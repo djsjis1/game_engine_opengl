@@ -120,7 +120,7 @@ events:
       The output was:
       0
       閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-      鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:20:53銆?
+      鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:20:34銆?
       
       鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\4.2.1\\CompilerIdCXX\\CompilerIdCXX.vcxproj鈥?榛樿鐩爣)銆?
       PrepareForBuild:
@@ -158,7 +158,7 @@ events:
           0 涓鍛?
           0 涓敊璇?
       
-      宸茬敤鏃堕棿 00:00:06.32
+      宸茬敤鏃堕棿 00:00:06.99
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -1281,8 +1281,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-9m29j7"
-      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-9m29j7"
+      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-u1l8ei"
+      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-u1l8ei"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -1292,48 +1292,48 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-9m29j7'
+        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-u1l8ei'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_19425.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_6bee8.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-        鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:21:00銆?
+        鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:20:43銆?
         
-        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\cmTC_19425.vcxproj鈥?榛樿鐩爣)銆?
+        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\cmTC_6bee8.vcxproj鈥?榛樿鐩爣)銆?
         PrepareForBuild:
           宸插惎鐢ㄧ粨鏋勫寲杈撳嚭銆傜紪璇戝櫒璇婃柇鐨勬牸寮忚缃皢鍙嶆槧閿欒灞傛缁撴瀯銆傛湁鍏宠缁嗕俊鎭紝璇峰弬闃?https://aka.ms/cpp/structured-output銆?
-          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\Debug\\鈥濄€?
-          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_19425.dir\\Debug\\cmTC_19425.tlog\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\Debug\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\鈥濄€?
         InitializeBuildStatus:
-          姝ｅ湪鍒涘缓鈥渃mTC_19425.dir\\Debug\\cmTC_19425.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
-          姝ｅ湪瀵光€渃mTC_19425.dir\\Debug\\cmTC_19425.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
+          姝ｅ湪鍒涘缓鈥渃mTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
+          姝ｅ湪瀵光€渃mTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg-master\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_19425.dir\\Debug\\\\" /Fd"cmTC_19425.dir\\Debug\\vc143.pdb" /external:W3 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_6bee8.dir\\Debug\\\\" /Fd"cmTC_6bee8.dir\\Debug\\vc143.pdb" /external:W3 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
           鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35221 鐗?
           鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
-          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_19425.dir\\Debug\\\\" /Fd"cmTC_19425.dir\\Debug\\vc143.pdb" /external:W3 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GR /Fo"cmTC_6bee8.dir\\Debug\\\\" /Fd"cmTC_6bee8.dir\\Debug\\vc143.pdb" /external:W3 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\Debug\\cmTC_19425.exe" /INCREMENTAL /ILK:"cmTC_19425.dir\\Debug\\cmTC_19425.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-9m29j7/Debug/cmTC_19425.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-9m29j7/Debug/cmTC_19425.lib" /MACHINE:X64  /machine:x64 cmTC_19425.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_19425.vcxproj -> D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\Debug\\cmTC_19425.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\Debug\\cmTC_6bee8.exe" /INCREMENTAL /ILK:"cmTC_6bee8.dir\\Debug\\cmTC_6bee8.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-u1l8ei/Debug/cmTC_6bee8.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-u1l8ei/Debug/cmTC_6bee8.lib" /MACHINE:X64  /machine:x64 cmTC_6bee8.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_6bee8.vcxproj -> D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\Debug\\cmTC_6bee8.exe
         AppLocalFromInstalled:
-          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\Debug\\cmTC_19425.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_19425.dir\\Debug\\cmTC_19425.tlog\\cmTC_19425.write.1u.tlog" "cmTC_19425.dir\\Debug\\vcpkg.applocal.log"
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\Debug\\cmTC_6bee8.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\cmTC_6bee8.write.1u.tlog" "cmTC_6bee8.dir\\Debug\\vcpkg.applocal.log"
           'pwsh.exe' 涓嶆槸鍐呴儴鎴栧閮ㄥ懡浠わ紝涔熶笉鏄彲杩愯鐨勭▼搴?
           鎴栨壒澶勭悊鏂囦欢銆?
-          鍛戒护鈥減wsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\Debug\\cmTC_19425.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_19425.dir\\Debug\\cmTC_19425.tlog\\cmTC_19425.write.1u.tlog" "cmTC_19425.dir\\Debug\\vcpkg.applocal.log"鈥濆凡閫€鍑猴紝浠ｇ爜涓?9009銆?
-          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\Debug\\cmTC_19425.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_19425.dir\\Debug\\cmTC_19425.tlog\\cmTC_19425.write.1u.tlog" "cmTC_19425.dir\\Debug\\vcpkg.applocal.log"
+          鍛戒护鈥減wsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\Debug\\cmTC_6bee8.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\cmTC_6bee8.write.1u.tlog" "cmTC_6bee8.dir\\Debug\\vcpkg.applocal.log"鈥濆凡閫€鍑猴紝浠ｇ爜涓?9009銆?
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\Debug\\cmTC_6bee8.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\cmTC_6bee8.write.1u.tlog" "cmTC_6bee8.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          姝ｅ湪鍒犻櫎鏂囦欢鈥渃mTC_19425.dir\\Debug\\cmTC_19425.tlog\\unsuccessfulbuild鈥濄€?
-          姝ｅ湪瀵光€渃mTC_19425.dir\\Debug\\cmTC_19425.tlog\\cmTC_19425.lastbuildstate鈥濇墽琛?Touch 浠诲姟銆?
-        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-9m29j7\\cmTC_19425.vcxproj鈥?榛樿鐩爣)鐨勬搷浣溿€?
+          姝ｅ湪鍒犻櫎鏂囦欢鈥渃mTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\unsuccessfulbuild鈥濄€?
+          姝ｅ湪瀵光€渃mTC_6bee8.dir\\Debug\\cmTC_6bee8.tlog\\cmTC_6bee8.lastbuildstate鈥濇墽琛?Touch 浠诲姟銆?
+        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-u1l8ei\\cmTC_6bee8.vcxproj鈥?榛樿鐩爣)鐨勬搷浣溿€?
         
         宸叉垚鍔熺敓鎴愩€?
             0 涓鍛?
             0 涓敊璇?
         
-        宸茬敤鏃堕棿 00:00:05.92
+        宸茬敤鏃堕棿 00:00:06.72
         
       exitCode: 0
   -
@@ -2948,7 +2948,7 @@ events:
       The output was:
       0
       閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-      鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:21:07銆?
+      鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:20:52銆?
       
       鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\4.2.1\\CompilerIdC\\CompilerIdC.vcxproj鈥?榛樿鐩爣)銆?
       PrepareForBuild:
@@ -2986,7 +2986,7 @@ events:
           0 涓鍛?
           0 涓敊璇?
       
-      宸茬敤鏃堕棿 00:00:07.53
+      宸茬敤鏃堕棿 00:00:06.67
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -3378,8 +3378,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-gyblva"
-      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-gyblva"
+      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-wgum0u"
+      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-wgum0u"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -3388,48 +3388,48 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-gyblva'
+        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-wgum0u'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_c8be8.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b5f8d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-        鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:21:16銆?
+        鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:21:00銆?
         
-        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\cmTC_c8be8.vcxproj鈥?榛樿鐩爣)銆?
+        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\cmTC_b5f8d.vcxproj鈥?榛樿鐩爣)銆?
         PrepareForBuild:
           宸插惎鐢ㄧ粨鏋勫寲杈撳嚭銆傜紪璇戝櫒璇婃柇鐨勬牸寮忚缃皢鍙嶆槧閿欒灞傛缁撴瀯銆傛湁鍏宠缁嗕俊鎭紝璇峰弬闃?https://aka.ms/cpp/structured-output銆?
-          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\Debug\\鈥濄€?
-          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\Debug\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\鈥濄€?
         InitializeBuildStatus:
-          姝ｅ湪鍒涘缓鈥渃mTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
-          姝ｅ湪瀵光€渃mTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
+          姝ｅ湪鍒涘缓鈥渃mTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
+          姝ｅ湪瀵光€渃mTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg-master\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_c8be8.dir\\Debug\\\\" /Fd"cmTC_c8be8.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_b5f8d.dir\\Debug\\\\" /Fd"cmTC_b5f8d.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCCompilerABI.c"
           鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35221 鐗?
           鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
-          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_c8be8.dir\\Debug\\\\" /Fd"cmTC_c8be8.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCCompilerABI.c"
+          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_b5f8d.dir\\Debug\\\\" /Fd"cmTC_b5f8d.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\Debug\\cmTC_c8be8.exe" /INCREMENTAL /ILK:"cmTC_c8be8.dir\\Debug\\cmTC_c8be8.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-gyblva/Debug/cmTC_c8be8.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-gyblva/Debug/cmTC_c8be8.lib" /MACHINE:X64  /machine:x64 cmTC_c8be8.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_c8be8.vcxproj -> D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\Debug\\cmTC_c8be8.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\Debug\\cmTC_b5f8d.exe" /INCREMENTAL /ILK:"cmTC_b5f8d.dir\\Debug\\cmTC_b5f8d.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-wgum0u/Debug/cmTC_b5f8d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-wgum0u/Debug/cmTC_b5f8d.lib" /MACHINE:X64  /machine:x64 cmTC_b5f8d.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_b5f8d.vcxproj -> D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\Debug\\cmTC_b5f8d.exe
         AppLocalFromInstalled:
-          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\Debug\\cmTC_c8be8.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\cmTC_c8be8.write.1u.tlog" "cmTC_c8be8.dir\\Debug\\vcpkg.applocal.log"
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\Debug\\cmTC_b5f8d.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\cmTC_b5f8d.write.1u.tlog" "cmTC_b5f8d.dir\\Debug\\vcpkg.applocal.log"
           'pwsh.exe' 涓嶆槸鍐呴儴鎴栧閮ㄥ懡浠わ紝涔熶笉鏄彲杩愯鐨勭▼搴?
           鎴栨壒澶勭悊鏂囦欢銆?
-          鍛戒护鈥減wsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\Debug\\cmTC_c8be8.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\cmTC_c8be8.write.1u.tlog" "cmTC_c8be8.dir\\Debug\\vcpkg.applocal.log"鈥濆凡閫€鍑猴紝浠ｇ爜涓?9009銆?
-          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\Debug\\cmTC_c8be8.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\cmTC_c8be8.write.1u.tlog" "cmTC_c8be8.dir\\Debug\\vcpkg.applocal.log"
+          鍛戒护鈥減wsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\Debug\\cmTC_b5f8d.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\cmTC_b5f8d.write.1u.tlog" "cmTC_b5f8d.dir\\Debug\\vcpkg.applocal.log"鈥濆凡閫€鍑猴紝浠ｇ爜涓?9009銆?
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\Debug\\cmTC_b5f8d.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\cmTC_b5f8d.write.1u.tlog" "cmTC_b5f8d.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          姝ｅ湪鍒犻櫎鏂囦欢鈥渃mTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\unsuccessfulbuild鈥濄€?
-          姝ｅ湪瀵光€渃mTC_c8be8.dir\\Debug\\cmTC_c8be8.tlog\\cmTC_c8be8.lastbuildstate鈥濇墽琛?Touch 浠诲姟銆?
-        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-gyblva\\cmTC_c8be8.vcxproj鈥?榛樿鐩爣)鐨勬搷浣溿€?
+          姝ｅ湪鍒犻櫎鏂囦欢鈥渃mTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\unsuccessfulbuild鈥濄€?
+          姝ｅ湪瀵光€渃mTC_b5f8d.dir\\Debug\\cmTC_b5f8d.tlog\\cmTC_b5f8d.lastbuildstate鈥濇墽琛?Touch 浠诲姟銆?
+        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wgum0u\\cmTC_b5f8d.vcxproj鈥?榛樿鐩爣)鐨勬搷浣溿€?
         
         宸叉垚鍔熺敓鎴愩€?
             0 涓鍛?
             0 涓敊璇?
         
-        宸茬敤鏃堕棿 00:00:06.31
+        宸茬敤鏃堕棿 00:00:07.48
         
       exitCode: 0
   -
@@ -3471,8 +3471,8 @@ events:
     checks:
       - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
     directories:
-      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-l9q54f"
-      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-l9q54f"
+      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-f2wk4x"
+      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-f2wk4x"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -3481,42 +3481,42 @@ events:
       variable: "CMAKE_HAVE_LIBC_PTHREAD"
       cached: true
       stdout: |
-        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-l9q54f'
+        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-f2wk4x'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_aba8d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_bef16.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-        鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:21:23銆?
+        鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:21:09銆?
         
-        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\cmTC_aba8d.vcxproj鈥?榛樿鐩爣)銆?
+        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\cmTC_bef16.vcxproj鈥?榛樿鐩爣)銆?
         PrepareForBuild:
           宸插惎鐢ㄧ粨鏋勫寲杈撳嚭銆傜紪璇戝櫒璇婃柇鐨勬牸寮忚缃皢鍙嶆槧閿欒灞傛缁撴瀯銆傛湁鍏宠缁嗕俊鎭紝璇峰弬闃?https://aka.ms/cpp/structured-output銆?
-          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\Debug\\鈥濄€?
-          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_aba8d.dir\\Debug\\cmTC_aba8d.tlog\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\Debug\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_bef16.dir\\Debug\\cmTC_bef16.tlog\\鈥濄€?
         InitializeBuildStatus:
-          姝ｅ湪鍒涘缓鈥渃mTC_aba8d.dir\\Debug\\cmTC_aba8d.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
-          姝ｅ湪瀵光€渃mTC_aba8d.dir\\Debug\\cmTC_aba8d.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
+          姝ｅ湪鍒涘缓鈥渃mTC_bef16.dir\\Debug\\cmTC_bef16.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
+          姝ｅ湪瀵光€渃mTC_bef16.dir\\Debug\\cmTC_bef16.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg-master\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_aba8d.dir\\Debug\\\\" /Fd"cmTC_aba8d.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\src.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_bef16.dir\\Debug\\\\" /Fd"cmTC_bef16.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\src.c"
           鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35221 鐗?
           鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
-          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_aba8d.dir\\Debug\\\\" /Fd"cmTC_aba8d.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\src.c"
+          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_bef16.dir\\Debug\\\\" /Fd"cmTC_bef16.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\src.c"
           src.c
-        D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\src.c(1,10): error C1083: 鏃犳硶鎵撳紑鍖呮嫭鏂囦欢: 鈥減thread.h鈥? No such file or directory [D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\cmTC_aba8d.vcxproj]
-        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\cmTC_aba8d.vcxproj鈥?榛樿鐩爣)鐨勬搷浣?- 澶辫触銆?
+        D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\src.c(1,10): error C1083: 鏃犳硶鎵撳紑鍖呮嫭鏂囦欢: 鈥減thread.h鈥? No such file or directory [D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\cmTC_bef16.vcxproj]
+        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\cmTC_bef16.vcxproj鈥?榛樿鐩爣)鐨勬搷浣?- 澶辫触銆?
         
         鐢熸垚澶辫触銆?
         
-        鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\cmTC_aba8d.vcxproj鈥?榛樿鐩爣) (1) ->
+        鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\cmTC_bef16.vcxproj鈥?榛樿鐩爣) (1) ->
         (ClCompile 鐩爣) -> 
-          D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\src.c(1,10): error C1083: 鏃犳硶鎵撳紑鍖呮嫭鏂囦欢: 鈥減thread.h鈥? No such file or directory [D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-l9q54f\\cmTC_aba8d.vcxproj]
+          D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\src.c(1,10): error C1083: 鏃犳硶鎵撳紑鍖呮嫭鏂囦欢: 鈥減thread.h鈥? No such file or directory [D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-f2wk4x\\cmTC_bef16.vcxproj]
         
             0 涓鍛?
             1 涓敊璇?
         
-        宸茬敤鏃堕棿 00:00:01.43
+        宸茬敤鏃堕棿 00:00:02.04
         
       exitCode: 1
   -
@@ -3529,8 +3529,8 @@ events:
     checks:
       - "Looking for pthread_create in pthreads"
     directories:
-      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-pjtkfc"
-      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-pjtkfc"
+      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-h8bg8p"
+      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-h8bg8p"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -3539,44 +3539,44 @@ events:
       variable: "CMAKE_HAVE_PTHREADS_CREATE"
       cached: true
       stdout: |
-        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-pjtkfc'
+        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-h8bg8p'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0789e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_ab931.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-        鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:21:26銆?
+        鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:21:12銆?
         
-        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\cmTC_0789e.vcxproj鈥?榛樿鐩爣)銆?
+        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\cmTC_ab931.vcxproj鈥?榛樿鐩爣)銆?
         PrepareForBuild:
           宸插惎鐢ㄧ粨鏋勫寲杈撳嚭銆傜紪璇戝櫒璇婃柇鐨勬牸寮忚缃皢鍙嶆槧閿欒灞傛缁撴瀯銆傛湁鍏宠缁嗕俊鎭紝璇峰弬闃?https://aka.ms/cpp/structured-output銆?
-          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\Debug\\鈥濄€?
-          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_0789e.dir\\Debug\\cmTC_0789e.tlog\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\Debug\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_ab931.dir\\Debug\\cmTC_ab931.tlog\\鈥濄€?
         InitializeBuildStatus:
-          姝ｅ湪鍒涘缓鈥渃mTC_0789e.dir\\Debug\\cmTC_0789e.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
-          姝ｅ湪瀵光€渃mTC_0789e.dir\\Debug\\cmTC_0789e.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
+          姝ｅ湪鍒涘缓鈥渃mTC_ab931.dir\\Debug\\cmTC_ab931.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
+          姝ｅ湪瀵光€渃mTC_ab931.dir\\Debug\\cmTC_ab931.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg-master\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_0789e.dir\\Debug\\\\" /Fd"cmTC_0789e.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\CheckFunctionExists.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_ab931.dir\\Debug\\\\" /Fd"cmTC_ab931.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\CheckFunctionExists.c"
           鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35221 鐗?
           鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
-          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_0789e.dir\\Debug\\\\" /Fd"cmTC_0789e.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\CheckFunctionExists.c"
+          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_ab931.dir\\Debug\\\\" /Fd"cmTC_ab931.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\CheckFunctionExists.c"
           CheckFunctionExists.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\Debug\\cmTC_0789e.exe" /INCREMENTAL /ILK:"cmTC_0789e.dir\\Debug\\cmTC_0789e.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" pthreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-pjtkfc/Debug/cmTC_0789e.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-pjtkfc/Debug/cmTC_0789e.lib" /MACHINE:X64  /machine:x64 cmTC_0789e.dir\\Debug\\CheckFunctionExists.obj
-        LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減threads.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\cmTC_0789e.vcxproj]
-        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\cmTC_0789e.vcxproj鈥?榛樿鐩爣)鐨勬搷浣?- 澶辫触銆?
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\Debug\\cmTC_ab931.exe" /INCREMENTAL /ILK:"cmTC_ab931.dir\\Debug\\cmTC_ab931.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" pthreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-h8bg8p/Debug/cmTC_ab931.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-h8bg8p/Debug/cmTC_ab931.lib" /MACHINE:X64  /machine:x64 cmTC_ab931.dir\\Debug\\CheckFunctionExists.obj
+        LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減threads.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\cmTC_ab931.vcxproj]
+        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\cmTC_ab931.vcxproj鈥?榛樿鐩爣)鐨勬搷浣?- 澶辫触銆?
         
         鐢熸垚澶辫触銆?
         
-        鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\cmTC_0789e.vcxproj鈥?榛樿鐩爣) (1) ->
+        鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\cmTC_ab931.vcxproj鈥?榛樿鐩爣) (1) ->
         (Link 鐩爣) -> 
-          LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減threads.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-pjtkfc\\cmTC_0789e.vcxproj]
+          LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減threads.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-h8bg8p\\cmTC_ab931.vcxproj]
         
             0 涓鍛?
             1 涓敊璇?
         
-        宸茬敤鏃堕棿 00:00:02.32
+        宸茬敤鏃堕棿 00:00:02.68
         
       exitCode: 1
   -
@@ -3589,8 +3589,8 @@ events:
     checks:
       - "Looking for pthread_create in pthread"
     directories:
-      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-ohmgjb"
-      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-ohmgjb"
+      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-g1jmaa"
+      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-g1jmaa"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -3599,44 +3599,44 @@ events:
       variable: "CMAKE_HAVE_PTHREAD_CREATE"
       cached: true
       stdout: |
-        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-ohmgjb'
+        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-g1jmaa'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_946ef.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_20b33.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-        鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:21:29銆?
+        鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:21:16銆?
         
-        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\cmTC_946ef.vcxproj鈥?榛樿鐩爣)銆?
+        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\cmTC_20b33.vcxproj鈥?榛樿鐩爣)銆?
         PrepareForBuild:
           宸插惎鐢ㄧ粨鏋勫寲杈撳嚭銆傜紪璇戝櫒璇婃柇鐨勬牸寮忚缃皢鍙嶆槧閿欒灞傛缁撴瀯銆傛湁鍏宠缁嗕俊鎭紝璇峰弬闃?https://aka.ms/cpp/structured-output銆?
-          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\Debug\\鈥濄€?
-          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_946ef.dir\\Debug\\cmTC_946ef.tlog\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\Debug\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_20b33.dir\\Debug\\cmTC_20b33.tlog\\鈥濄€?
         InitializeBuildStatus:
-          姝ｅ湪鍒涘缓鈥渃mTC_946ef.dir\\Debug\\cmTC_946ef.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
-          姝ｅ湪瀵光€渃mTC_946ef.dir\\Debug\\cmTC_946ef.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
+          姝ｅ湪鍒涘缓鈥渃mTC_20b33.dir\\Debug\\cmTC_20b33.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
+          姝ｅ湪瀵光€渃mTC_20b33.dir\\Debug\\cmTC_20b33.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg-master\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_946ef.dir\\Debug\\\\" /Fd"cmTC_946ef.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\CheckFunctionExists.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_20b33.dir\\Debug\\\\" /Fd"cmTC_20b33.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\CheckFunctionExists.c"
           鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35221 鐗?
           鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
-          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_946ef.dir\\Debug\\\\" /Fd"cmTC_946ef.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\CheckFunctionExists.c"
+          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_20b33.dir\\Debug\\\\" /Fd"cmTC_20b33.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\CheckFunctionExists.c"
           CheckFunctionExists.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\Debug\\cmTC_946ef.exe" /INCREMENTAL /ILK:"cmTC_946ef.dir\\Debug\\cmTC_946ef.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" pthread.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-ohmgjb/Debug/cmTC_946ef.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-ohmgjb/Debug/cmTC_946ef.lib" /MACHINE:X64  /machine:x64 cmTC_946ef.dir\\Debug\\CheckFunctionExists.obj
-        LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減thread.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\cmTC_946ef.vcxproj]
-        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\cmTC_946ef.vcxproj鈥?榛樿鐩爣)鐨勬搷浣?- 澶辫触銆?
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\Debug\\cmTC_20b33.exe" /INCREMENTAL /ILK:"cmTC_20b33.dir\\Debug\\cmTC_20b33.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" pthread.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-g1jmaa/Debug/cmTC_20b33.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-g1jmaa/Debug/cmTC_20b33.lib" /MACHINE:X64  /machine:x64 cmTC_20b33.dir\\Debug\\CheckFunctionExists.obj
+        LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減thread.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\cmTC_20b33.vcxproj]
+        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\cmTC_20b33.vcxproj鈥?榛樿鐩爣)鐨勬搷浣?- 澶辫触銆?
         
         鐢熸垚澶辫触銆?
         
-        鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\cmTC_946ef.vcxproj鈥?榛樿鐩爣) (1) ->
+        鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\cmTC_20b33.vcxproj鈥?榛樿鐩爣) (1) ->
         (Link 鐩爣) -> 
-          LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減thread.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ohmgjb\\cmTC_946ef.vcxproj]
+          LINK : fatal error LNK1104: 鏃犳硶鎵撳紑鏂囦欢鈥減thread.lib鈥?[D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g1jmaa\\cmTC_20b33.vcxproj]
         
             0 涓鍛?
             1 涓敊璇?
         
-        宸茬敤鏃堕棿 00:00:02.51
+        宸茬敤鏃堕棿 00:00:03.10
         
       exitCode: 1
   -
@@ -3648,8 +3648,8 @@ events:
     checks:
       - "Looking for _fwrite_nolock"
     directories:
-      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-c8aygg"
-      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-c8aygg"
+      source: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-savtpw"
+      binary: "D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-savtpw"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_C_FLAGS_DEBUG: "/MDd /Zi /Ob0 /Od /RTC1"
@@ -3658,48 +3658,48 @@ events:
       variable: "HAVE_FWRITE_UNLOCKED"
       cached: true
       stdout: |
-        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-c8aygg'
+        Change Dir: 'D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-savtpw'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_916eb.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_c6523.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         閫傜敤浜?.NET Framework MSBuild 鐗堟湰 17.14.23+b0019275e
-        鐢熸垚鍚姩鏃堕棿涓?2026/7/2 15:21:33銆?
+        鐢熸垚鍚姩鏃堕棿涓?2026/7/7 16:21:20銆?
         
-        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\cmTC_916eb.vcxproj鈥?榛樿鐩爣)銆?
+        鑺傜偣 1 涓婄殑椤圭洰鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\cmTC_c6523.vcxproj鈥?榛樿鐩爣)銆?
         PrepareForBuild:
           宸插惎鐢ㄧ粨鏋勫寲杈撳嚭銆傜紪璇戝櫒璇婃柇鐨勬牸寮忚缃皢鍙嶆槧閿欒灞傛缁撴瀯銆傛湁鍏宠缁嗕俊鎭紝璇峰弬闃?https://aka.ms/cpp/structured-output銆?
-          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\Debug\\鈥濄€?
-          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\Debug\\鈥濄€?
+          姝ｅ湪鍒涘缓鐩綍鈥渃mTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\鈥濄€?
         InitializeBuildStatus:
-          姝ｅ湪鍒涘缓鈥渃mTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
-          姝ｅ湪瀵光€渃mTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
+          姝ｅ湪鍒涘缓鈥渃mTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\unsuccessfulbuild鈥濓紝鍥犱负宸叉寚瀹氣€淎lwaysCreate鈥濄€?
+          姝ｅ湪瀵光€渃mTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\unsuccessfulbuild鈥濇墽琛?Touch 浠诲姟銆?
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\vcpkg-master\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_916eb.dir\\Debug\\\\" /Fd"cmTC_916eb.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\CheckSymbolExists.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_c6523.dir\\Debug\\\\" /Fd"cmTC_c6523.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\CheckSymbolExists.c"
           鐢ㄤ簬 x64 鐨?Microsoft (R) C/C++ 浼樺寲缂栬瘧鍣?19.44.35221 鐗?
           鐗堟潈鎵€鏈?C) Microsoft Corporation銆備繚鐣欐墍鏈夋潈鍒┿€?
-          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_916eb.dir\\Debug\\\\" /Fd"cmTC_916eb.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\CheckSymbolExists.c"
+          cl /c /I"C:\\vcpkg-master\\installed\\x64-windows\\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /Fo"cmTC_c6523.dir\\Debug\\\\" /Fd"cmTC_c6523.dir\\Debug\\vc143.pdb" /external:W3 /TC /errorReport:queue "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\CheckSymbolExists.c"
           CheckSymbolExists.c
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\Debug\\cmTC_916eb.exe" /INCREMENTAL /ILK:"cmTC_916eb.dir\\Debug\\cmTC_916eb.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-c8aygg/Debug/cmTC_916eb.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-c8aygg/Debug/cmTC_916eb.lib" /MACHINE:X64  /machine:x64 cmTC_916eb.dir\\Debug\\CheckSymbolExists.obj
-          cmTC_916eb.vcxproj -> D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\Debug\\cmTC_916eb.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\Debug\\cmTC_c6523.exe" /INCREMENTAL /ILK:"cmTC_c6523.dir\\Debug\\cmTC_c6523.ilk" /NOLOGO /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\vcpkg-master\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-savtpw/Debug/cmTC_c6523.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"D:/code/.std/opengl/build/CMakeFiles/CMakeScratch/TryCompile-savtpw/Debug/cmTC_c6523.lib" /MACHINE:X64  /machine:x64 cmTC_c6523.dir\\Debug\\CheckSymbolExists.obj
+          cmTC_c6523.vcxproj -> D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\Debug\\cmTC_c6523.exe
         AppLocalFromInstalled:
-          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\Debug\\cmTC_916eb.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\cmTC_916eb.write.1u.tlog" "cmTC_916eb.dir\\Debug\\vcpkg.applocal.log"
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\Debug\\cmTC_c6523.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\cmTC_c6523.write.1u.tlog" "cmTC_c6523.dir\\Debug\\vcpkg.applocal.log"
           'pwsh.exe' 涓嶆槸鍐呴儴鎴栧閮ㄥ懡浠わ紝涔熶笉鏄彲杩愯鐨勭▼搴?
           鎴栨壒澶勭悊鏂囦欢銆?
-          鍛戒护鈥減wsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\Debug\\cmTC_916eb.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\cmTC_916eb.write.1u.tlog" "cmTC_916eb.dir\\Debug\\vcpkg.applocal.log"鈥濆凡閫€鍑猴紝浠ｇ爜涓?9009銆?
-          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\Debug\\cmTC_916eb.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\cmTC_916eb.write.1u.tlog" "cmTC_916eb.dir\\Debug\\vcpkg.applocal.log"
+          鍛戒护鈥減wsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\Debug\\cmTC_c6523.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\cmTC_c6523.write.1u.tlog" "cmTC_c6523.dir\\Debug\\vcpkg.applocal.log"鈥濆凡閫€鍑猴紝浠ｇ爜涓?9009銆?
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\vcpkg-master\\scripts\\buildsystems\\msbuild\\applocal.ps1" "D:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\Debug\\cmTC_c6523.exe" "C:\\vcpkg-master\\installed\\x64-windows\\debug\\bin" "cmTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\cmTC_c6523.write.1u.tlog" "cmTC_c6523.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          姝ｅ湪鍒犻櫎鏂囦欢鈥渃mTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\unsuccessfulbuild鈥濄€?
-          姝ｅ湪瀵光€渃mTC_916eb.dir\\Debug\\cmTC_916eb.tlog\\cmTC_916eb.lastbuildstate鈥濇墽琛?Touch 浠诲姟銆?
-        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-c8aygg\\cmTC_916eb.vcxproj鈥?榛樿鐩爣)鐨勬搷浣溿€?
+          姝ｅ湪鍒犻櫎鏂囦欢鈥渃mTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\unsuccessfulbuild鈥濄€?
+          姝ｅ湪瀵光€渃mTC_c6523.dir\\Debug\\cmTC_c6523.tlog\\cmTC_c6523.lastbuildstate鈥濇墽琛?Touch 浠诲姟銆?
+        宸插畬鎴愮敓鎴愰」鐩€淒:\\code\\.std\\opengl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-savtpw\\cmTC_c6523.vcxproj鈥?榛樿鐩爣)鐨勬搷浣溿€?
         
         宸叉垚鍔熺敓鎴愩€?
             0 涓鍛?
             0 涓敊璇?
         
-        宸茬敤鏃堕棿 00:00:07.52
+        宸茬敤鏃堕棿 00:00:07.06
         
       exitCode: 0
 ...

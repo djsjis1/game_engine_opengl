@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "my_demo/Debug/my_demo.exe"
+			"path" : "my_demo/RelWithDebInfo/my_demo.exe"
 		},
 		{
-			"path" : "my_demo/Debug/my_demo.pdb"
+			"path" : "my_demo/RelWithDebInfo/my_demo.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -44,7 +44,7 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 107,
+				"line" : 108,
 				"parent" : 0
 			},
 			{
@@ -106,13 +106,13 @@
 			{
 				"command" : 6,
 				"file" : 0,
-				"line" : 120,
+				"line" : 121,
 				"parent" : 0
 			},
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 105,
+				"line" : 106,
 				"parent" : 0
 			}
 		]
@@ -151,7 +151,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++latest"
+					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG -std:c++latest"
 				},
 				{
 					"backtrace" : 13,
@@ -171,6 +171,10 @@
 				{
 					"backtrace" : 2,
 					"define" : "QT_GUI_LIB"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "QT_NO_DEBUG"
 				},
 				{
 					"backtrace" : 2,
@@ -197,7 +201,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "D:/code/.std/opengl/build/my_demo/my_demo_autogen/include_Debug"
+					"path" : "D:/code/.std/opengl/build/my_demo/my_demo_autogen/include_RelWithDebInfo"
 				},
 				{
 					"backtrace" : 15,
@@ -283,7 +287,7 @@
 				1,
 				3,
 				5,
-				12
+				13
 			]
 		}
 	],
@@ -306,11 +310,11 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "mylog::@4aefedf33a03efb4affd"
+			"id" : "spdlog::@bad68644e005c63640a3"
 		},
 		{
 			"backtrace" : 2,
-			"id" : "spdlog::@bad68644e005c63640a3"
+			"id" : "mylog::@4aefedf33a03efb4affd"
 		}
 	],
 	"id" : "my_demo::@73cdf1463cb3315c58e9",
@@ -319,7 +323,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1",
+				"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG",
 				"role" : "flags"
 			},
 			{
@@ -332,47 +336,47 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "..\\sqlite3\\Debug\\sqlite3.lib",
+				"fragment" : "..\\sqlite3\\RelWithDebInfo\\sqlite3.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "..\\mylog\\Debug\\mylog.lib",
+				"fragment" : "..\\mylog\\RelWithDebInfo\\mylog.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\qtmaind.lib",
+				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\qtmain.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "Debug\\flecs.lib",
+				"fragment" : "RelWithDebInfo\\flecs.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5OpenGLd.lib",
+				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5OpenGL.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5Widgetsd.lib",
+				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5Widgets.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 10,
-				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5Guid.lib",
+				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5Gui.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 10,
-				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5Cored.lib",
+				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\Qt5Core.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\qtmaind.lib",
+				"fragment" : "D:\\QT\\5.14.2\\msvc2017_64\\lib\\qtmain.lib",
 				"role" : "libraries"
 			},
 			{
@@ -382,7 +386,7 @@
 			},
 			{
 				"backtrace" : 12,
-				"fragment" : "..\\mylog\\spdlog-build\\Debug\\spdlogd.lib",
+				"fragment" : "..\\mylog\\spdlog-build\\RelWithDebInfo\\spdlog.lib",
 				"role" : "libraries"
 			},
 			{
@@ -439,7 +443,7 @@
 				1,
 				3,
 				5,
-				12
+				13
 			]
 		},
 		{
@@ -454,11 +458,12 @@
 				9,
 				10,
 				11,
-				13,
+				12,
 				14,
 				15,
 				16,
-				17
+				17,
+				18
 			]
 		}
 	],
@@ -468,7 +473,7 @@
 			"backtrace" : 0,
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "build/my_demo/my_demo_autogen/mocs_compilation_Debug.cpp",
+			"path" : "build/my_demo/my_demo_autogen/mocs_compilation_RelWithDebInfo.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -517,6 +522,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "my_demo/Components/CameraComponent.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "my_demo/Components/EditorVisible.h",
 			"sourceGroupIndex" : 1
 		},
 		{

@@ -106,6 +106,7 @@ void RenderWidget::paintGL()
         m_shader.setMat3("uNormalMatrix", tf.getNormalMatrix());
 
         // 4b. 材质（可选组件，有就用，没有用默认灰色）
+        // 可选组件获取（C API：e.get<T>() 在 MSVC 有 bug，用 ecs_get_id 代替）
         const auto *mat = static_cast<const MaterialComponent *>(
             ecs_get_id(m_world->c_ptr(), e.raw_id(),
                        m_world->component<MaterialComponent>().raw_id()));

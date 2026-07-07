@@ -93,6 +93,7 @@ add_executable(my_demo WIN32
     Components/TagComponent.h
     Components/RotateBehavior.h
     Components/CameraComponent.h
+    Components/EditorVisible.h
     System/CameraSystem.h
     editor/EditorPanel.h   editor/EditorPanel.cpp
     System/Shader.h
