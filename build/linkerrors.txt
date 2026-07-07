@@ -1,0 +1,29 @@
+================================================================================
+Linker Errors
+Generated: 2026-07-01T03:21:14.999Z
+Total Errors: 8
+================================================================================
+
+[LNK2005] (MSVC)
+"unsigned __int64 FLECS_IDTransformComponentID_" (?FLECS_IDTransformComponentID_@@3_KA) 已经在 mocs_compilation_Debug.obj 中定义 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]
+
+[LNK2005] (MSVC)
+"unsigned __int64 FLECS_IDMaterialComponentID_" (?FLECS_IDMaterialComponentID_@@3_KA) 已经在 mocs_compilation_Debug.obj 中定义 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]
+
+[LNK2005] (MSVC)
+"unsigned __int64 FLECS_IDMeshComponentID_" (?FLECS_IDMeshComponentID_@@3_KA) 已经在 MainWindow.obj 中定义 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]
+
+[LNK2005] (MSVC)
+"unsigned __int64 FLECS_IDTransformComponentID_" (?FLECS_IDTransformComponentID_@@3_KA) 已经在 mocs_compilation_Debug.obj 中定义 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]
+
+[LNK2005] (MSVC)
+"unsigned __int64 FLECS_IDMaterialComponentID_" (?FLECS_IDMaterialComponentID_@@3_KA) 已经在 mocs_compilation_Debug.obj 中定义 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]
+
+[LNK2005] (MSVC)
+"unsigned __int64 FLECS_IDTransformComponentID_" (?FLECS_IDTransformComponentID_@@3_KA) 已经在 mocs_compilation_Debug.obj 中定义 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]
+
+[LNK2005] (MSVC)
+"unsigned __int64 FLECS_IDMaterialComponentID_" (?FLECS_IDMaterialComponentID_@@3_KA) 已经在 mocs_compilation_Debug.obj 中定义 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]
+
+[LNK1169] (MSVC)
+找到一个或多个多重定义的符号 [D:\code\.std\opengl\build\my_demo\my_demo.vcxproj]

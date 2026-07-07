@@ -1,0 +1,5 @@
+D:/code/.std/opengl/game_engine/build_new/CMakeFiles/flecs.dir
+D:/code/.std/opengl/game_engine/build_new/CMakeFiles/game_editor.dir
+D:/code/.std/opengl/game_engine/build_new/CMakeFiles/ALL_BUILD.dir
+D:/code/.std/opengl/game_engine/build_new/CMakeFiles/ZERO_CHECK.dir
+D:/code/.std/opengl/game_engine/build_new/my_demo/CMakeFiles/my_demo.dir
