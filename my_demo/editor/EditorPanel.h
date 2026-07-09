@@ -8,6 +8,7 @@
 #include <QStackedWidget>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
+#include <QLineEdit>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,6 +30,7 @@
 #include "Components/RotateBehavior.h"
 #include "Components/TagComponent.h"
 #include "Components/EditorVisible.h"
+#include "Components/ScriptComponent.h"
 
 // ============================================================
 // EditorPanel —— 反射驱动的编辑栏

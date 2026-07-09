@@ -1,0 +1,71 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"my_demo/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "flecs::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "lua::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "my_demo::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "mylog::@4aefedf33a03efb4affd"
+		},
+		{
+			"id" : "sqlite3::@67664483256e4dfea371"
+		}
+	],
+	"id" : "ALL_BUILD::@73cdf1463cb3315c58e9",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"orderDependencies" : 
+	[
+		{
+			"id" : "flecs::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "lua::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "my_demo::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "mylog::@4aefedf33a03efb4affd"
+		},
+		{
+			"id" : "sqlite3::@67664483256e4dfea371"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "my_demo",
+		"source" : "my_demo"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

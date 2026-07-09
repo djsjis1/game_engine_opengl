@@ -16,6 +16,9 @@
     <ClCompile Include="D:\code\.std\opengl\my_demo\editor\EditorPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\my_demo\System\LuaApi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="D:\code\.std\opengl\build\my_demo\my_demo_autogen\mocs_compilation_Release.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,6 +54,12 @@
     <ClInclude Include="D:\code\.std\opengl\my_demo\System\CameraSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\System\EditorCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\System\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\editor\EditorPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -61,6 +70,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\System\RotationSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\System\ScriptSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\ScriptComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Engine.h">

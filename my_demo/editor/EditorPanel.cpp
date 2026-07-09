@@ -535,9 +535,30 @@ QWidget *EditorPanel::createEditorForComponent(flecs::entity_t compId, flecs::en
     const EcsStruct *st = static_cast<const EcsStruct *>(
         ecs_get_id(m_world->c_ptr(), compEnt.raw_id(), structId3));
 
-    // 没有反射信息（如 Mesh 组件）→ 显示占位文字
+    // 没有反射信息 → 特殊处理 ScriptComponent（文本输入）
     if (!st)
     {
+        auto scrId = m_world->component<ScriptComponent>().raw_id();
+        if (compId == scrId)
+        {
+            auto *data = (const ScriptComponent *)ecs_get_id(m_world->c_ptr(), entity.raw_id(), compId);
+            auto *w = new QWidget;
+            auto *l = new QFormLayout(w);
+            auto *pathEdit = new QLineEdit(data ? data->filePath : "");
+            pathEdit->setPlaceholderText("scripts/xxx.lua");
+            l->addRow("脚本路径", pathEdit);
+            QString key = "ScriptComponent|filePath";
+            m_propWidgets[key] = pathEdit;
+            connect(pathEdit, &QLineEdit::textChanged, this, [this, compId, entity]()
+                    {
+                if (m_updating) return;
+                auto *d = (ScriptComponent *)ecs_get_mut_id(m_world->c_ptr(), entity.raw_id(), compId);
+                if (!d) return;
+                auto *edit = qobject_cast<QLineEdit *>(m_propWidgets["ScriptComponent|filePath"]);
+                if (edit) { strncpy(d->filePath, edit->text().toUtf8().constData(), sizeof(d->filePath)-1);
+                    ecs_modified_id(m_world->c_ptr(), entity.raw_id(), compId); emit valueChanged(); } });
+            return w;
+        }
         auto *w = new QWidget;
         w->setLayout(new QVBoxLayout);
         w->layout()->addWidget(new QLabel("（该组件无可编辑属性）"));

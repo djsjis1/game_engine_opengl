@@ -1,0 +1,248 @@
+{
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "D:/code/.std/opengl/build/my_demo/lua_autogen",
+	"CMAKE_BINARY_DIR" : "D:/code/.std/opengl/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/code/.std/opengl/build/my_demo",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/code/.std/opengl/my_demo",
+	"CMAKE_EXECUTABLE" : "C:/Program Files/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/code/.std/opengl/my_demo/CMakeLists.txt",
+		"D:/code/.std/opengl/build/CMakeFiles/4.2.1/CMakeCCompiler.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/CMakeCInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/CMakeLanguageInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Compiler/MSVC-C.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Compiler/MSVC.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Windows-MSVC-C.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Windows-MSVC.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/CMakeCommonLanguageInclude.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Internal/CMakeCLinkerInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Internal/CMakeCommonLinkerInformation.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Linker/MSVC-C.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Linker/MSVC.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Linker/Windows-MSVC-C.cmake",
+		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Linker/Windows-MSVC.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/code/.std/opengl",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lapi.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lapi.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lauxlib.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lauxlib.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lcode.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lcode.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lctype.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lctype.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ldebug.h",
+			"Mu",
+			"JEXN4LKSKB/moc_ldebug.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ldo.h",
+			"Mu",
+			"JEXN4LKSKB/moc_ldo.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lfunc.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lfunc.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lgc.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lgc.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/llex.h",
+			"Mu",
+			"JEXN4LKSKB/moc_llex.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lmem.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lmem.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lobject.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lobject.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lopcodes.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lopcodes.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lparser.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lparser.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lstate.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lstate.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lstring.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lstring.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ltable.h",
+			"Mu",
+			"JEXN4LKSKB/moc_ltable.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ltm.h",
+			"Mu",
+			"JEXN4LKSKB/moc_ltm.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lundump.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lundump.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lvm.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lvm.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lzio.h",
+			"Mu",
+			"JEXN4LKSKB/moc_lzio.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "D:/code/.std/opengl/build/my_demo/lua_autogen/include",
+	"INCLUDE_DIR_Debug" : "D:/code/.std/opengl/build/my_demo/lua_autogen/include_Debug",
+	"INCLUDE_DIR_MinSizeRel" : "D:/code/.std/opengl/build/my_demo/lua_autogen/include_MinSizeRel",
+	"INCLUDE_DIR_RelWithDebInfo" : "D:/code/.std/opengl/build/my_demo/lua_autogen/include_RelWithDebInfo",
+	"INCLUDE_DIR_Release" : "D:/code/.std/opengl/build/my_demo/lua_autogen/include_Release",
+	"MOC_COMPILATION_FILE" : "D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation.cpp",
+	"MOC_COMPILATION_FILE_Debug" : "D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_Debug.cpp",
+	"MOC_COMPILATION_FILE_MinSizeRel" : "D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_MinSizeRel.cpp",
+	"MOC_COMPILATION_FILE_RelWithDebInfo" : "D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_RelWithDebInfo.cpp",
+	"MOC_COMPILATION_FILE_Release" : "D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_Release.cpp",
+	"MOC_DEFINITIONS" : [],
+	"MOC_DEFINITIONS_Debug" : [ "WIN32", "_CRT_SECURE_NO_WARNINGS" ],
+	"MOC_DEFINITIONS_MinSizeRel" : [ "WIN32", "_CRT_SECURE_NO_WARNINGS" ],
+	"MOC_DEFINITIONS_RelWithDebInfo" : [ "WIN32", "_CRT_SECURE_NO_WARNINGS" ],
+	"MOC_DEFINITIONS_Release" : [ "WIN32", "_CRT_SECURE_NO_WARNINGS" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : [],
+	"MOC_INCLUDES_Debug" : [ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src" ],
+	"MOC_INCLUDES_MinSizeRel" : [ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src" ],
+	"MOC_INCLUDES_RelWithDebInfo" : [ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src" ],
+	"MOC_INCLUDES_Release" : [ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src" ],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : 
+	[
+		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Debug.cpp",
+		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_MinSizeRel.cpp",
+		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_RelWithDebInfo.cpp",
+		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Release.cpp"
+	],
+	"MULTI_CONFIG" : true,
+	"PARALLEL" : 6,
+	"PARSE_CACHE_FILE" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE_Debug" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/ParseCache_Debug.txt",
+	"PARSE_CACHE_FILE_MinSizeRel" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/ParseCache_MinSizeRel.txt",
+	"PARSE_CACHE_FILE_RelWithDebInfo" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/ParseCache_RelWithDebInfo.txt",
+	"PARSE_CACHE_FILE_Release" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/ParseCache_Release.txt",
+	"QT_MOC_EXECUTABLE" : "D:/QT/5.14.2/msvc2017_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 14,
+	"SETTINGS_FILE" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE_Debug" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/AutogenUsed_Debug.txt",
+	"SETTINGS_FILE_MinSizeRel" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/AutogenUsed_MinSizeRel.txt",
+	"SETTINGS_FILE_RelWithDebInfo" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/AutogenUsed_RelWithDebInfo.txt",
+	"SETTINGS_FILE_Release" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/lua_autogen.dir/AutogenUsed_Release.txt",
+	"SOURCES" : 
+	[
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lapi.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lauxlib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lbaselib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lcode.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lcorolib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lctype.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ldblib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ldebug.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ldo.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ldump.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lfunc.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lgc.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/linit.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/liolib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/llex.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lmathlib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lmem.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/loadlib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lobject.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lopcodes.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/loslib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lparser.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lstate.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lstring.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lstrlib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ltable.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ltablib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/ltm.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lundump.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lutf8lib.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lvm.c", "Mu", null ],
+		[ "D:/code/.std/opengl/thirdparty/lua-5.4.7/src/lzio.c", "Mu", null ]
+	],
+	"USE_BETTER_GRAPH" : false,
+	"VERBOSITY" : 0
+}

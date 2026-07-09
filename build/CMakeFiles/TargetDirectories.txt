@@ -24,6 +24,7 @@ D:/code/.std/opengl/build/lesson/CMakeFiles/lesson20_geometry_shader.dir
 D:/code/.std/opengl/build/lesson/CMakeFiles/lesson21_deferred_shading.dir
 D:/code/.std/opengl/build/lesson/CMakeFiles/engine_demo.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/flecs.dir
+D:/code/.std/opengl/build/my_demo/CMakeFiles/lua.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/my_demo.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/ALL_BUILD.dir
 D:/code/.std/opengl/build/sqlite3/CMakeFiles/sqlite3.dir

@@ -1,0 +1,209 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "main_course::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "lesson05_texture::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson01_hello_window::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson02_hello_triangle::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson03_shader_uniform::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson04_ebo_rectangle::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson06_transform::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson07_coordinate_3d::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson14_framebuffer::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson08_camera::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson11_lighting_maps::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson10_material::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson12_light_casters::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson20_geometry_shader::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "engine_demo::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson13_multiple_lights::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson09_basic_lighting::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson16_instancing::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson18_normal_mapping::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson15_cubemap::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson17_shadow_mapping::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson19_bloom::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson21_deferred_shading::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "flecs::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "lua::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "my_demo::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "mylog::@4aefedf33a03efb4affd"
+		},
+		{
+			"id" : "sqlite3::@67664483256e4dfea371"
+		}
+	],
+	"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"orderDependencies" : 
+	[
+		{
+			"id" : "main_course::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "lesson05_texture::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson01_hello_window::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson02_hello_triangle::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson03_shader_uniform::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson04_ebo_rectangle::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson06_transform::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson07_coordinate_3d::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson14_framebuffer::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson08_camera::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson11_lighting_maps::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson10_material::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson12_light_casters::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson20_geometry_shader::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "engine_demo::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson13_multiple_lights::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson09_basic_lighting::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson16_instancing::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson18_normal_mapping::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson15_cubemap::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson17_shadow_mapping::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson19_bloom::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "lesson21_deferred_shading::@c3d88aed0643cca56d38"
+		},
+		{
+			"id" : "flecs::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "lua::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "my_demo::@73cdf1463cb3315c58e9"
+		},
+		{
+			"id" : "mylog::@4aefedf33a03efb4affd"
+		},
+		{
+			"id" : "sqlite3::@67664483256e4dfea371"
+		}
+	],
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

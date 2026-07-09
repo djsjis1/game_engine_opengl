@@ -1,0 +1,152 @@
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-MKDIR.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -Dcfgdir=/Debug -P D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/tmp/lua_src-populate-mkdirs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-DOWNLOAD.RULE
+setlocal
+cd D:\code\.std\opengl\build\_deps
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/download-lua_src-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/verify-lua_src-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/extract-lua_src-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-UPDATE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-PATCH.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-CONFIGURE.RULE
+setlocal
+cd D:\code\.std\opengl\build\_deps\lua_src-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-BUILD.RULE
+setlocal
+cd D:\code\.std\opengl\build\_deps\lua_src-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-INSTALL.RULE
+setlocal
+cd D:\code\.std\opengl\build\_deps\lua_src-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\082DD4A8E654CF30D7FE67FC62BE44C4\LUA_SRC-POPULATE-TEST.RULE
+setlocal
+cd D:\code\.std\opengl\build\_deps\lua_src-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-test
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\F95253BAD5E1FBC76E3086C895B34671\LUA_SRC-POPULATE-COMPLETE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory D:/code/.std/opengl/build/_deps/lua_src-subbuild/CMakeFiles/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/CMakeFiles/Debug/lua_src-populate-complete
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch D:/code/.std/opengl/build/_deps/lua_src-subbuild/lua_src-populate-prefix/src/lua_src-populate-stamp/Debug/lua_src-populate-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKEFILES\CD354E4F8AF11FD49D2971FC814B9B52\LUA_SRC-POPULATE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\BUILD\_DEPS\LUA_SRC-SUBBUILD\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/code/.std/opengl/build/_deps/lua_src-subbuild -BD:/code/.std/opengl/build/_deps/lua_src-subbuild --check-stamp-file D:/code/.std/opengl/build/_deps/lua_src-subbuild/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

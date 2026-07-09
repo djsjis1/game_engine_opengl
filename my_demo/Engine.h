@@ -18,6 +18,7 @@
 #include "Components/RotateBehavior.h"
 #include "Components/CameraComponent.h"
 #include "Components/EditorVisible.h"
+#include "Components/ScriptComponent.h"
 
 class Engine
 {
@@ -50,12 +51,12 @@ class Engine
             .member<bool>("active", offsetof(CameraComponent, active))
             .member<bool>("isEditor", offsetof(CameraComponent, isEditor));
 
-        // EditorVisible 标签（单独调用，不插入 member 链）
         m_world.component<TransformComponent>().add<EditorVisible>();
         m_world.component<MeshComponent>().add<EditorVisible>();
         m_world.component<MaterialComponent>().add<EditorVisible>();
         m_world.component<RotateBehavior>().add<EditorVisible>();
         m_world.component<CameraComponent>().add<EditorVisible>();
+        m_world.component<ScriptComponent>().add<EditorVisible>();
     }
 
 public:
@@ -68,6 +69,7 @@ public:
         m_world.component<TagComponent>();
         m_world.component<RotateBehavior>();
         m_world.component<CameraComponent>();
+        m_world.component<ScriptComponent>();
         registerReflection();
     }
 
@@ -80,8 +82,8 @@ public:
     flecs::world &world() { return m_world; }
 
 private:
-    flecs::world m_world;// 世界对象
-    std::vector<System *> m_systems;// 系统列表
+    flecs::world m_world;
+    std::vector<System *> m_systems;
 };
 
 #endif

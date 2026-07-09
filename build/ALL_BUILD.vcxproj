@@ -266,6 +266,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{E69E5613-1A0E-3F11-A9DC-79821044B2FB}</Project>
       <Name>lesson21_deferred_shading</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\code\.std\opengl\build\my_demo\lua.vcxproj">
+      <Project>{AF0B6F39-FAF5-36CB-95BE-FB12EA894A50}</Project>
+      <Name>lua</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\code\.std\opengl\build\main_course.vcxproj">
       <Project>{E5EAAD86-5D0C-3C91-A4A2-E9FF500AE020}</Project>
       <Name>main_course</Name>

@@ -19,7 +19,7 @@ set(LOG_DIR        "${THIRDPARTY_DIR}/log")
 set(ENGINE_DIR     "${ROOT_DIR}/game_engine/engine")
 set(SHADER_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/Shaders/")
 set(QT_PATH        "D:/QT/5.14.2/msvc2017_64")
-
+     
 # ---- 检测构建模式 ----
 # CMAKE_SOURCE_DIR == CMAKE_CURRENT_SOURCE_DIR → 独立构建（顶层项目）
 # 否则 → 由父项目通过 add_subdirectory 引入
@@ -82,6 +82,30 @@ if(NOT TARGET mylog)
     add_subdirectory(${LOG_DIR} ${CMAKE_BINARY_DIR}/mylog)
 endif()
 
+# ---- Lua 5.4（脚本引擎，本地源码）----
+if(NOT TARGET lua)
+    set(LUA_DIR "${THIRDPARTY_DIR}/lua-5.4.7/src")
+    set(LUA_SRC
+        ${LUA_DIR}/lapi.c ${LUA_DIR}/lauxlib.c ${LUA_DIR}/lbaselib.c
+        ${LUA_DIR}/lcode.c ${LUA_DIR}/lcorolib.c ${LUA_DIR}/lctype.c
+        ${LUA_DIR}/ldblib.c ${LUA_DIR}/ldebug.c ${LUA_DIR}/ldo.c
+        ${LUA_DIR}/ldump.c ${LUA_DIR}/lfunc.c ${LUA_DIR}/lgc.c
+        ${LUA_DIR}/linit.c ${LUA_DIR}/liolib.c ${LUA_DIR}/llex.c
+        ${LUA_DIR}/lmathlib.c ${LUA_DIR}/lmem.c ${LUA_DIR}/loadlib.c
+        ${LUA_DIR}/lobject.c ${LUA_DIR}/lopcodes.c ${LUA_DIR}/loslib.c
+        ${LUA_DIR}/lparser.c ${LUA_DIR}/lstate.c ${LUA_DIR}/lstring.c
+        ${LUA_DIR}/lstrlib.c ${LUA_DIR}/ltable.c ${LUA_DIR}/ltablib.c
+        ${LUA_DIR}/ltm.c ${LUA_DIR}/lundump.c ${LUA_DIR}/lutf8lib.c
+        ${LUA_DIR}/lvm.c ${LUA_DIR}/lzio.c
+    )
+    add_library(lua STATIC ${LUA_SRC})
+    target_include_directories(lua PUBLIC ${LUA_DIR})
+    if(MSVC)
+        target_compile_definitions(lua PRIVATE _CRT_SECURE_NO_WARNINGS)
+        target_compile_options(lua PRIVATE /utf-8)
+    endif()
+endif()
+
 # ============================================================
 # my_demo 可执行文件
 # ============================================================
@@ -95,10 +119,15 @@ add_executable(my_demo WIN32
     Components/CameraComponent.h
     Components/EditorVisible.h
     System/CameraSystem.h
+    System/EditorCamera.h
+    System/Input.h
     editor/EditorPanel.h   editor/EditorPanel.cpp
     System/Shader.h
     System/MeshFactory.h
     System/RotationSystem.h
+    System/ScriptSystem.h
+    System/LuaApi.cpp
+    Components/ScriptComponent.h
     Engine.h
     System/System.h
 )
@@ -109,6 +138,7 @@ target_link_libraries(my_demo PRIVATE
     game_engine
     sqlite3
     mylog
+    lua
     Qt5::Widgets
     Qt5::WinMain
 )

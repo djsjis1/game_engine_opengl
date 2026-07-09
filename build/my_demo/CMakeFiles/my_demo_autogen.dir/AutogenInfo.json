@@ -55,6 +55,12 @@
 			null
 		],
 		[
+			"D:/code/.std/opengl/my_demo/Components/ScriptComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_ScriptComponent.cpp",
+			null
+		],
+		[
 			"D:/code/.std/opengl/my_demo/Components/TagComponent.h",
 			"Mu",
 			"XUR7DU7GFW/moc_TagComponent.cpp",
@@ -85,6 +91,18 @@
 			null
 		],
 		[
+			"D:/code/.std/opengl/my_demo/System/EditorCamera.h",
+			"Mu",
+			"D4NBAXR44T/moc_EditorCamera.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/System/Input.h",
+			"Mu",
+			"D4NBAXR44T/moc_Input.cpp",
+			null
+		],
+		[
 			"D:/code/.std/opengl/my_demo/System/MeshFactory.h",
 			"Mu",
 			"D4NBAXR44T/moc_MeshFactory.cpp",
@@ -94,6 +112,12 @@
 			"D:/code/.std/opengl/my_demo/System/RotationSystem.h",
 			"Mu",
 			"D4NBAXR44T/moc_RotationSystem.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/System/ScriptSystem.h",
+			"Mu",
+			"D4NBAXR44T/moc_ScriptSystem.cpp",
 			null
 		],
 		[
@@ -192,6 +216,7 @@
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
+		"D:/code/.std/opengl/thirdparty/lua-5.4.7/src",
 		"D:/QT/5.14.2/msvc2017_64/include",
 		"D:/QT/5.14.2/msvc2017_64/include/QtOpenGL",
 		"D:/QT/5.14.2/msvc2017_64/include/QtWidgets",
@@ -210,6 +235,7 @@
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
+		"D:/code/.std/opengl/thirdparty/lua-5.4.7/src",
 		"D:/QT/5.14.2/msvc2017_64/include",
 		"D:/QT/5.14.2/msvc2017_64/include/QtOpenGL",
 		"D:/QT/5.14.2/msvc2017_64/include/QtWidgets",
@@ -228,6 +254,7 @@
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
+		"D:/code/.std/opengl/thirdparty/lua-5.4.7/src",
 		"D:/QT/5.14.2/msvc2017_64/include",
 		"D:/QT/5.14.2/msvc2017_64/include/QtOpenGL",
 		"D:/QT/5.14.2/msvc2017_64/include/QtWidgets",
@@ -246,6 +273,7 @@
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
+		"D:/code/.std/opengl/thirdparty/lua-5.4.7/src",
 		"D:/QT/5.14.2/msvc2017_64/include",
 		"D:/QT/5.14.2/msvc2017_64/include/QtOpenGL",
 		"D:/QT/5.14.2/msvc2017_64/include/QtWidgets",
@@ -265,7 +293,11 @@
 		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Debug.cpp",
 		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_MinSizeRel.cpp",
 		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_RelWithDebInfo.cpp",
-		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Release.cpp"
+		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Release.cpp",
+		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_Debug.cpp",
+		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_MinSizeRel.cpp",
+		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_RelWithDebInfo.cpp",
+		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_Release.cpp"
 	],
 	"MULTI_CONFIG" : true,
 	"PARALLEL" : 6,
@@ -287,6 +319,7 @@
 	[
 		[ "D:/code/.std/opengl/my_demo/MainWindow.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/RenderWidget.cpp", "Mu", null ],
+		[ "D:/code/.std/opengl/my_demo/System/LuaApi.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/editor/EditorPanel.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/main.cpp", "Mu", null ]
 	],

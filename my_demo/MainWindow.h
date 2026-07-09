@@ -6,20 +6,19 @@
 #include <QElapsedTimer>
 #include <QKeyEvent>
 #include <QMouseEvent>
-
-#include "System/CameraInput.h"
+#include <QAction>
+#include "System/EditorCamera.h"
 
 class EditorPanel;
 class RenderWidget;
 class Engine;
-class CameraSystem;
+class ScriptSystem;
 
 class MainWindow : public QMainWindow
 {
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
-
     void startGameLoop();
 
 protected:
@@ -28,14 +27,17 @@ protected:
 private:
     void processKey(QKeyEvent *event, bool pressed);
     void processMouse(QMouseEvent *event);
+    void togglePlayMode();
 
     EditorPanel *m_editor = nullptr;
     RenderWidget *m_renderWidget = nullptr;
     Engine *m_engine = nullptr;
-    CameraSystem *m_cameraSys = nullptr;
+    ScriptSystem *m_scriptSystem = nullptr;
     QTimer *m_timer = nullptr;
     QElapsedTimer m_elapsed;
-    CameraInput m_input;
+    EditorCamera m_editorCam;
+    bool m_isPlaying = false;
+    QAction *m_playAction = nullptr;
 };
 
 #endif
