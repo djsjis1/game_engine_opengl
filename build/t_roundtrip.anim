@@ -1,0 +1,111 @@
+{
+  "clips": {
+    "c": {
+      "duration": 2.0,
+      "tracks": [
+        {
+          "comp": "TransformComponent",
+          "field": "position",
+          "keys": [
+            {
+              "t": 0.0,
+              "v": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "t": 2.0,
+              "v": [
+                10.0,
+                0.0,
+                0.0
+              ]
+            }
+          ]
+        },
+        {
+          "comp": "MaterialComponent",
+          "field": "diffuse",
+          "keys": [
+            {
+              "t": 0.0,
+              "v": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "t": 2.0,
+              "v": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            }
+          ]
+        },
+        {
+          "comp": "HealthComponent",
+          "field": "hp",
+          "keys": [
+            {
+              "t": 0.0,
+              "v": [
+                100.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "t": 2.0,
+              "v": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ]
+        },
+        {
+          "comp": "TransformComponent",
+          "field": "visible",
+          "keys": [
+            {
+              "t": 0.0,
+              "v": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "t": 1.899999976158142,
+              "v": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ]
+        },
+        {
+          "comp": "NoSuchComponent",
+          "field": "nope",
+          "keys": [
+            {
+              "t": 0.0,
+              "v": [
+                5.0,
+                5.0,
+                5.0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

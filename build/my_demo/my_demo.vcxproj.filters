@@ -10,13 +10,22 @@
     <ClCompile Include="D:\code\.std\opengl\my_demo\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\code\.std\opengl\my_demo\RenderWidget.cpp">
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Systems\PhysicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\code\.std\opengl\my_demo\editor\EditorPanel.cpp">
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Scripting\LuaApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\code\.std\opengl\my_demo\System\LuaApi.cpp">
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Scripting\ScriptEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Scripting\LuaAsync.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Render\RenderWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\code\.std\opengl\build\my_demo\my_demo_autogen\mocs_compilation_Release.cpp">
@@ -33,7 +42,34 @@
     <ClInclude Include="D:\code\.std\opengl\my_demo\MainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\RenderWidget.h">
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\EngineState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\EngineFSM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\JobSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\CommandStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Easing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Raycast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\MeshComponent.h">
@@ -48,40 +84,85 @@
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\CameraComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\TransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\MaterialComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\EditorVisible.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\CameraSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\EditorCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\editor\EditorPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\MeshFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\RotationSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\ScriptSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\ScriptComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\Engine.h">
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\SignalComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\System\System.h">
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\RigidbodyComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\BoxColliderComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\AnimationComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\HealthComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\SpriteComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Components\Reflect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Systems\CameraSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Systems\RotationSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Systems\TransformSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Systems\AnimationSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Systems\ScriptSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Systems\PhysicsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\LuaApi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\LuaAsync.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Render\RenderWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Render\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Render\MeshFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Render\ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Render\AnimationLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Render\SceneSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorCommands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

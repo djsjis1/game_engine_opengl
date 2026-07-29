@@ -98,7 +98,7 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_Debug;D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/QT/5.14.2/msvc2017_64/include" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtWidgets" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtGui" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtANGLE" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtCore" /external:I "D:/QT/5.14.2/msvc2017_64/./mkspecs/win32-msvc" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtOpenGL" /utf-8 /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -127,16 +127,33 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;SHADER_DIR=\"D:/code/.std/opengl/lesson/lesson05_texture/shaders/\";QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_OPENGL_LIB;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_Debug;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_Debug;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC for target lesson05_texture</Message>
+      <Command>setlocal
+cd D:\code\.std\opengl\build\lesson
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/code/.std/opengl/build/lesson/CMakeFiles/lesson05_texture_autogen.dir/AutogenInfo.json Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
     <Link>
       <AdditionalDependencies>D:\QT\5.14.2\msvc2017_64\lib\Qt5OpenGLd.lib;opengl32.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Widgetsd.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Guid.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Cored.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -157,7 +174,7 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_Release;D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/QT/5.14.2/msvc2017_64/include" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtWidgets" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtGui" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtANGLE" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtCore" /external:I "D:/QT/5.14.2/msvc2017_64/./mkspecs/win32-msvc" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtOpenGL" /utf-8 /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -187,16 +204,33 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SHADER_DIR=\"D:/code/.std/opengl/lesson/lesson05_texture/shaders/\";QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;QT_OPENGL_LIB;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_Release;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_Release;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC for target lesson05_texture</Message>
+      <Command>setlocal
+cd D:\code\.std\opengl\build\lesson
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/code/.std/opengl/build/lesson/CMakeFiles/lesson05_texture_autogen.dir/AutogenInfo.json Release
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
     <Link>
       <AdditionalDependencies>D:\QT\5.14.2\msvc2017_64\lib\Qt5OpenGL.lib;opengl32.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Widgets.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Gui.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Core.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -217,7 +251,7 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_MinSizeRel;D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/QT/5.14.2/msvc2017_64/include" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtWidgets" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtGui" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtANGLE" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtCore" /external:I "D:/QT/5.14.2/msvc2017_64/./mkspecs/win32-msvc" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtOpenGL" /utf-8 /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -247,16 +281,33 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SHADER_DIR=\"D:/code/.std/opengl/lesson/lesson05_texture/shaders/\";QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;QT_OPENGL_LIB;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_MinSizeRel;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_MinSizeRel;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC for target lesson05_texture</Message>
+      <Command>setlocal
+cd D:\code\.std\opengl\build\lesson
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/code/.std/opengl/build/lesson/CMakeFiles/lesson05_texture_autogen.dir/AutogenInfo.json MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
     <Link>
       <AdditionalDependencies>D:\QT\5.14.2\msvc2017_64\lib\Qt5OpenGL.lib;opengl32.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Widgets.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Gui.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Core.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -277,7 +328,7 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_RelWithDebInfo;D:\code\.std\opengl\lesson\lesson05_texture;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /external:I "D:/QT/5.14.2/msvc2017_64/include" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtWidgets" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtGui" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtANGLE" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtCore" /external:I "D:/QT/5.14.2/msvc2017_64/./mkspecs/win32-msvc" /external:I "D:/QT/5.14.2/msvc2017_64/include/QtOpenGL" /utf-8 /FS</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -306,16 +357,33 @@ QT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins</LocalDebuggerEnvir
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;SHADER_DIR=\"D:/code/.std/opengl/lesson/lesson05_texture/shaders/\";QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;QT_OPENGL_LIB;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_RelWithDebInfo;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\include_RelWithDebInfo;D:\code\.std\opengl\lesson\lesson05_texture;D:\QT\5.14.2\msvc2017_64\include;D:\QT\5.14.2\msvc2017_64\include\QtWidgets;D:\QT\5.14.2\msvc2017_64\include\QtGui;D:\QT\5.14.2\msvc2017_64\include\QtANGLE;D:\QT\5.14.2\msvc2017_64\include\QtCore;D:\QT\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;D:\QT\5.14.2\msvc2017_64\include\QtOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC for target lesson05_texture</Message>
+      <Command>setlocal
+cd D:\code\.std\opengl\build\lesson
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen D:/code/.std/opengl/build/lesson/CMakeFiles/lesson05_texture_autogen.dir/AutogenInfo.json RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
     <Link>
       <AdditionalDependencies>D:\QT\5.14.2\msvc2017_64\lib\Qt5OpenGL.lib;opengl32.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Widgets.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Gui.lib;D:\QT\5.14.2\msvc2017_64\lib\Qt5Core.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -392,10 +460,30 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\mocs_compilation_Debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="D:\code\.std\opengl\lesson\lesson05_texture\main.cpp" />
     <ClCompile Include="D:\code\.std\opengl\lesson\lesson05_texture\openglwidget.cpp" />
     <ClInclude Include="D:\code\.std\opengl\lesson\lesson05_texture\openglwidget.h" />
     <ClInclude Include="D:\code\.std\opengl\lesson\lesson05_texture\shader.h" />
+    <ClCompile Include="D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\mocs_compilation_Release.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\mocs_compilation_MinSizeRel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\build\lesson\lesson05_texture_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

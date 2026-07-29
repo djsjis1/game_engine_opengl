@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../../../../../my_demo/editor/EditorPanel.h"
+#include "../../../../../my_demo/Editor/EditorPanel.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_EditorPanel_t {
-    QByteArrayData data[10];
-    char stringdata0[141];
+    QByteArrayData data[15];
+    char stringdata0[213];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,15 +37,22 @@ QT_MOC_LITERAL(1, 12, 12), // "valueChanged"
 QT_MOC_LITERAL(2, 25, 0), // ""
 QT_MOC_LITERAL(3, 26, 11), // "onNewEntity"
 QT_MOC_LITERAL(4, 38, 14), // "onDeleteEntity"
-QT_MOC_LITERAL(5, 53, 14), // "onAddComponent"
-QT_MOC_LITERAL(6, 68, 17), // "onRemoveComponent"
-QT_MOC_LITERAL(7, 86, 16), // "onEntitySelected"
-QT_MOC_LITERAL(8, 103, 19), // "onComponentSelected"
-QT_MOC_LITERAL(9, 123, 17) // "onPropertyChanged"
+QT_MOC_LITERAL(5, 53, 11), // "onSetParent"
+QT_MOC_LITERAL(6, 65, 10), // "onUnparent"
+QT_MOC_LITERAL(7, 76, 15), // "onToggleVisible"
+QT_MOC_LITERAL(8, 92, 12), // "onSavePrefab"
+QT_MOC_LITERAL(9, 105, 19), // "onInstantiatePrefab"
+QT_MOC_LITERAL(10, 125, 14), // "onAddComponent"
+QT_MOC_LITERAL(11, 140, 17), // "onRemoveComponent"
+QT_MOC_LITERAL(12, 158, 16), // "onEntitySelected"
+QT_MOC_LITERAL(13, 175, 19), // "onComponentSelected"
+QT_MOC_LITERAL(14, 195, 17) // "onPropertyChanged"
 
     },
     "EditorPanel\0valueChanged\0\0onNewEntity\0"
-    "onDeleteEntity\0onAddComponent\0"
+    "onDeleteEntity\0onSetParent\0onUnparent\0"
+    "onToggleVisible\0onSavePrefab\0"
+    "onInstantiatePrefab\0onAddComponent\0"
     "onRemoveComponent\0onEntitySelected\0"
     "onComponentSelected\0onPropertyChanged"
 };
@@ -57,7 +64,7 @@ static const uint qt_meta_data_EditorPanel[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+      13,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -65,21 +72,31 @@ static const uint qt_meta_data_EditorPanel[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   54,    2, 0x06 /* Public */,
+       1,    0,   79,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,   55,    2, 0x08 /* Private */,
-       4,    0,   56,    2, 0x08 /* Private */,
-       5,    0,   57,    2, 0x08 /* Private */,
-       6,    0,   58,    2, 0x08 /* Private */,
-       7,    0,   59,    2, 0x08 /* Private */,
-       8,    0,   60,    2, 0x08 /* Private */,
-       9,    0,   61,    2, 0x08 /* Private */,
+       3,    0,   80,    2, 0x08 /* Private */,
+       4,    0,   81,    2, 0x08 /* Private */,
+       5,    0,   82,    2, 0x08 /* Private */,
+       6,    0,   83,    2, 0x08 /* Private */,
+       7,    0,   84,    2, 0x08 /* Private */,
+       8,    0,   85,    2, 0x08 /* Private */,
+       9,    0,   86,    2, 0x08 /* Private */,
+      10,    0,   87,    2, 0x08 /* Private */,
+      11,    0,   88,    2, 0x08 /* Private */,
+      12,    0,   89,    2, 0x08 /* Private */,
+      13,    0,   90,    2, 0x08 /* Private */,
+      14,    0,   91,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -100,11 +117,16 @@ void EditorPanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 0: _t->valueChanged(); break;
         case 1: _t->onNewEntity(); break;
         case 2: _t->onDeleteEntity(); break;
-        case 3: _t->onAddComponent(); break;
-        case 4: _t->onRemoveComponent(); break;
-        case 5: _t->onEntitySelected(); break;
-        case 6: _t->onComponentSelected(); break;
-        case 7: _t->onPropertyChanged(); break;
+        case 3: _t->onSetParent(); break;
+        case 4: _t->onUnparent(); break;
+        case 5: _t->onToggleVisible(); break;
+        case 6: _t->onSavePrefab(); break;
+        case 7: _t->onInstantiatePrefab(); break;
+        case 8: _t->onAddComponent(); break;
+        case 9: _t->onRemoveComponent(); break;
+        case 10: _t->onEntitySelected(); break;
+        case 11: _t->onComponentSelected(); break;
+        case 12: _t->onPropertyChanged(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -149,13 +171,13 @@ int EditorPanel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 13)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 13;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 13)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 8;
+        _id -= 13;
     }
     return _id;
 }

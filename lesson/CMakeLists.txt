@@ -126,23 +126,3 @@ add_lesson(lesson20_geometry_shader lesson20_geometry_shader)
 # -------------------------------------------------------
 add_lesson(lesson21_deferred_shading lesson21_deferred_shading)
 
-# ===========================================================
-# ECS 渲染引擎 Demo (engine/)
-# ===========================================================
-# 引擎是 header-only 的，只需编译 demo_main.cpp
-set(ENGINE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../engine")
-set(ENTT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/entt-3.16.0/single_include")
-add_executable(engine_demo "${ENGINE_DIR}/demo_main.cpp")
-target_link_libraries(engine_demo Qt5::Widgets Qt5::OpenGL OpenGL::GL)
-# engine/ 和 entt/ 作为 include 目录
-target_include_directories(engine_demo PRIVATE "${ENGINE_DIR}" "${ENTT_DIR}")
-# 向源码注入 SHADER_DIR 宏，指向 engine/shaders/
-target_compile_definitions(engine_demo PRIVATE SHADER_DIR="${ENGINE_DIR}/shaders/")
-if(MSVC)
-    target_compile_options(engine_demo PRIVATE /utf-8 /FS)
-endif()
-# 设置 VS 调试器工作目录和环境
-set_target_properties(engine_demo PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${ENGINE_DIR}"
-    VS_DEBUGGER_ENVIRONMENT "PATH=D:/QT/5.14.2/msvc2017_64/bin;%PATH%\nQT_QPA_PLATFORM_PLUGIN_PATH=D:/QT/5.14.2/msvc2017_64/plugins"
-)

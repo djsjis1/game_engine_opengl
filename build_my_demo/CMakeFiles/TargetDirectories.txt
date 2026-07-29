@@ -1,0 +1,9 @@
+D:/code/.std/opengl/build_my_demo/CMakeFiles/flecs.dir
+D:/code/.std/opengl/build_my_demo/CMakeFiles/lua.dir
+D:/code/.std/opengl/build_my_demo/CMakeFiles/my_demo.dir
+D:/code/.std/opengl/build_my_demo/CMakeFiles/ALL_BUILD.dir
+D:/code/.std/opengl/build_my_demo/CMakeFiles/ZERO_CHECK.dir
+D:/code/.std/opengl/build_my_demo/sqlite3/CMakeFiles/sqlite3.dir
+D:/code/.std/opengl/build_my_demo/mylog/CMakeFiles/mylog.dir
+D:/code/.std/opengl/build_my_demo/mylog/spdlog-build/CMakeFiles/spdlog.dir
+D:/code/.std/opengl/build_my_demo/mylog/spdlog-build/CMakeFiles/ALL_BUILD.dir

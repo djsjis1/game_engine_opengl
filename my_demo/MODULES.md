@@ -221,7 +221,11 @@ MainWindow 的 `eventFilter` 把键盘/鼠标事件翻译成这个结构体。�
 
 三个面板：实体列表 → 组件列表 → 属性编辑器。任何修改都通过 `valueChanged()` 信号触发视口刷新。
 
-**Mesh 组件的特殊处理**：创建 VAO 需要 OpenGL 上下文，所以通过 `m_meshCreator` 回调让 MainWindow 调用 `makeCurrent()` + `MeshFactory`。
+**Mesh 组件的资源管理**（延迟化架构，与 GL 上下文彻底解耦）：
+
+- `ResourceManager::acquireMesh` 是纯登记（任何时机可调），GPU 数据延迟到首帧渲染时创建
+- 释放由 Engine 的 `MeshComponent OnRemove Observer` 自动触发（destruct/级联删除/移除组件全覆盖），归零后挂入待删队列，`paintGL` 每帧开头 flush
+- 任何上层代码（命令/序列化/编辑器）都不需要 makeCurrent，也不需要"记得释放"
 
 ---
 
@@ -303,10 +307,11 @@ Qt 的 `#define emit` 破坏 Flecs 源码中的 emit 变量名。
 Flecs 4.1.6 的 `flecs::entity::get<T>()` 在 MSVC 有模板 bug。
 **解法**：用 C API 绕过——`ecs_get_id(w->c_ptr(), id, w->component<T>().raw_id())`
 
-### 坑 3：OpenGL 上下文
+### 坑 3：OpenGL 上下文（已被架构升级化解）
 
-GPU 操作必须在活跃上下文中。
-**解法**：`m_renderWidget->makeCurrent()` + 操作 + `doneCurrent()`
+GPU 操作必须在活跃上下文中。早期靠 `makeCurrent()` 包裹，到处都是样板代码。
+**现行解法**：ResourceManager 延迟化——acquire/release 纯记账，GPU 创建/销毁
+延迟到 paintGL（天然有上下文）。业务代码彻底不碰 GL。
 
 ### 坑 4：编辑器焦点抢键盘
 
@@ -322,6 +327,64 @@ CameraSystem 不更新 projMatrix（不知道窗口宽高比）。
 
 Qoder 的 Write 工具有时会追加到文件末尾。
 **解法**：发现文件有重复内容（两个 class 定义），删掉重写。
+
+### 坑 7：HFSM2 的 ContextT 默认拷贝 context（本项目最隐蔽的 bug）
+
+`ContextT<EngineContext>` 是值语义：FSM 构造时拷贝一份 context。
+Engine 构造 FSM 时回调还是空的，MainWindow 稍后注册的回调写进原件，
+FSM 内部那份拷贝永远是空——**状态切换正常但 enter/exit 什么都不做**。
+症状极具迷惑性：无崩溃无报错，只是 Play 模式的面板隐藏/快照/autoplay/
+系统启停全部静默失效（存在数周未被发现）。
+**解法**：`ContextT<EngineContext &>` 引用语义。
+**通用教训**：把含状态对象交给第三方库时，先搞清它存引用还是拷贝；
+排查手段是写最小隔离实验（本次靠三轮实验锁定：真实路径复现→
+官方示例排除库本身→值/引用对照实锤）。
+
+**孪生陷阱**：回调修好后析构路径也被激活——Play 状态直接关窗口时
+`delete engine → FSM 析构 → exit → onExitPlay` 回调里的控件指针
+可能已在销毁流程 → use-after-free。
+**解法**：~MainWindow 先 `context() = EngineContext{}` 解绑再 delete。
+**教训**：注册给库的回调捕获了 this，就必须在自己析构前解绑。
+
+### 坑 8：Flecs 反射 member 两参数注册会猜错数组长度
+
+`.member<T>("名字", 偏移)` 两参数形式下，flecs 用"到下个字段的偏移间隙"
+推断 count。遇到未注册的运行时字段（如 modelMatrix）推断错 →
+序列化出 `"y":[-2.25,3,0,45]` 这种错乱数据。
+**解法**：必须三参数 `.member<T>("名字", 1, 偏移)` 显式 count=1
+（现已由 reflect_gen 自动生成，不会再手写错）。
+
+### 坑 9：flecs::entity 的 bool 不检查实体是否活着
+
+`if (entity)` 只查 id!=0；对已删除实体调 `ecs_get_type/ecs_get_id` 直接崩溃。
+症状：删除实体后点列表残留项 → 崩。
+**解法**：任何外部持有的实体 ID 使用前先 `world.is_alive(id)`。
+
+### 坑 10：QScrollArea::setWidget 会自动 delete 旧 widget
+
+换新面板时旧面板被 Qt 默默销毁，复用的成员指针（如 m_emptyProp）变悬空
+→use-after-free 崩溃。另外：控件自己的信号回调里不能重建面板（会销毁
+自己），要 `QTimer::singleShot(0, ...)` 延迟到事件循环。
+**教训**：Qt 父子/所有权转移 API 要阅文档确认谁负责 delete。
+
+### 坑 11：静态单例不能持有 GL 资源对象
+
+ResourceManager（静态单例）曾直接持有 MeshFactory（继承 QOpenGLFunctions）：
+程序退出时静态析构晚于 GL 上下文销毁 → Qt 引用计数断言崩溃。
+**解法**：堆分配 + 在上下文还活着时（cleanupGL）显式销毁。
+**教训**：静态对象的析构时机不可控，不要让它们持有依赖外部生命周期的资源。
+
+### 坑 12：WIN32 GUI 程序没有控制台，printf 诊断全部不可见
+
+`add_executable(my_demo WIN32 ...)` → 无控制台，fprintf/print 看不见，
+"控制台没输出"不能作为诊断依据。
+**解法**：面向用户的诊断走 statusBar/UI；开发调试看 VS 调试输出或写日志文件。
+
+### 坑 13：离散时间里用 == 判断时刻必然失效
+
+动画事件帧若用 `time == 0.5` 触发：播放头每帧跳 16ms，几乎永远踩不中。
+**解法**：区间跨越检测 `(prev, cur]`，loop 回绕拆两段（见 AnimClip::collectEvents）。
+**教训**：一切"到达某时刻/某位置触发"的需求都要用跨越检测，不要用相等判断。
 
 ---
 
@@ -379,6 +442,12 @@ Qoder 的 Write 工具有时会追加到文件末尾。
 | System.h | 46 | 系统基类 |
 | RotationSystem.h | 38 | 旋转系统 |
 | CameraSystem.h | 49 | 摄像机系统 |
+| CameraInput.h | 33 | 输入状态 |
+| CameraComponent.h | 77 | 摄像机组件 |
+| RenderWidget.cpp | 143 | 渲染管线 |
+| EditorPanel.cpp | 456 | 编辑栏 |
+| MainWindow.cpp | 154 | 游戏循环+输入 |
+| CMakeLists.txt | 129 | 构建配置 |
 | CameraInput.h | 33 | 输入状态 |
 | CameraComponent.h | 77 | 摄像机组件 |
 | RenderWidget.cpp | 143 | 渲染管线 |

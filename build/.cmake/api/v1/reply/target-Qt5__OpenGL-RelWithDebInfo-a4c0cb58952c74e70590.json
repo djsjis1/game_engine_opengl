@@ -1,0 +1,156 @@
+{
+	"abstract" : true,
+	"artifacts" : 
+	[
+		{
+			"path" : "D:/QT/5.14.2/msvc2017_64/bin/Qt5OpenGL.dll"
+		},
+		{
+			"path" : "D:/QT/5.14.2/msvc2017_64/lib/Qt5OpenGL.lib"
+		}
+	],
+	"backtrace" : 5,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"find_package",
+			"set_property",
+			"_populate_OpenGL_target_properties"
+		],
+		"files" : 
+		[
+			"D:/QT/5.14.2/msvc2017_64/lib/cmake/Qt5OpenGL/Qt5OpenGLConfig.cmake",
+			"D:/QT/5.14.2/msvc2017_64/lib/cmake/Qt5/Qt5Config.cmake",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 2,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 28,
+				"parent" : 2
+			},
+			{
+				"file" : 0,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 150,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 185,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 45,
+				"parent" : 6
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 189,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 45,
+				"parent" : 8
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"id" : "Qt5::OpenGL::@6890427a1f51a3e7e1df",
+	"imported" : true,
+	"interfaceCompileDependencies" : 
+	[
+		{
+			"backtrace" : 7,
+			"id" : "Qt5::Widgets::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "Qt5::Gui::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "Qt5::Core::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "Qt5::Widgets::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "Qt5::Gui::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "Qt5::Core::@6890427a1f51a3e7e1df"
+		}
+	],
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 7,
+			"id" : "Qt5::Widgets::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "Qt5::Gui::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "Qt5::Core::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "Qt5::Widgets::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "Qt5::Gui::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "Qt5::Core::@6890427a1f51a3e7e1df"
+		}
+	],
+	"local" : true,
+	"name" : "Qt5::OpenGL",
+	"nameOnDisk" : "Qt5OpenGL.dll",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sources" : [],
+	"type" : "SHARED_LIBRARY"
+}

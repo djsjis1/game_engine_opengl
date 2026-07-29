@@ -1,0 +1,10 @@
+^D:\CODE\.STD\OPENGL\BUILD_MY_DEMO\CMAKEFILES\4DA7511D7EFE2B5762D12A06DBB8D1B5\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/code/.std/opengl/my_demo -BD:/code/.std/opengl/build_my_demo --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/code/.std/opengl/build_my_demo/MyDemo.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

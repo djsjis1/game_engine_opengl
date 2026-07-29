@@ -17,6 +17,7 @@
 #include <QScrollArea>
 #include <QMap>
 #include <functional>
+#include <memory>
 
 #ifndef Q_MOC_RUN
 #pragma push_macro("emit")
@@ -31,6 +32,7 @@
 #include "Components/TagComponent.h"
 #include "Components/EditorVisible.h"
 #include "Components/ScriptComponent.h"
+#include "Components/CameraComponent.h"
 
 // ============================================================
 // EditorPanel —— 反射驱动的编辑栏
@@ -53,7 +55,15 @@ public:
         m_world = world;
         rebuildComponentList();
     }
-    void setMeshCreator(std::function<void(flecs::entity)> fn) { m_meshCreator = fn; }
+    /// Ctrl+Z / Ctrl+Y 入口（MainWindow 快捷键调用）
+    void undoLast();
+    void redoLast();
+
+    /// 刷新实体列表（场景加载/启动时创建实体后需手动调用）
+    void refreshEntityList();
+
+    /// 按实体 ID 选中列表项（视口射线拾取后同步高亮；id=0 取消选择）
+    void selectEntityById(flecs::entity_t id);
 
 signals:
     void valueChanged();
@@ -61,6 +71,11 @@ signals:
 private slots:
     void onNewEntity();
     void onDeleteEntity();
+    void onSetParent();
+    void onUnparent();
+    void onToggleVisible();
+    void onSavePrefab();
+    void onInstantiatePrefab();
     void onAddComponent();
     void onRemoveComponent();
     void onEntitySelected();
@@ -72,10 +87,11 @@ private:
     void buildComponentSection(QVBoxLayout *layout);
     void buildPropertySection(QVBoxLayout *layout);
 
-    void refreshEntityList();
     void refreshComponentList();
     void refreshPropertyEditor();
     void rebuildComponentList();
+    void addEntityToList(flecs::entity e, int depth);
+    void runCommand(std::unique_ptr<class Command> cmd); // 包 GL 上下文执行命令
     void blockPropertySignals(bool block);
 
     void clearDynamicEditors();
@@ -85,7 +101,8 @@ private:
     QString selectedComponentName() const;
 
     flecs::world *m_world = nullptr;
-    std::function<void(flecs::entity)> m_meshCreator;
+    // 注：无任何外部回调依赖 —— ResourceManager 延迟化后，
+    // 资源操作无 GL 时序要求，编辑器与渲染上下文彻底解耦
 
     QListWidget *m_entityList = nullptr;
     QPushButton *m_newBtn = nullptr, *m_deleteBtn = nullptr;
@@ -93,7 +110,6 @@ private:
     QComboBox *m_addCompBox = nullptr;
     QPushButton *m_addCompBtn = nullptr, *m_removeCompBtn = nullptr;
     QScrollArea *m_propScroll = nullptr;
-    QWidget *m_emptyProp = nullptr;
 
     QMap<QString, flecs::entity_t> m_componentMap;
     QMap<QString, QWidget *> m_propWidgets;

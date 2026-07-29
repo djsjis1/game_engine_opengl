@@ -260,25 +260,95 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//Directory under which to collect all populated content
-FETCHCONTENT_BASE_DIR:PATH=D:/code/.std/opengl/build/_deps
+//Enable C++ exceptions
+CPP_EXCEPTIONS_ENABLED:BOOL=OFF
 
-//Disables all attempts to download or update content and assumes
-// source dirs already exist
-FETCHCONTENT_FULLY_DISCONNECTED:BOOL=OFF
+//Enable C++ RTTI
+CPP_RTTI_ENABLED:BOOL=OFF
 
-//Enables QUIET option for all content population
-FETCHCONTENT_QUIET:BOOL=ON
+//Cross compile to the CROSS_COMPILE_ARM_TARGET architecture
+CROSS_COMPILE_ARM:BOOL=OFF
 
-//When not empty, overrides where to find pre-populated content
-// for lua_src
-FETCHCONTENT_SOURCE_DIR_LUA_SRC:PATH=
+//The target to use
+CROSS_COMPILE_ARM_TARGET:STRING=aarch64-linux-gnu
 
-//Enables UPDATE_DISCONNECTED behavior for all content population
-FETCHCONTENT_UPDATES_DISCONNECTED:BOOL=OFF
+//Cross platform deterministic
+CROSS_PLATFORM_DETERMINISTIC:BOOL=OFF
 
-//Enables UPDATE_DISCONNECTED behavior just for population of lua_src
-FETCHCONTENT_UPDATES_DISCONNECTED_LUA_SRC:BOOL=OFF
+//Enable debug renderer in Debug and Release builds
+DEBUG_RENDERER_IN_DEBUG_AND_RELEASE:BOOL=ON
+
+//Enable debug renderer in all builds
+DEBUG_RENDERER_IN_DISTRIBUTION:BOOL=OFF
+
+//Disable support for a custom memory allocator
+DISABLE_CUSTOM_ALLOCATOR:BOOL=OFF
+
+//Use double precision math
+DOUBLE_PRECISION:BOOL=OFF
+
+//Path to a program.
+DXC_COMPILER:FILEPATH=DXC_COMPILER-NOTFOUND
+
+//Enable all warnings and warnings as errors
+ENABLE_ALL_WARNINGS:BOOL=ON
+
+//Generate installation target
+ENABLE_INSTALL:BOOL=ON
+
+//Compile the ObjectStream class and RTTI attribute information
+ENABLE_OBJECT_STREAM:BOOL=ON
+
+//Enable floating point exceptions
+FLOATING_POINT_EXCEPTIONS_ENABLED:BOOL=ON
+
+//Generate debug symbols
+GENERATE_DEBUG_SYMBOLS:BOOL=ON
+
+//Enable interprocedural optimizations
+INTERPROCEDURAL_OPTIMIZATION:BOOL=OFF
+
+//Compile Jolt as a shared library
+JPH_BUILD_SHARED_LIBS:BOOL=OFF
+
+//Which type of debug symbols to generate
+JPH_DEBUG_SYMBOL_FORMAT:STRING=
+
+//Shader Debug Symbols
+JPH_SHADER_DEBUG_SYMBOLS:BOOL=OFF
+
+//Shader Optimization
+JPH_SHADER_OPTIMIZATION:BOOL=ON
+
+//Track Simulation Stats
+JPH_TRACK_SIMULATION_STATS:BOOL=OFF
+
+//Use CPU Compute
+JPH_USE_CPU_COMPUTE:BOOL=ON
+
+//Use DirectX
+JPH_USE_DX12:BOOL=ON
+
+//Use external profiler when profiling is enabled
+JPH_USE_EXTERNAL_PROFILE:BOOL=OFF
+
+//Use Metal
+JPH_USE_MTL:BOOL=ON
+
+//Use Vulkan
+JPH_USE_VK:BOOL=ON
+
+//Enable 64 bit WASM
+JPH_USE_WASM64:BOOL=OFF
+
+//Value Computed by CMake
+JoltPhysics_BINARY_DIR:STATIC=D:/code/.std/opengl/build/jolt
+
+//Value Computed by CMake
+JoltPhysics_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+JoltPhysics_SOURCE_DIR:STATIC=D:/code/.std/opengl/thirdparty/JoltPhysics-master/Build
 
 //Build mylog example
 MYLOG_BUILD_EXAMPLE:BOOL=OFF
@@ -292,11 +362,17 @@ MyDemo_IS_TOP_LEVEL:STATIC=OFF
 //Value Computed by CMake
 MyDemo_SOURCE_DIR:STATIC=D:/code/.std/opengl/my_demo
 
+//Number of bits in ObjectLayer
+OBJECT_LAYER_BITS:BOOL=OFF
+
 //OpenGL library for win32
 OPENGL_gl_LIBRARY:STRING=opengl32
 
 //GLU library for win32
 OPENGL_glu_LIBRARY:STRING=glu32
+
+//Override CMAKE_CXX_FLAGS_DEBUG/RELEASE
+OVERRIDE_CXX_FLAGS:BOOL=OFF
 
 //Value Computed by CMake
 OpenGL_Qt_Course_BINARY_DIR:STATIC=D:/code/.std/opengl/build
@@ -306,6 +382,12 @@ OpenGL_Qt_Course_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 OpenGL_Qt_Course_SOURCE_DIR:STATIC=D:/code/.std/opengl
+
+//Enable the profiler in Debug and Release builds
+PROFILER_IN_DEBUG_AND_RELEASE:BOOL=ON
+
+//Enable the profiler in all builds
+PROFILER_IN_DISTRIBUTION:BOOL=OFF
 
 //The directory containing a CMake configuration file for Qt5Core.
 Qt5Core_DIR:PATH=D:/QT/5.14.2/msvc2017_64/lib/cmake/Qt5Core
@@ -425,6 +507,63 @@ SPDLOG_WCHAR_SUPPORT:BOOL=OFF
 
 //Build sqlite3 shell executable
 SQLITE_BUILD_SHELL:BOOL=OFF
+
+//Track Broadphase Stats
+TRACK_BROADPHASE_STATS:BOOL=OFF
+
+//Track Narrowphase Stats
+TRACK_NARROWPHASE_STATS:BOOL=OFF
+
+//Enable asserts
+USE_ASSERTS:BOOL=OFF
+
+//Enable AVX
+USE_AVX:BOOL=ON
+
+//Enable AVX2
+USE_AVX2:BOOL=ON
+
+//Enable AVX512
+USE_AVX512:BOOL=OFF
+
+//Enable F16C
+USE_F16C:BOOL=ON
+
+//Enable FMADD
+USE_FMADD:BOOL=ON
+
+//Enable LZCNT
+USE_LZCNT:BOOL=ON
+
+//Enable SSE4.1
+USE_SSE4_1:BOOL=ON
+
+//Enable SSE4.2
+USE_SSE4_2:BOOL=ON
+
+//Use the static MSVC runtime library
+USE_STATIC_MSVC_RUNTIME_LIBRARY:BOOL=ON
+
+//Use std::vector instead of own Array class
+USE_STD_VECTOR:BOOL=OFF
+
+//Enable TZCNT
+USE_TZCNT:BOOL=ON
+
+//Enable SIMD for WASM
+USE_WASM_SIMD:BOOL=OFF
+
+//Path to a program.
+Vulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=Vulkan_GLSLANG_VALIDATOR_EXECUTABLE-NOTFOUND
+
+//Path to a program.
+Vulkan_GLSLC_EXECUTABLE:FILEPATH=Vulkan_GLSLC_EXECUTABLE-NOTFOUND
+
+//Path to a file.
+Vulkan_INCLUDE_DIR:PATH=Vulkan_INCLUDE_DIR-NOTFOUND
+
+//Path to a library.
+Vulkan_LIBRARY:FILEPATH=Vulkan_LIBRARY-NOTFOUND
 
 //Dependencies for the target
 mylog_LIB_DEPENDS:STATIC=general;spdlog::spdlog;
@@ -563,7 +702,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -619,6 +758,14 @@ HAVE_FWRITE_UNLOCKED:INTERNAL=1
 OPENGL_gl_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OPENGL_glu_LIBRARY
 OPENGL_glu_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Vulkan_GLSLANG_VALIDATOR_EXECUTABLE
+Vulkan_GLSLANG_VALIDATOR_EXECUTABLE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Vulkan_GLSLC_EXECUTABLE
+Vulkan_GLSLC_EXECUTABLE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Vulkan_INCLUDE_DIR
+Vulkan_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Vulkan_LIBRARY
+Vulkan_LIBRARY-ADVANCED:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files/OpenGL_Qt_Course
 

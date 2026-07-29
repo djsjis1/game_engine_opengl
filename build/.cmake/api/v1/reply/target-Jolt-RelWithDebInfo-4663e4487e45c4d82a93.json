@@ -1,0 +1,4181 @@
+{
+	"archive" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/machine:x64",
+				"role" : "flags"
+			}
+		]
+	},
+	"artifacts" : 
+	[
+		{
+			"path" : "jolt/RelWithDebInfo/Jolt.lib"
+		}
+	],
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"include",
+			"install",
+			"target_link_libraries",
+			"add_compile_options",
+			"target_compile_options",
+			"target_compile_definitions",
+			"EMIT_X86_INSTRUCTION_SET_DEFINITIONS",
+			"target_include_directories",
+			"target_precompile_headers"
+		],
+		"files" : 
+		[
+			"thirdparty/JoltPhysics-master/Jolt/Jolt.cmake",
+			"thirdparty/JoltPhysics-master/Build/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 326,
+				"parent" : 0
+			},
+			{
+				"file" : 0,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 791,
+				"parent" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 335,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 891,
+				"parent" : 2
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 4,
+				"file" : 2,
+				"line" : 10,
+				"parent" : 6
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 974,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 934,
+				"parent" : 2
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 978,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 946,
+				"parent" : 10
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 943,
+				"parent" : 10
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 910,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 890,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 961,
+				"parent" : 10
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 964,
+				"parent" : 10
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 955,
+				"parent" : 10
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 949,
+				"parent" : 10
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 952,
+				"parent" : 10
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 958,
+				"parent" : 10
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 820,
+				"parent" : 2
+			},
+			{
+				"command" : 9,
+				"file" : 0,
+				"line" : 830,
+				"parent" : 2
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR  /Zc:__cplusplus /Gm- /MP /nologo /diagnostics:classic /FC /fp:except- /Zc:inline /Wall /WX /Zi /GR- /wd4577 /fp:fast /MD /Zi /O2 /Ob1 /DNDEBUG -std:c++17"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "/utf-8"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "/FS"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "/arch:AVX2"
+				},
+				{
+					"fragment" : "/YcD:/code/.std/opengl/build/jolt/CMakeFiles/Jolt.dir/RelWithDebInfo/cmake_pch.hxx /FpD:/code/.std/opengl/build/jolt/Jolt.dir/RelWithDebInfo//cmake_pch.pch /FID:/code/.std/opengl/build/jolt/CMakeFiles/Jolt.dir/RelWithDebInfo/cmake_pch.hxx"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 9,
+					"define" : "JPH_OBJECT_STREAM"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "JPH_USE_AVX"
+				},
+				{
+					"backtrace" : 12,
+					"define" : "JPH_USE_AVX2"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "JPH_USE_CPU_COMPUTE"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "JPH_USE_DX12"
+				},
+				{
+					"backtrace" : 15,
+					"define" : "JPH_USE_F16C"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "JPH_USE_FMADD"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "JPH_USE_LZCNT"
+				},
+				{
+					"backtrace" : 18,
+					"define" : "JPH_USE_SSE4_1"
+				},
+				{
+					"backtrace" : 19,
+					"define" : "JPH_USE_SSE4_2"
+				},
+				{
+					"backtrace" : 20,
+					"define" : "JPH_USE_TZCNT"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 0,
+					"path" : "D:/code/.std/opengl/build/jolt/Jolt_autogen/include_RelWithDebInfo"
+				},
+				{
+					"backtrace" : 21,
+					"path" : "D:/code/.std/opengl/thirdparty/JoltPhysics-master/Build/.."
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					3
+				],
+				"standard" : "17"
+			},
+			"precompileHeaders" : 
+			[
+				{
+					"backtrace" : 22,
+					"header" : "D:/code/.std/opengl/thirdparty/JoltPhysics-master/Build/..//Jolt/Jolt.h"
+				}
+			],
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR  /Zc:__cplusplus /Gm- /MP /nologo /diagnostics:classic /FC /fp:except- /Zc:inline /Wall /WX /Zi /GR- /wd4577 /fp:fast /MD /Zi /O2 /Ob1 /DNDEBUG -std:c++17"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "/utf-8"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "/FS"
+				},
+				{
+					"backtrace" : 8,
+					"fragment" : "/arch:AVX2"
+				},
+				{
+					"fragment" : "/YuD:/code/.std/opengl/build/jolt/CMakeFiles/Jolt.dir/RelWithDebInfo/cmake_pch.hxx /FpD:/code/.std/opengl/build/jolt/Jolt.dir/RelWithDebInfo//cmake_pch.pch /FID:/code/.std/opengl/build/jolt/CMakeFiles/Jolt.dir/RelWithDebInfo/cmake_pch.hxx"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 9,
+					"define" : "JPH_OBJECT_STREAM"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "JPH_USE_AVX"
+				},
+				{
+					"backtrace" : 12,
+					"define" : "JPH_USE_AVX2"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "JPH_USE_CPU_COMPUTE"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "JPH_USE_DX12"
+				},
+				{
+					"backtrace" : 15,
+					"define" : "JPH_USE_F16C"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "JPH_USE_FMADD"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "JPH_USE_LZCNT"
+				},
+				{
+					"backtrace" : 18,
+					"define" : "JPH_USE_SSE4_1"
+				},
+				{
+					"backtrace" : 19,
+					"define" : "JPH_USE_SSE4_2"
+				},
+				{
+					"backtrace" : 20,
+					"define" : "JPH_USE_TZCNT"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 0,
+					"path" : "D:/code/.std/opengl/build/jolt/Jolt_autogen/include_RelWithDebInfo"
+				},
+				{
+					"backtrace" : 21,
+					"path" : "D:/code/.std/opengl/thirdparty/JoltPhysics-master/Build/.."
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					3
+				],
+				"standard" : "17"
+			},
+			"precompileHeaders" : 
+			[
+				{
+					"backtrace" : 22,
+					"header" : "D:/code/.std/opengl/thirdparty/JoltPhysics-master/Build/..//Jolt/Jolt.h"
+				}
+			],
+			"sourceIndexes" : 
+			[
+				1,
+				2,
+				10,
+				19,
+				22,
+				33,
+				37,
+				39,
+				41,
+				43,
+				48,
+				55,
+				61,
+				64,
+				76,
+				79,
+				89,
+				91,
+				99,
+				102,
+				141,
+				151,
+				155,
+				160,
+				164,
+				169,
+				173,
+				175,
+				180,
+				182,
+				185,
+				191,
+				193,
+				198,
+				203,
+				205,
+				208,
+				211,
+				218,
+				222,
+				224,
+				227,
+				229,
+				231,
+				234,
+				236,
+				238,
+				243,
+				245,
+				248,
+				250,
+				252,
+				255,
+				257,
+				259,
+				261,
+				263,
+				266,
+				268,
+				270,
+				272,
+				274,
+				277,
+				279,
+				282,
+				284,
+				286,
+				290,
+				293,
+				295,
+				302,
+				305,
+				307,
+				309,
+				325,
+				327,
+				329,
+				331,
+				333,
+				335,
+				337,
+				339,
+				341,
+				343,
+				345,
+				347,
+				349,
+				351,
+				353,
+				355,
+				357,
+				359,
+				363,
+				365,
+				367,
+				369,
+				371,
+				373,
+				376,
+				380,
+				382,
+				384,
+				387,
+				390,
+				392,
+				394,
+				399,
+				401,
+				403,
+				405,
+				407,
+				409,
+				411,
+				413,
+				415,
+				417,
+				419,
+				421,
+				423,
+				425,
+				427,
+				429,
+				431,
+				433,
+				435,
+				437,
+				439,
+				441,
+				443,
+				445,
+				447,
+				450,
+				451,
+				453,
+				455,
+				457,
+				459,
+				461,
+				464,
+				465,
+				467,
+				469,
+				477,
+				479,
+				481,
+				483,
+				485,
+				487
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "Jolt::@aab4da6a6a7c0f108d52",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 4,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "C:/Program Files/OpenGL_Qt_Course"
+		}
+	},
+	"interfaceLinkLibraries" : 
+	[
+		{
+			"backtrace" : 5,
+			"fragment" : "dxgi.lib"
+		},
+		{
+			"backtrace" : 5,
+			"fragment" : "d3d12.lib"
+		},
+		{
+			"backtrace" : 5,
+			"fragment" : "d3dcompiler.lib"
+		},
+		{
+			"backtrace" : 5,
+			"fragment" : "dxguid.lib"
+		}
+	],
+	"linkLibraries" : 
+	[
+		{
+			"backtrace" : 5,
+			"fragment" : "dxgi.lib"
+		},
+		{
+			"backtrace" : 5,
+			"fragment" : "d3d12.lib"
+		},
+		{
+			"backtrace" : 5,
+			"fragment" : "d3dcompiler.lib"
+		},
+		{
+			"backtrace" : 5,
+			"fragment" : "dxguid.lib"
+		}
+	],
+	"name" : "Jolt",
+	"nameOnDisk" : "Jolt.lib",
+	"orderDependencies" : 
+	[
+		{
+			"backtrace" : 0,
+			"id" : "Qt5::moc::@6890427a1f51a3e7e1df"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "jolt",
+		"source" : "thirdparty/JoltPhysics-master/Build"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		},
+		{
+			"name" : "AABBTree",
+			"sourceIndexes" : 
+			[
+				2,
+				3,
+				4
+			]
+		},
+		{
+			"name" : "AABBTree\\NodeCodec",
+			"sourceIndexes" : 
+			[
+				5
+			]
+		},
+		{
+			"name" : "AABBTree\\TriangleCodec",
+			"sourceIndexes" : 
+			[
+				6
+			]
+		},
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				7,
+				112,
+				113,
+				425,
+				426,
+				480
+			]
+		},
+		{
+			"name" : "Compute",
+			"sourceIndexes" : 
+			[
+				8,
+				9,
+				10,
+				11,
+				12
+			]
+		},
+		{
+			"name" : "Core",
+			"sourceIndexes" : 
+			[
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				61,
+				62,
+				63,
+				64,
+				65,
+				66,
+				67,
+				68,
+				69,
+				70,
+				71,
+				72,
+				73,
+				74,
+				75,
+				76,
+				77,
+				78,
+				79,
+				80,
+				81,
+				82,
+				83,
+				84
+			]
+		},
+		{
+			"name" : "Geometry",
+			"sourceIndexes" : 
+			[
+				85,
+				86,
+				87,
+				88,
+				89,
+				90,
+				91,
+				92,
+				93,
+				94,
+				95,
+				96,
+				97,
+				98,
+				99,
+				100,
+				101,
+				102,
+				103,
+				104,
+				105,
+				106,
+				107,
+				108,
+				109,
+				110,
+				111
+			]
+		},
+		{
+			"name" : "Math",
+			"sourceIndexes" : 
+			[
+				114,
+				115,
+				116,
+				117,
+				118,
+				119,
+				120,
+				121,
+				122,
+				123,
+				124,
+				125,
+				126,
+				127,
+				128,
+				129,
+				130,
+				131,
+				132,
+				133,
+				134,
+				135,
+				136,
+				137,
+				138,
+				139,
+				140,
+				141,
+				142,
+				143,
+				144,
+				145,
+				146
+			]
+		},
+		{
+			"name" : "ObjectStream",
+			"sourceIndexes" : 
+			[
+				147,
+				148,
+				149,
+				150,
+				151,
+				152,
+				153,
+				449,
+				450,
+				451,
+				452,
+				453,
+				454,
+				455,
+				456,
+				457,
+				458,
+				459,
+				460,
+				461,
+				462,
+				463,
+				464
+			]
+		},
+		{
+			"name" : "Physics\\Body",
+			"sourceIndexes" : 
+			[
+				154,
+				155,
+				156,
+				157,
+				158,
+				159,
+				160,
+				161,
+				162,
+				163,
+				164,
+				165,
+				166,
+				167,
+				168,
+				169,
+				170,
+				171,
+				172,
+				173,
+				174,
+				175,
+				176,
+				177,
+				178,
+				179
+			]
+		},
+		{
+			"name" : "Physics\\Character",
+			"sourceIndexes" : 
+			[
+				180,
+				181,
+				182,
+				183,
+				184,
+				185,
+				186
+			]
+		},
+		{
+			"name" : "Physics\\Collision",
+			"sourceIndexes" : 
+			[
+				187,
+				188,
+				189,
+				190,
+				205,
+				206,
+				207,
+				208,
+				209,
+				210,
+				211,
+				212,
+				213,
+				214,
+				215,
+				216,
+				217,
+				218,
+				219,
+				220,
+				221,
+				222,
+				223,
+				224,
+				225,
+				226,
+				227,
+				228,
+				229,
+				230,
+				231,
+				232,
+				233,
+				234,
+				235,
+				236,
+				237,
+				238,
+				239,
+				240,
+				241,
+				242,
+				243,
+				244,
+				245,
+				246,
+				247,
+				297,
+				298,
+				299,
+				300,
+				301,
+				302,
+				303
+			]
+		},
+		{
+			"name" : "Physics\\Collision\\BroadPhase",
+			"sourceIndexes" : 
+			[
+				191,
+				192,
+				193,
+				194,
+				195,
+				196,
+				197,
+				198,
+				199,
+				200,
+				201,
+				202,
+				203,
+				204
+			]
+		},
+		{
+			"name" : "Physics\\Collision\\Shape",
+			"sourceIndexes" : 
+			[
+				248,
+				249,
+				250,
+				251,
+				252,
+				253,
+				254,
+				255,
+				256,
+				257,
+				258,
+				259,
+				260,
+				261,
+				262,
+				263,
+				264,
+				265,
+				266,
+				267,
+				268,
+				269,
+				270,
+				271,
+				272,
+				273,
+				274,
+				275,
+				276,
+				277,
+				278,
+				279,
+				280,
+				281,
+				282,
+				283,
+				284,
+				285,
+				286,
+				287,
+				288,
+				289,
+				290,
+				291,
+				292,
+				293,
+				294,
+				295,
+				296
+			]
+		},
+		{
+			"name" : "Physics\\Constraints",
+			"sourceIndexes" : 
+			[
+				304,
+				305,
+				306,
+				307,
+				308,
+				309,
+				310,
+				325,
+				326,
+				327,
+				328,
+				329,
+				330,
+				331,
+				332,
+				333,
+				334,
+				335,
+				336,
+				337,
+				338,
+				339,
+				340,
+				341,
+				342,
+				343,
+				344,
+				345,
+				346,
+				347,
+				348,
+				349,
+				350,
+				351,
+				352,
+				353,
+				354,
+				355,
+				356,
+				357,
+				358
+			]
+		},
+		{
+			"name" : "Physics\\Constraints\\ConstraintPart",
+			"sourceIndexes" : 
+			[
+				311,
+				312,
+				313,
+				314,
+				315,
+				316,
+				317,
+				318,
+				319,
+				320,
+				321,
+				322,
+				323,
+				324
+			]
+		},
+		{
+			"name" : "Physics",
+			"sourceIndexes" : 
+			[
+				359,
+				360,
+				361,
+				362,
+				371,
+				372,
+				373,
+				374,
+				375,
+				376,
+				377,
+				378,
+				379,
+				380,
+				381,
+				382,
+				383,
+				398,
+				399,
+				400
+			]
+		},
+		{
+			"name" : "Physics\\Hair",
+			"sourceIndexes" : 
+			[
+				363,
+				364,
+				365,
+				366,
+				367,
+				368,
+				369,
+				370
+			]
+		},
+		{
+			"name" : "Physics\\Ragdoll",
+			"sourceIndexes" : 
+			[
+				384,
+				385
+			]
+		},
+		{
+			"name" : "Physics\\SoftBody",
+			"sourceIndexes" : 
+			[
+				386,
+				387,
+				388,
+				389,
+				390,
+				391,
+				392,
+				393,
+				394,
+				395,
+				396,
+				397
+			]
+		},
+		{
+			"name" : "Physics\\Vehicle",
+			"sourceIndexes" : 
+			[
+				401,
+				402,
+				403,
+				404,
+				405,
+				406,
+				407,
+				408,
+				409,
+				410,
+				411,
+				412,
+				413,
+				414,
+				415,
+				416,
+				417,
+				418,
+				419,
+				420,
+				421,
+				422,
+				423,
+				424
+			]
+		},
+		{
+			"name" : "Renderer",
+			"sourceIndexes" : 
+			[
+				427,
+				428,
+				429,
+				430,
+				431,
+				432,
+				433,
+				434
+			]
+		},
+		{
+			"name" : "Skeleton",
+			"sourceIndexes" : 
+			[
+				435,
+				436,
+				437,
+				438,
+				439,
+				440,
+				441,
+				442
+			]
+		},
+		{
+			"name" : "TriangleSplitter",
+			"sourceIndexes" : 
+			[
+				443,
+				444,
+				445,
+				446,
+				447,
+				448
+			]
+		},
+		{
+			"name" : "Compute\\CPU",
+			"sourceIndexes" : 
+			[
+				465,
+				466,
+				467,
+				468,
+				469,
+				470,
+				471,
+				472,
+				473,
+				474,
+				475,
+				476
+			]
+		},
+		{
+			"name" : "Shaders",
+			"sourceIndexes" : 
+			[
+				477,
+				478,
+				479,
+				491,
+				492,
+				493,
+				494,
+				495,
+				496,
+				497,
+				498,
+				499,
+				500,
+				501,
+				502,
+				503,
+				504,
+				505,
+				506,
+				507,
+				508,
+				509,
+				510,
+				511,
+				512,
+				513,
+				514,
+				515,
+				516,
+				517,
+				518,
+				519,
+				520,
+				521,
+				522,
+				523,
+				524,
+				525,
+				526,
+				527,
+				528,
+				529,
+				530,
+				531,
+				532,
+				533,
+				534,
+				535,
+				536
+			]
+		},
+		{
+			"name" : "Compute\\DX12",
+			"sourceIndexes" : 
+			[
+				481,
+				482,
+				483,
+				484,
+				485,
+				486,
+				487,
+				488,
+				489,
+				490
+			]
+		},
+		{
+			"name" : "Precompile Header File",
+			"sourceIndexes" : 
+			[
+				537,
+				538,
+				539,
+				540
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 0,
+			"path" : "build/jolt/CMakeFiles/Jolt.dir/cmake_pch.cxx",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 1,
+			"isGenerated" : true,
+			"path" : "build/jolt/Jolt_autogen/mocs_compilation_RelWithDebInfo.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/AABBTree/AABBTreeBuilder.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/AABBTree/AABBTreeBuilder.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/AABBTree/AABBTreeToBuffer.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/AABBTree/NodeCodec/NodeCodecQuadTreeHalfFloat.h",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/AABBTree/TriangleCodec/TriangleCodecIndexed8BitPackSOA4Flags.h",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ConfigurationString.h",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/ComputeBuffer.h",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/ComputeQueue.h",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/ComputeSystem.cpp",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/ComputeSystem.h",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/ComputeShader.h",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/ARMNeon.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/RISCVVector.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Array.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Atomics.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/BinaryHeap.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/ByteBuffer.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Color.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Color.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Core.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Factory.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Factory.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/FixedSizeFreeList.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/FixedSizeFreeList.inl",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/FPControlWord.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/FPException.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/FPFlushDenormals.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/HashCombine.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/HashTable.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/IncludeWindows.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/InsertionSort.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/IssueReporting.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/IssueReporting.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystem.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystem.inl",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystemSingleThreaded.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystemSingleThreaded.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystemThreadPool.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystemThreadPool.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystemWithBarrier.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/JobSystemWithBarrier.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/LinearCurve.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/LinearCurve.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/LockFreeHashMap.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/LockFreeHashMap.inl",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/LSANSuppressions.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Memory.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Memory.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Mutex.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/MutexArray.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/NonCopyable.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/ObjectToIDMap.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Prefetch.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Profiler.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Profiler.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Profiler.inl",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/QuickSort.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Reference.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Result.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/RTTI.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/RTTI.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/ScopeExit.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Semaphore.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/Semaphore.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StaticArray.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/STLAlignedAllocator.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/STLAllocator.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/STLLocalAllocator.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/STLTempAllocator.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StreamIn.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StreamOut.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StreamUtils.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StreamWrapper.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StridedPtr.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StringTools.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/StringTools.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/TempAllocator.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/TickCounter.cpp",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/TickCounter.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/UnorderedMap.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/UnorderedMapFwd.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/UnorderedSet.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Core/UnorderedSetFwd.h",
+			"sourceGroupIndex" : 6
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/AABox.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/AABox4.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/ClipPoly.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/ClosestPoint.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/ConvexHullBuilder.cpp",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/ConvexHullBuilder.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/ConvexHullBuilder2D.cpp",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/ConvexHullBuilder2D.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/ConvexSupport.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/Ellipse.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/EPAConvexHullBuilder.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/EPAPenetrationDepth.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/GJKClosestPoint.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/IndexedTriangle.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/Indexify.cpp",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/Indexify.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/MortonCode.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/OrientedBox.cpp",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/OrientedBox.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/Plane.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/RayAABox.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/RayCapsule.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/RayCylinder.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/RaySphere.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/RayTriangle.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/Sphere.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Geometry/Triangle.h",
+			"sourceGroupIndex" : 7
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Jolt.cmake",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Jolt.h",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/BVec16.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/BVec16.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/DMat44.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/DMat44.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Double3.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/DVec3.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/DVec3.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/DynMatrix.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/EigenValueSymmetric.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/FindRoot.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Float2.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Float3.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Float4.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/GaussianElimination.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/HalfFloat.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Mat44.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Mat44.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Math.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/MathTypes.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Matrix.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Quat.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Quat.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Real.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Swizzle.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Trigonometry.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/UVec4.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/UVec4.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Vec3.cpp",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Vec3.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Vec3.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Vec4.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Vec4.inl",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Math/Vector.h",
+			"sourceGroupIndex" : 8
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStream.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/SerializableAttribute.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/SerializableAttributeEnum.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/SerializableAttributeTyped.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/SerializableObject.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/SerializableObject.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/TypeDeclarations.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/AllowedDOFs.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/Body.cpp",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/Body.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/Body.inl",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyAccess.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyActivationListener.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyCreationSettings.cpp",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyCreationSettings.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyFilter.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyID.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyInterface.cpp",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyInterface.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyLock.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyLockInterface.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyLockMulti.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyManager.cpp",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyManager.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyPair.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/BodyType.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/MassProperties.cpp",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/MassProperties.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/MotionProperties.cpp",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/MotionProperties.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/MotionProperties.inl",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/MotionQuality.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Body/MotionType.h",
+			"sourceGroupIndex" : 10
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Character/Character.cpp",
+			"sourceGroupIndex" : 11
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Character/Character.h",
+			"sourceGroupIndex" : 11
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Character/CharacterBase.cpp",
+			"sourceGroupIndex" : 11
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Character/CharacterBase.h",
+			"sourceGroupIndex" : 11
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Character/CharacterID.h",
+			"sourceGroupIndex" : 11
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Character/CharacterVirtual.cpp",
+			"sourceGroupIndex" : 11
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Character/CharacterVirtual.h",
+			"sourceGroupIndex" : 11
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/AABoxCast.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ActiveEdgeMode.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ActiveEdges.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BackFaceMode.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhase.cpp",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhase.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseBruteForce.cpp",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseBruteForce.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseLayerInterfaceMask.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseLayerInterfaceTable.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseQuadTree.cpp",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseQuadTree.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/BroadPhaseQuery.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/ObjectVsBroadPhaseLayerFilterMask.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/ObjectVsBroadPhaseLayerFilterTable.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/QuadTree.cpp",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/BroadPhase/QuadTree.h",
+			"sourceGroupIndex" : 13
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CastConvexVsTriangles.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CastConvexVsTriangles.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CastResult.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CastSphereVsTriangles.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CastSphereVsTriangles.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollectFacesMode.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideConvexVsTriangles.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideConvexVsTriangles.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollidePointResult.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideShape.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideShapeVsShapePerLeaf.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideSoftBodyVertexIterator.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideSoftBodyVerticesVsTriangles.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideSphereVsTriangles.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollideSphereVsTriangles.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollisionCollector.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollisionCollectorImpl.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollisionDispatch.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollisionDispatch.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollisionGroup.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/CollisionGroup.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ContactListener.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/EstimateCollisionResponse.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/EstimateCollisionResponse.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/GroupFilter.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/GroupFilter.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/GroupFilterTable.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/GroupFilterTable.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/InternalEdgeRemovingCollector.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/NarrowPhaseQuery.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/NarrowPhaseQuery.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/NarrowPhaseStats.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/NarrowPhaseStats.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ObjectLayer.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ObjectLayerPairFilterMask.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ObjectLayerPairFilterTable.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/PhysicsMaterial.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/PhysicsMaterial.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/PhysicsMaterialSimple.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/PhysicsMaterialSimple.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/RayCast.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/BoxShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/BoxShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/CapsuleShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/CapsuleShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/CompoundShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/CompoundShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/CompoundShapeVisitors.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/ConvexHullShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/ConvexHullShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/ConvexShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/ConvexShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/CylinderShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/CylinderShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/DecoratedShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/DecoratedShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/EmptyShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/EmptyShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/GetTrianglesContext.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/HeightFieldShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/HeightFieldShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/MeshShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/MeshShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/MutableCompoundShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/MutableCompoundShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/OffsetCenterOfMassShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/OffsetCenterOfMassShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/PlaneShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/PlaneShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/PolyhedronSubmergedVolumeCalculator.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/RotatedTranslatedShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/ScaledShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/ScaledShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/ScaleHelpers.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/Shape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/Shape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/SphereShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/SphereShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/StaticCompoundShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/StaticCompoundShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/SubShapeID.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/SubShapeIDPair.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/TaperedCapsuleShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/TaperedCapsuleShape.gliffy",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/TaperedCapsuleShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/TaperedCylinderShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/TaperedCylinderShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/TriangleShape.cpp",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/Shape/TriangleShape.h",
+			"sourceGroupIndex" : 14
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ShapeCast.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/ShapeFilter.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/SimShapeFilter.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/SimShapeFilterWrapper.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/SortReverseAndStore.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/TransformedShape.cpp",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Collision/TransformedShape.h",
+			"sourceGroupIndex" : 12
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/CalculateSolverSteps.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConeConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConeConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/Constraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/Constraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintManager.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintManager.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/AngleConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/AngularFrictionConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/AxisConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/ContactConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/DualAxisConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/GearConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/HingeRotationConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/IndependentAxisConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/PointConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/RackAndPinionConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/RotationEulerConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/RotationQuatConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/SpringPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ConstraintPart/SwingTwistConstraintPart.h",
+			"sourceGroupIndex" : 16
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ContactConstraintManager.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/ContactConstraintManager.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/DistanceConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/DistanceConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/FixedConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/FixedConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/GearConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/GearConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/HingeConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/HingeConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/MotorSettings.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/MotorSettings.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PathConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PathConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PathConstraintPath.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PathConstraintPath.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PathConstraintPathHermite.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PathConstraintPathHermite.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PointConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PointConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PulleyConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/PulleyConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/RackAndPinionConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/RackAndPinionConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SixDOFConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SixDOFConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SliderConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SliderConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SpringSettings.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SpringSettings.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SwingTwistConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/SwingTwistConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/TwoBodyConstraint.cpp",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Constraints/TwoBodyConstraint.h",
+			"sourceGroupIndex" : 15
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/DeterminismLog.cpp",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/DeterminismLog.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/EActivation.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/EPhysicsUpdateError.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/Hair.cpp",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/Hair.h",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/HairSettings.cpp",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/HairSettings.h",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/HairShaders.cpp",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/HairShaders.h",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/RegisterHair.cpp",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Hair/RegisterHair.h",
+			"sourceGroupIndex" : 18
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/IslandBuilder.cpp",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/IslandBuilder.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/LargeIslandSplitter.cpp",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/LargeIslandSplitter.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsLock.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsScene.cpp",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsScene.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsSettings.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsStepListener.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsSystem.cpp",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsSystem.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsUpdateContext.cpp",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/PhysicsUpdateContext.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Ragdoll/Ragdoll.cpp",
+			"sourceGroupIndex" : 19
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Ragdoll/Ragdoll.h",
+			"sourceGroupIndex" : 19
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyContactListener.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyCreationSettings.cpp",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyCreationSettings.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyManifold.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyMotionProperties.cpp",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyMotionProperties.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyShape.cpp",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyShape.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodySharedSettings.cpp",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodySharedSettings.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyUpdateContext.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/SoftBody/SoftBodyVertex.h",
+			"sourceGroupIndex" : 20
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/StateRecorder.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/StateRecorderImpl.cpp",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/StateRecorderImpl.h",
+			"sourceGroupIndex" : 17
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/MotorcycleController.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/MotorcycleController.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/TrackedVehicleController.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/TrackedVehicleController.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleAntiRollBar.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleAntiRollBar.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleCollisionTester.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleCollisionTester.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleConstraint.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleConstraint.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleController.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleController.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleDifferential.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleDifferential.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleEngine.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleEngine.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleTrack.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleTrack.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleTransmission.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/VehicleTransmission.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/Wheel.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/Wheel.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/WheeledVehicleController.cpp",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Physics/Vehicle/WheeledVehicleController.h",
+			"sourceGroupIndex" : 21
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/RegisterTypes.cpp",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/RegisterTypes.h",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRenderer.cpp",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRenderer.h",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRendererPlayback.cpp",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRendererPlayback.h",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRendererRecorder.cpp",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRendererRecorder.h",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRendererSimple.cpp",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Renderer/DebugRendererSimple.h",
+			"sourceGroupIndex" : 22
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/SkeletalAnimation.cpp",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/SkeletalAnimation.h",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/Skeleton.cpp",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/Skeleton.h",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/SkeletonMapper.cpp",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/SkeletonMapper.h",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/SkeletonPose.cpp",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Skeleton/SkeletonPose.h",
+			"sourceGroupIndex" : 23
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/TriangleSplitter/TriangleSplitter.cpp",
+			"sourceGroupIndex" : 24
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/TriangleSplitter/TriangleSplitter.h",
+			"sourceGroupIndex" : 24
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/TriangleSplitter/TriangleSplitterBinning.cpp",
+			"sourceGroupIndex" : 24
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/TriangleSplitter/TriangleSplitterBinning.h",
+			"sourceGroupIndex" : 24
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/TriangleSplitter/TriangleSplitterMean.cpp",
+			"sourceGroupIndex" : 24
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/TriangleSplitter/TriangleSplitterMean.h",
+			"sourceGroupIndex" : 24
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/GetPrimitiveTypeOfType.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStream.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamBinaryIn.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamBinaryIn.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamBinaryOut.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamBinaryOut.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamIn.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamIn.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamOut.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamOut.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamTextIn.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamTextIn.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamTextOut.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamTextOut.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/ObjectStreamTypes.h",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/ObjectStream/TypeDeclarations.cpp",
+			"sourceGroupIndex" : 9
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ComputeQueueCPU.cpp",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ComputeQueueCPU.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ComputeBufferCPU.cpp",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ComputeBufferCPU.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ComputeSystemCPU.cpp",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ComputeSystemCPU.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ComputeShaderCPU.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/HLSLToCPP.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/ShaderWrapper.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/WrapShaderBegin.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/WrapShaderBindings.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/CPU/WrapShaderEnd.h",
+			"sourceGroupIndex" : 25
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairWrapper.cpp",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairWrapper.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/TestComputeWrapper.cpp",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Jolt.natvis",
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeQueueDX12.cpp",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeQueueDX12.h",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeBufferDX12.cpp",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeBufferDX12.h",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeSystemDX12.cpp",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeSystemDX12.h",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeSystemDX12Impl.cpp",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeSystemDX12Impl.h",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/ComputeShaderDX12.h",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Compute/DX12/IncludeDX12.h",
+			"sourceGroupIndex" : 27
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairApplyDeltaTransform.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairApplyGlobalPose.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairCalculateCollisionPlanes.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairCalculateRenderPositions.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairGridAccumulate.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairGridClear.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairGridNormalize.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairIntegrate.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairSkinRoots.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairSkinVertices.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairTeleport.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateRoots.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateStrands.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateVelocity.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateVelocityIntegrate.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/TestCompute.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/TestCompute2.hlsl",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairApplyDeltaTransformBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairApplyGlobalPose.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairApplyGlobalPoseBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairCalculateCollisionPlanesBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairCalculateRenderPositions.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairCalculateRenderPositionsBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairCommon.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairGridAccumulateBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairGridClearBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairGridNormalizeBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairIntegrate.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairIntegrateBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairSkinRootsBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairSkinVerticesBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairStructs.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairTeleportBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateRootsBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateStrandsBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateVelocity.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateVelocityBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/HairUpdateVelocityIntegrateBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/ShaderCore.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/ShaderMat44.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/ShaderMath.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/ShaderPlane.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/ShaderQuat.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/ShaderVec3.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/TestComputeBindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 3,
+			"path" : "thirdparty/JoltPhysics-master/Jolt/Shaders/TestCompute2Bindings.h",
+			"sourceGroupIndex" : 26
+		},
+		{
+			"backtrace" : 0,
+			"path" : "build/jolt/CMakeFiles/Jolt.dir/Debug/cmake_pch.hxx",
+			"sourceGroupIndex" : 28
+		},
+		{
+			"backtrace" : 0,
+			"path" : "build/jolt/CMakeFiles/Jolt.dir/Release/cmake_pch.hxx",
+			"sourceGroupIndex" : 28
+		},
+		{
+			"backtrace" : 0,
+			"path" : "build/jolt/CMakeFiles/Jolt.dir/MinSizeRel/cmake_pch.hxx",
+			"sourceGroupIndex" : 28
+		},
+		{
+			"backtrace" : 0,
+			"path" : "build/jolt/CMakeFiles/Jolt.dir/RelWithDebInfo/cmake_pch.hxx",
+			"sourceGroupIndex" : 28
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

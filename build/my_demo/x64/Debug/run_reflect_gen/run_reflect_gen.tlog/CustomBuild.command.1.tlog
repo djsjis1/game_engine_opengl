@@ -1,0 +1,20 @@
+^D:\CODE\.STD\OPENGL\BUILD\CMAKEFILES\0F418D594686BC3CB05DE0019BCB7BCD\RUN_REFLECT_GEN.RULE
+setlocal
+Debug\reflect_gen.exe D:/code/.std/opengl/my_demo/Components D:/code/.std/opengl/my_demo/Generated/ComponentReflection.inl
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\CODE\.STD\OPENGL\MY_DEMO\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/code/.std/opengl -BD:/code/.std/opengl/build --check-stamp-file D:/code/.std/opengl/build/my_demo/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

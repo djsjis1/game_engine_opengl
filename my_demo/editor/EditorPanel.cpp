@@ -32,19 +32,30 @@
 // ============================================================
 
 #include "EditorPanel.h"
+#include "EditorCommands.h" // 命令模式：新建/删除/设父/显隐 → 可撤销
+#include "Components/AnimationComponent.h"
+#include "Components/SpriteComponent.h"
+#include "Render/AnimationLibrary.h" // 动画编辑：打关键帧/新建clip/保存
 #include <cstring>
 #include <vector>
+#include <QFile>
+#include <QRegularExpression>
+#include <QInputDialog>
+#include <QFileDialog>
+#include <QColor>
+#include <QSlider>
+#include <QTimer>
 
 // ============================================================
 // 构造函数：搭建三个面板的骨架
 // ============================================================
 EditorPanel::EditorPanel(QWidget *parent) : QWidget(parent)
 {
-    setFixedWidth(360);                       // 固定 360px 宽
+    setMinimumWidth(380);                     // 最小宽度（可通过分隔条拉宽，不再固定）
     auto *mainLayout = new QVBoxLayout(this); // 垂直布局
-    buildEntitySection(mainLayout);           // 第一块：实体
-    buildComponentSection(mainLayout);        // 第二块：组件
-    buildPropertySection(mainLayout);         // 第三块：属性
+    buildEntitySection(mainLayout);           // 第一块：实体（列表限高）
+    buildComponentSection(mainLayout);        // 第二块：组件（列表限高）
+    buildPropertySection(mainLayout);         // 第三块：属性（占剩余全部空间）
 }
 
 // ============================================================
@@ -60,13 +71,38 @@ void EditorPanel::buildEntitySection(QVBoxLayout *layout)
     btnRow->addWidget(m_newBtn);
     btnRow->addWidget(m_deleteBtn);
     vlay->addLayout(btnRow);
-    m_entityList = new QListWidget; // 实体列表
+
+    // 父子层级操作
+    auto *parentRow = new QHBoxLayout;
+    auto *setParentBtn = new QPushButton("设为子级...");
+    auto *unparentBtn = new QPushButton("解除父级");
+    auto *visToggleBtn = new QPushButton("👁 显示/隐藏");
+    parentRow->addWidget(setParentBtn);
+    parentRow->addWidget(unparentBtn);
+    parentRow->addWidget(visToggleBtn);
+    vlay->addLayout(parentRow);
+
+    // 预制体操作（原型模式：模板复用）
+    auto *prefabRow = new QHBoxLayout;
+    auto *savePrefabBtn = new QPushButton("存预制体...");
+    auto *loadPrefabBtn = new QPushButton("实例化预制体...");
+    prefabRow->addWidget(savePrefabBtn);
+    prefabRow->addWidget(loadPrefabBtn);
+    vlay->addLayout(prefabRow);
+
+    m_entityList = new QListWidget;      // 实体列表（带层级缩进）
+    m_entityList->setMaximumHeight(150); // 限高：把垂直空间让给属性区
     vlay->addWidget(m_entityList);
     layout->addWidget(group);
 
     // 信号连接：点击按钮 → 槽函数
     connect(m_newBtn, &QPushButton::clicked, this, &EditorPanel::onNewEntity);
     connect(m_deleteBtn, &QPushButton::clicked, this, &EditorPanel::onDeleteEntity);
+    connect(setParentBtn, &QPushButton::clicked, this, &EditorPanel::onSetParent);
+    connect(unparentBtn, &QPushButton::clicked, this, &EditorPanel::onUnparent);
+    connect(visToggleBtn, &QPushButton::clicked, this, &EditorPanel::onToggleVisible);
+    connect(savePrefabBtn, &QPushButton::clicked, this, &EditorPanel::onSavePrefab);
+    connect(loadPrefabBtn, &QPushButton::clicked, this, &EditorPanel::onInstantiatePrefab);
     // 选中列表中某一行 → 刷新组件列表 + 属性编辑器
     connect(m_entityList, &QListWidget::currentItemChanged, this, [this]()
             { onEntitySelected(); });
@@ -87,7 +123,8 @@ void EditorPanel::buildComponentSection(QVBoxLayout *layout)
     addRow->addWidget(m_addCompBtn);
     addRow->addWidget(m_removeCompBtn);
     vlay->addLayout(addRow);
-    m_compList = new QListWidget; // 当前实体的组件列表
+    m_compList = new QListWidget;      // 当前实体的组件列表
+    m_compList->setMaximumHeight(110); // 限高：把垂直空间让给属性区
     vlay->addWidget(m_compList);
     layout->addWidget(group);
 
@@ -107,10 +144,11 @@ void EditorPanel::buildPropertySection(QVBoxLayout *layout)
     auto *vlay = new QVBoxLayout(group);
     m_propScroll = new QScrollArea; // 滚动区域（容纳任意高度的编辑器）
     m_propScroll->setWidgetResizable(true);
-    m_emptyProp = new QWidget; // 占位空白页（没选中组件时显示）
-    m_propScroll->setWidget(m_emptyProp);
+    // 占位空白页：注意 QScrollArea::setWidget 会在下次 setWidget 时
+    // 自动 delete 旧 widget，所以空白页每次现建，绝不能复用成员指针！
+    m_propScroll->setWidget(new QWidget);
     vlay->addWidget(m_propScroll);
-    layout->addWidget(group);
+    layout->addWidget(group, 1); // stretch=1：属性区占据全部剩余垂直空间
 }
 
 // ============================================================
@@ -174,34 +212,190 @@ void EditorPanel::rebuildComponentList()
 }
 
 // ============================================================
-// 【新建实体】
-// 创建实体 → 加 TagComponent（名称）+ TransformComponent（位置）
-// → 刷新实体列表
+// 【新建实体】命令化：Ctrl+Z 可撤销
 // ============================================================
 void EditorPanel::onNewEntity()
 {
     if (!m_world)
         return;
-    auto e = m_world->entity();      // 创建空白实体
-    e.set<TagComponent>({"Entity"}); // 名称 = "Entity"
-    e.set<TransformComponent>({});   // 默认位置 (0,0,0)
-    refreshEntityList();             // 更新 UI 中的实体列表
+
+    // 自动编号：Entity, Entity2, Entity3...（避免重名无法区分）
+    int count = 1;
+    m_world->each([&](flecs::entity, const TagComponent &tag)
+                  {
+        if (strncmp(tag.name, "Entity", 6) == 0) count++; });
+
+    char name[64];
+    if (count == 1)
+        strncpy(name, "Entity", sizeof(name) - 1);
+    else
+        snprintf(name, sizeof(name), "Entity%d", count);
+
+    // 命令内部创建默认实体（Tag+Transform+Material+Mesh，立即可见）
+    runCommand(std::make_unique<CreateEntityCommand>(m_world, name));
+
+    refreshEntityList(); // 更新 UI 中的实体列表
+    emit valueChanged(); // 通知重绘（新实体立即显现）
 }
 
 // ============================================================
-// 【删除实体】
-// 获取选中的实体 → destruct() 销毁 → 刷新全部面板
+// 【删除实体】命令化：execute=快照子树+删除，undo=完整重建
 // ============================================================
 void EditorPanel::onDeleteEntity()
 {
     auto e = selectedEntity();
     if (!e)
         return;
-    e.destruct();            // Flecs: 彻底销毁实体
-    refreshEntityList();     // 重建实体列表
-    refreshComponentList();  // 清空组件列表
-    refreshPropertyEditor(); // 清空属性面板
-    emit valueChanged();     // 通知 MainWindow 刷新渲染
+    runCommand(std::make_unique<DeleteEntityCommand>(m_world, e.raw_id()));
+    m_entityList->setCurrentItem(nullptr); // 显式清除选择，避免残留死实体引用
+    refreshEntityList();                   // 重建实体列表
+    refreshComponentList();                // 清空组件列表
+    refreshPropertyEditor();               // 清空属性面板
+    emit valueChanged();                   // 通知 MainWindow 刷新渲染
+}
+
+// ============================================================
+// 命令执行/撤销/重做
+// ResourceManager 延迟化后，命令内的资源操作都是纯记账，
+// 不再需要 GL 上下文包裹 —— 任何时机执行都安全
+// ============================================================
+void EditorPanel::runCommand(std::unique_ptr<Command> cmd)
+{
+    CommandStack::instance().push(std::move(cmd));
+}
+
+void EditorPanel::undoLast()
+{
+    const char *n = CommandStack::instance().undo();
+    if (!n)
+        return;                            // 无可撤销
+    m_entityList->setCurrentItem(nullptr); // 防止选中项引用已撤销的实体
+    refreshEntityList();
+    refreshComponentList();
+    refreshPropertyEditor();
+    emit valueChanged();
+}
+
+void EditorPanel::redoLast()
+{
+    const char *n = CommandStack::instance().redo();
+    if (!n)
+        return; // 无可重做
+    m_entityList->setCurrentItem(nullptr);
+    refreshEntityList();
+    refreshComponentList();
+    refreshPropertyEditor();
+    emit valueChanged();
+}
+
+// ============================================================
+// 【设为子级】选中实体 → 弹窗选父实体 → Flecs child_of
+// ============================================================
+void EditorPanel::onSetParent()
+{
+    auto child = selectedEntity();
+    if (!m_world || !child)
+        return;
+
+    // 收集可选父实体（排除自己和编辑器内部实体）
+    QStringList names;
+    std::vector<flecs::entity_t> ids;
+    m_world->each([&](flecs::entity e, const TagComponent &tag)
+                  {
+        if (e.raw_id() == child.raw_id()) return;
+        auto camId = m_world->component<CameraComponent>().raw_id();
+        const auto *cam = static_cast<const CameraComponent *>(
+            ecs_get_id(m_world->c_ptr(), e.raw_id(), camId));
+        if (cam && cam->isEditor) return;
+        names << QString::fromUtf8(tag.name);
+        ids.push_back(e.raw_id()); });
+
+    if (names.isEmpty())
+        return;
+
+    bool ok = false;
+    QString sel = QInputDialog::getItem(this, "设为子级", "选择父实体:", names, 0, false, &ok);
+    if (!ok)
+        return;
+
+    int idx = names.indexOf(sel);
+    if (idx < 0)
+        return;
+
+    // 防止循环：不能把自己的祖先设为自己的子（简单检查：目标不能是 child 的后代）
+    flecs::entity parent = m_world->entity(ids[idx]);
+    for (flecs::entity p = parent; p; p = p.parent())
+        if (p.raw_id() == child.raw_id())
+            return; // 环！拒绝
+
+    // 命令化：记录旧父，undo 时恢复
+    flecs::entity oldP = child.parent();
+    runCommand(std::make_unique<SetParentCommand>(
+        m_world, child.raw_id(), oldP ? oldP.raw_id() : 0, parent.raw_id()));
+    refreshEntityList();
+    emit valueChanged();
+}
+
+// ============================================================
+// 【解除父级】实体回到根层级（命令化，可撤销）
+// ============================================================
+void EditorPanel::onUnparent()
+{
+    auto e = selectedEntity();
+    if (!m_world || !e)
+        return;
+    flecs::entity oldP = e.parent();
+    if (!oldP)
+        return; // 本来就在根层级，不产生空命令
+    runCommand(std::make_unique<SetParentCommand>(
+        m_world, e.raw_id(), oldP.raw_id(), 0));
+    refreshEntityList();
+    emit valueChanged();
+}
+
+// ============================================================
+// 【显示/隐藏】命令化（翻转操作：undo 就是再翻一次）
+// ============================================================
+void EditorPanel::onToggleVisible()
+{
+    auto e = selectedEntity();
+    if (!m_world || !e)
+        return;
+    runCommand(std::make_unique<ToggleVisibleCommand>(m_world, e.raw_id()));
+    refreshEntityList(); // 列表更新隐藏标记
+    emit valueChanged(); // 触发重绘
+}
+
+// ============================================================
+// 【存预制体】选中实体（含子树）→ .prefab 文件（原型模式：存模板）
+// ============================================================
+void EditorPanel::onSavePrefab()
+{
+    auto e = selectedEntity();
+    if (!m_world || !e)
+        return;
+    QString path = QFileDialog::getSaveFileName(this, "保存预制体",
+                                                "entity.prefab", "Prefab (*.prefab)");
+    if (path.isEmpty())
+        return;
+    if (SceneSerializer::savePrefab(*m_world, e, path.toStdString()))
+        emit valueChanged();
+}
+
+// ============================================================
+// 【实例化预制体】.prefab → 新实体子树（命令化，可撤销）
+// ============================================================
+void EditorPanel::onInstantiatePrefab()
+{
+    if (!m_world)
+        return;
+    QString path = QFileDialog::getOpenFileName(this, "实例化预制体",
+                                                "", "Prefab (*.prefab)");
+    if (path.isEmpty())
+        return;
+    runCommand(std::make_unique<InstantiatePrefabCommand>(m_world, path.toStdString()));
+    refreshEntityList();
+    emit valueChanged();
 }
 
 // ============================================================
@@ -209,10 +403,7 @@ void EditorPanel::onDeleteEntity()
 //
 // 通用路径：e.add(compId) → Flecs 分配内存并初始化
 //
-// Mesh 特殊路径：Mesh 需要 OpenGL 上下文才能创建 VAO。
-// → 通过 m_meshCreator 回调，让 MainWindow 调用 makeCurrent()
-// → MeshFactory::createCube() 生成 GPU 网格数据
-// → 回调中 e.set<MeshComponent>(mesh) 写入 VAO 句柄
+// Mesh 特殊路径：只需登记资源句柄（acquire 是纯记账，GPU 创建延迟到首帧渲染）
 // ============================================================
 void EditorPanel::onAddComponent()
 {
@@ -227,12 +418,12 @@ void EditorPanel::onAddComponent()
 
     flecs::entity_t compId = m_componentMap[name]; // 查找 Flecs 组件 ID
 
-    // ---- 2. Mesh 特殊处理 ----
+    // ---- 2. Mesh 特殊处理：需要登记资源句柄（纯记账，无 GL 依赖）----
     if (compId == m_world->component<MeshComponent>().raw_id())
     {
-        e.set<MeshComponent>({}); // 先创建空的 MeshComponent
-        if (m_meshCreator)
-            m_meshCreator(e);    // 回调：创建 GPU VAO 数据
+        MeshComponent m;
+        m.meshHandle = ResourceManager::instance().acquireMesh("cube");
+        e.set<MeshComponent>(m);
         refreshComponentList();  // 刷新组件列表
         refreshPropertyEditor(); // 刷新属性编辑区
         emit valueChanged();     // 触发重绘
@@ -263,7 +454,9 @@ void EditorPanel::onRemoveComponent()
         return;
 
     flecs::entity_t compId = m_componentMap[name];
-    e.remove(compId); // Flecs C++ API: 移除组件
+
+    // 直接移除：Mesh 资源由 OnRemove Observer 自动释放，无需特殊处理
+    e.remove(compId);
 
     refreshComponentList();
     refreshPropertyEditor();
@@ -319,11 +512,33 @@ void EditorPanel::onPropertyChanged()
     flecs::entity compEnt(m_world->c_ptr(), compId);
 
     // 2. 读取反射元数据：EcsStruct 含所有成员的 offset/type/name
-    auto structId2 = m_world->component<EcsStruct>().raw_id();
+    auto ecsStructId = m_world->component<EcsStruct>().raw_id();
     const EcsStruct *st = static_cast<const EcsStruct *>(
-        ecs_get_id(m_world->c_ptr(), compEnt.raw_id(), structId2));
+        ecs_get_id(m_world->c_ptr(), compEnt.raw_id(), ecsStructId));
     if (!st)
+    {
+        // ScriptComponent properties 回写
+        auto scrId = m_world->component<ScriptComponent>().raw_id();
+        if (compId == scrId)
+        {
+            auto *sc = (ScriptComponent *)ecs_get_mut_id(m_world->c_ptr(), e.raw_id(), compId);
+            if (sc)
+            {
+                for (auto it = m_propWidgets.begin(); it != m_propWidgets.end(); ++it)
+                {
+                    if (!it.key().startsWith("ScriptComponent|prop|"))
+                        continue;
+                    auto *spin = qobject_cast<QDoubleSpinBox *>(it.value());
+                    if (!spin)
+                        continue;
+                    std::string name = it.key().mid(QString("ScriptComponent|prop|").length()).toStdString();
+                    sc->properties[name] = (float)spin->value();
+                }
+                ecs_modified_id(m_world->c_ptr(), e.raw_id(), compId);
+            }
+        }
         return;
+    }
 
     // 3. 获取组件数据的可变指针（void* → 后面用偏移量转换为具体类型）
     void *data = ecs_get_mut_id(m_world->c_ptr(), e.raw_id(), compId);
@@ -390,15 +605,50 @@ void EditorPanel::refreshEntityList()
     m_entityList->blockSignals(true); // 先阻断信号，防止清空时触发级联刷新
     m_entityList->clear();
 
-    // world.each(TagComponent) → 遍历所有有 TagComponent 的实体
+    // 层级显示：先添加根实体，递归缩进添加子实体
     m_world->each([this](flecs::entity e, const TagComponent &tag)
                   {
-        auto *item = new QListWidgetItem(tag.name);     // 显示名
-        // 把实体 ID 存入 UserRole（点击时用 selectedEntity() 读取）
-        item->setData(Qt::UserRole, (qulonglong)e.raw_id());
-        m_entityList->addItem(item); });
+        // 跳过编辑器内部实体（如编辑器摄像机）
+        auto camId = m_world->component<CameraComponent>().raw_id();
+        const auto *cam = static_cast<const CameraComponent *>(
+            ecs_get_id(m_world->c_ptr(), e.raw_id(), camId));
+        if (cam && cam->isEditor) return;
+
+        // 只从根实体开始（有父的由递归处理）
+        flecs::entity parent = e.parent();
+        if (parent && parent.has<TagComponent>()) return;
+
+        addEntityToList(e, 0); });
 
     m_entityList->blockSignals(false); // 恢复信号
+}
+
+/// 递归添加实体及其子实体到列表（depth 控制缩进）
+void EditorPanel::addEntityToList(flecs::entity e, int depth)
+{
+    const auto *tag = static_cast<const TagComponent *>(ecs_get_id(
+        m_world->c_ptr(), e.raw_id(), m_world->component<TagComponent>().raw_id()));
+    if (!tag)
+        return;
+
+    QString indent = QString("    ").repeated(depth);
+    QString prefix = depth > 0 ? "└ " : "";
+
+    // 隐藏的实体加标记（对标 Godot 场景树的👁划掉状态）
+    const auto *tf = static_cast<const TransformComponent *>(ecs_get_id(
+        m_world->c_ptr(), e.raw_id(), m_world->component<TransformComponent>().raw_id()));
+    QString visMark = (tf && !tf->visible) ? "👁‍🗨 " : "";
+
+    auto *item = new QListWidgetItem(indent + prefix + visMark + QString::fromUtf8(tag->name));
+    item->setData(Qt::UserRole, (qulonglong)e.raw_id());
+    // 隐藏的实体置灰显示
+    if (tf && !tf->visible)
+        item->setForeground(QColor(128, 128, 128));
+    m_entityList->addItem(item);
+
+    // 递归子实体
+    e.children([&](flecs::entity child)
+               { addEntityToList(child, depth + 1); });
 }
 
 // ============================================================
@@ -476,7 +726,12 @@ void EditorPanel::refreshPropertyEditor()
     // 没选中组件 → 显示空白页
     if (!m_world || !e || compName.isEmpty() || !m_componentMap.contains(compName))
     {
-        m_propScroll->setWidget(m_emptyProp);
+        // ★ 先清空控件注册表：setWidget 会 delete 旧编辑器（含其全部子控件），
+        //   不清的话 m_propWidgets 里全是悬空指针，blockPropertySignals 遍历必崩
+        clearDynamicEditors();
+        // ★ 空白页必须现建：QScrollArea::setWidget 会在下次 setWidget 时
+        //   delete 旧 widget，复用同一指针 = use-after-free 崩溃
+        m_propScroll->setWidget(new QWidget);
         return;
     }
 
@@ -531,9 +786,92 @@ QWidget *EditorPanel::createEditorForComponent(flecs::entity_t compId, flecs::en
     const char *compName = compEnt.name();
     QString compKey = compName ? compName : "Unknown"; // 用作 map key 前缀
 
-    auto structId3 = m_world->component<EcsStruct>().raw_id();
+    auto ecsStructId = m_world->component<EcsStruct>().raw_id();
     const EcsStruct *st = static_cast<const EcsStruct *>(
-        ecs_get_id(m_world->c_ptr(), compEnt.raw_id(), structId3));
+        ecs_get_id(m_world->c_ptr(), compEnt.raw_id(), ecsStructId));
+
+    // 特殊处理 SpriteComponent（含 char 数组 folder，反射面板做不了）
+    // frame 虽有反射，但和 folder/帧数信息一起展示更友好
+    if (compId == m_world->component<SpriteComponent>().raw_id())
+    {
+        auto *data = (const SpriteComponent *)ecs_get_id(
+            m_world->c_ptr(), entity.raw_id(), compId);
+        auto *w = new QWidget;
+        auto *l = new QFormLayout(w);
+
+        // 帧图目录（绝对路径，回车确认后登记并刷新面板）
+        auto *dirEdit = new QLineEdit(data ? data->folder : "");
+        dirEdit->setPlaceholderText("D:/.../sprites/walk（目录，图片按文件名排序为帧）");
+        l->addRow("帧图目录", dirEdit);
+        connect(dirEdit, &QLineEdit::editingFinished, this,
+                [this, entity, compId, dirEdit]()
+                {
+            auto *d = (SpriteComponent *)ecs_get_mut_id(
+                m_world->c_ptr(), entity.raw_id(), compId);
+            if (!d) return;
+            QString path = dirEdit->text().trimmed();
+            if (path == QString::fromUtf8(d->folder)) return; // 没改不重建
+            // 换目录：释放旧帧集引用，句柄清零（渲染时惰性重新 acquire）
+            if (d->spriteHandle)
+            {
+                ResourceManager::instance().releaseSprite(d->spriteHandle);
+                d->spriteHandle = 0;
+            }
+            strncpy(d->folder, path.toUtf8().constData(), sizeof(d->folder) - 1);
+            d->folder[sizeof(d->folder) - 1] = '\0';
+            d->frame = 0;
+            QTimer::singleShot(0, this, [this]() { refreshPropertyEditor(); }); });
+
+        // 帧集状态 + 当前帧选择
+        if (data && data->folder[0])
+        {
+            // 预登记以便显示帧数（acquire 纯文件扫描，不碰 GL，安全）
+            uint32_t h = data->spriteHandle;
+            if (!h)
+            {
+                auto *d = (SpriteComponent *)ecs_get_mut_id(
+                    m_world->c_ptr(), entity.raw_id(), compId);
+                d->spriteHandle = ResourceManager::instance().acquireSprite(d->folder);
+                h = d->spriteHandle;
+            }
+            int count = ResourceManager::instance().spriteFrameCount(h);
+            auto *info = new QLabel(count > 0
+                                        ? QString::asprintf("✓ 已加载 %d 帧", count)
+                                        : QString("⚠ 目录不存在或没有图片"));
+            info->setStyleSheet(count > 0 ? "color: green;" : "color: orange;");
+            l->addRow(info);
+
+            if (count > 0)
+            {
+                // 当前帧滑块（手动预览；动画播放时由轨道 SpriteComponent/frame 驱动）
+                auto *frameSlider = new QSlider(Qt::Horizontal);
+                frameSlider->setRange(0, count - 1);
+                frameSlider->setValue(data->frame);
+                auto *frameLabel = new QLabel(QString::number(data->frame));
+                auto *row = new QHBoxLayout;
+                row->addWidget(frameSlider, 1);
+                row->addWidget(frameLabel);
+                l->addRow("当前帧", row);
+                connect(frameSlider, &QSlider::valueChanged, this,
+                        [this, entity, compId, frameLabel](int v)
+                        {
+                    auto *d = (SpriteComponent *)ecs_get_mut_id(
+                        m_world->c_ptr(), entity.raw_id(), compId);
+                    if (!d) return;
+                    d->frame = v;
+                    frameLabel->setText(QString::number(v));
+                    emit valueChanged(); });
+
+                // 用法提示（帧动画 = 现成动画系统驱动 frame 字段）
+                auto *hint = new QLabel(
+                    "💡 做帧动画：AnimationComponent → 属性轨道选\n"
+                    "   SpriteComponent/frame → 不同时刻打不同帧号");
+                hint->setStyleSheet("color: gray;");
+                l->addRow(hint);
+            }
+        }
+        return w;
+    }
 
     // 没有反射信息 → 特殊处理 ScriptComponent（文本输入）
     if (!st)
@@ -544,8 +882,10 @@ QWidget *EditorPanel::createEditorForComponent(flecs::entity_t compId, flecs::en
             auto *data = (const ScriptComponent *)ecs_get_id(m_world->c_ptr(), entity.raw_id(), compId);
             auto *w = new QWidget;
             auto *l = new QFormLayout(w);
+
+            // 脚本路径
             auto *pathEdit = new QLineEdit(data ? data->filePath : "");
-            pathEdit->setPlaceholderText("scripts/xxx.lua");
+            pathEdit->setPlaceholderText("D:/.../scripts/xxx.lua（建议绝对路径）");
             l->addRow("脚本路径", pathEdit);
             QString key = "ScriptComponent|filePath";
             m_propWidgets[key] = pathEdit;
@@ -555,10 +895,469 @@ QWidget *EditorPanel::createEditorForComponent(flecs::entity_t compId, flecs::en
                 auto *d = (ScriptComponent *)ecs_get_mut_id(m_world->c_ptr(), entity.raw_id(), compId);
                 if (!d) return;
                 auto *edit = qobject_cast<QLineEdit *>(m_propWidgets["ScriptComponent|filePath"]);
-                if (edit) { strncpy(d->filePath, edit->text().toUtf8().constData(), sizeof(d->filePath)-1);
+                if (edit) {
+                    QByteArray utf8 = edit->text().toUtf8();
+                    strncpy(d->filePath, utf8.constData(), sizeof(d->filePath) - 1);
+                    d->filePath[sizeof(d->filePath) - 1] = '\0';
                     ecs_modified_id(m_world->c_ptr(), entity.raw_id(), compId); emit valueChanged(); } });
+
+            // ---- @export 变量 ----
+            if (data)
+            {
+                // ★ 静态解析（Godot 风格）：不需要运行脚本，
+                //   直接扫描 .lua 文件里的 export("name", value) 声明，
+                //   把编辑器还不知道的变量预先填入 properties。
+                if (data->filePath[0])
+                {
+                    QFile f(QString::fromUtf8(data->filePath));
+                    if (f.open(QIODevice::ReadOnly | QIODevice::Text))
+                    {
+                        QString src = QString::fromUtf8(f.readAll());
+                        // 匹配 export("name", 3.14) / export('name', 42)
+                        QRegularExpression re(R"(export\(\s*[\"']([A-Za-z_][A-Za-z0-9_]*)[\"']\s*,\s*(-?[0-9]+\.?[0-9]*)\s*\))");
+                        auto *mutData = (ScriptComponent *)ecs_get_mut_id(m_world->c_ptr(), entity.raw_id(), compId);
+                        auto it = re.globalMatch(src);
+                        while (it.hasNext() && mutData)
+                        {
+                            auto m = it.next();
+                            std::string name = m.captured(1).toStdString();
+                            float defVal = m.captured(2).toFloat();
+                            // 只补充新变量，不覆盖已有值（和脚本 export 语义一致）
+                            if (mutData->properties.find(name) == mutData->properties.end())
+                                mutData->properties[name] = defVal;
+                        }
+                        data = mutData ? mutData : data; // 用更新后的数据继续渲染
+                    }
+                }
+
+                for (const auto &kv : data->properties)
+                {
+                    auto *spin = new QDoubleSpinBox;
+                    spin->setRange(-10000, 10000);
+                    spin->setDecimals(2);
+                    spin->setValue(kv.second);
+                    l->addRow(QString::fromStdString(kv.first), spin);
+                    QString pkey = "ScriptComponent|prop|" + QString::fromStdString(kv.first);
+                    m_propWidgets[pkey] = spin;
+                    m_propMeta[pkey] = PropMeta{compId, 0, true, 0};
+                    connect(spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+                            this, &EditorPanel::onPropertyChanged);
+                }
+                if (data->properties.empty())
+                    l->addRow(new QLabel("（脚本未定义 export 变量）"));
+            }
             return w;
         }
+
+        // 特殊处理 AnimationComponent（对标 Godot AnimationPlayer 面板）
+        auto animId = m_world->component<AnimationComponent>().raw_id();
+        if (compId == animId)
+        {
+            auto *data = (const AnimationComponent *)ecs_get_id(m_world->c_ptr(), entity.raw_id(), compId);
+            auto *w = new QWidget;
+            auto *l = new QFormLayout(w);
+
+            // 通用写回辅助：取可写指针 + 通知重绘
+            auto mutate = [this, compId, entity]() -> AnimationComponent *
+            {
+                if (m_updating)
+                    return nullptr;
+                return (AnimationComponent *)ecs_get_mut_id(
+                    m_world->c_ptr(), entity.raw_id(), compId);
+            };
+            // 延迟重建面板（不能在控件回调里立即销毁控件自己 → use-after-free）
+            auto rebuildLater = [this]()
+            { QTimer::singleShot(0, this, [this]()
+                                 { refreshPropertyEditor(); }); };
+
+            // ---- 动画文件路径（回车/失焦后重建面板加载该库）----
+            auto *fileEdit = new QLineEdit(data ? data->animFile : "");
+            fileEdit->setPlaceholderText("D:/.../anims/xxx.anim（绝对路径；可不存在，保存时创建）");
+            l->addRow("动画文件", fileEdit);
+            m_propWidgets["AnimationComponent|animFile"] = fileEdit;
+            connect(fileEdit, &QLineEdit::editingFinished, this, [this, mutate, fileEdit, rebuildLater]()
+                    {
+                auto *d = mutate(); if (!d) return;
+                QByteArray u = fileEdit->text().toUtf8();
+                if (strncmp(d->animFile, u.constData(), sizeof(d->animFile)) == 0) return;
+                strncpy(d->animFile, u.constData(), sizeof(d->animFile) - 1);
+                d->animFile[sizeof(d->animFile) - 1] = '\0';
+                rebuildLater(); });
+
+            // 取动画库（文件不存在也返回空库 → 可直接开始做动画）
+            AnimLib *lib = (data && data->animFile[0])
+                               ? AnimationLibraryManager::instance().getOrCreate(data->animFile)
+                               : nullptr;
+
+            // ---- 动画选择 + 新建 ----
+            auto *clipRow = new QHBoxLayout;
+            auto *clipBox = new QComboBox;
+            if (lib)
+                for (auto &kv : lib->clips)
+                    clipBox->addItem(QString::fromStdString(kv.first));
+            if (data)
+                clipBox->setCurrentText(QString::fromUtf8(data->current));
+            auto *newClipBtn = new QPushButton("新建");
+            clipRow->addWidget(clipBox, 1);
+            clipRow->addWidget(newClipBtn);
+            l->addRow("动画", clipRow);
+            m_propWidgets["AnimationComponent|clip"] = clipBox;
+
+            connect(clipBox, &QComboBox::currentTextChanged, this,
+                    [this, mutate, rebuildLater](const QString &name)
+                    {
+                auto *d = mutate(); if (!d) return;
+                QByteArray u = name.toUtf8();
+                if (strncmp(d->current, u.constData(), sizeof(d->current)) == 0) return;
+                strncpy(d->current, u.constData(), sizeof(d->current) - 1);
+                d->current[sizeof(d->current) - 1] = '\0';
+                d->time = 0;
+                rebuildLater(); });
+
+            connect(newClipBtn, &QPushButton::clicked, this, [this, mutate, rebuildLater]()
+                    {
+                auto *d = mutate(); if (!d || !d->animFile[0]) return;
+                bool ok = false;
+                QString name = QInputDialog::getText(this, "新建动画", "动画名:",
+                                                     QLineEdit::Normal, "anim", &ok);
+                if (!ok || name.isEmpty()) return;
+                AnimLib *lb = AnimationLibraryManager::instance().getOrCreate(d->animFile);
+                if (!lb) return;
+                lb->clips[name.toStdString()]; // 创建空 clip（默认 1 秒）
+                QByteArray u = name.toUtf8();
+                strncpy(d->current, u.constData(), sizeof(d->current) - 1);
+                d->current[sizeof(d->current) - 1] = '\0';
+                rebuildLater(); });
+
+            // 当前编辑的 clip（后续控件都针对它）
+            AnimClip *clip = nullptr;
+            if (lib && data && data->current[0])
+            {
+                auto itc = lib->clips.find(data->current);
+                if (itc != lib->clips.end())
+                    clip = &itc->second;
+            }
+
+            if (clip)
+            {
+                // ---- 时长 ----
+                auto *durSpin = new QDoubleSpinBox;
+                durSpin->setRange(0.1, 600);
+                durSpin->setSingleStep(0.1);
+                durSpin->setValue(clip->duration);
+                l->addRow("时长(秒)", durSpin);
+                m_propWidgets["AnimationComponent|dur"] = durSpin;
+                connect(durSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+                        this, [this, clip](double v)
+                        { if (!m_updating) clip->duration = (float)v; });
+
+                // ---- 时间滑块（scrub：拖动即预览该时刻姿态，Godot 同款）----
+                auto *slider = new QSlider(Qt::Horizontal);
+                slider->setRange(0, 1000);
+                float curT = data ? data->time : 0;
+                slider->setValue(clip->duration > 0 ? int(curT / clip->duration * 1000) : 0);
+                auto *timeLabel = new QLabel(QString::asprintf("%.2fs", curT));
+                auto *timeRow = new QHBoxLayout;
+                timeRow->addWidget(slider, 1);
+                timeRow->addWidget(timeLabel);
+                l->addRow("时间", timeRow);
+                connect(slider, &QSlider::valueChanged, this,
+                        [this, mutate, clip, entity, timeLabel](int v)
+                        {
+                    auto *d = mutate(); if (!d) return;
+                    float t = clip->duration * v / 1000.0f;
+                    d->time = t;
+                    d->playing = false; // scrub 时停止自动播放
+                    timeLabel->setText(QString::asprintf("%.2fs", t));
+                    // 预览：反射写入该时刻全部轨道（不限于 Transform）
+                    applyClip(*m_world, entity.raw_id(), *clip, t);
+                    emit valueChanged(); });
+
+                // ---- 缓动曲线选择（打帧时生效：本帧→下一帧的插值方式）----
+                auto *easeBox = new QComboBox;
+                for (int i = 0; i < (int)EasingType::kCount; ++i)
+                    easeBox->addItem(QString::fromUtf8(easingName(i)));
+                l->addRow("缓动曲线", easeBox);
+
+                // ---- 自定义贝塞尔 4 参数（选"自定义贝塞尔"时显示）----
+                // 用户用 4 个数字定义专属曲线（CSS cubic-bezier 同款）：
+                //   控制点 P1=(x1,y1) P2=(x2,y2)，y 可超 [0,1] 制造过冲回弹
+                auto *bzRow = new QWidget;
+                auto *bzLay = new QHBoxLayout(bzRow);
+                bzLay->setContentsMargins(0, 0, 0, 0);
+                QDoubleSpinBox *bzSpin[4];
+                const double bzDef[4] = {0.25, 0.1, 0.25, 1.0}; // CSS "ease"
+                const char *bzName[4] = {"x1", "y1", "x2", "y2"};
+                for (int bi = 0; bi < 4; ++bi)
+                {
+                    bzLay->addWidget(new QLabel(bzName[bi]));
+                    bzSpin[bi] = new QDoubleSpinBox;
+                    // x 必须在 [0,1]（保证曲线 x 单调可求解）；y 可超界（过冲）
+                    if (bi % 2 == 0)
+                        bzSpin[bi]->setRange(0.0, 1.0);
+                    else
+                        bzSpin[bi]->setRange(-2.0, 3.0);
+                    bzSpin[bi]->setSingleStep(0.05);
+                    bzSpin[bi]->setDecimals(2);
+                    bzSpin[bi]->setValue(bzDef[bi]);
+                    bzLay->addWidget(bzSpin[bi]);
+                }
+                l->addRow("贝塞尔参数", bzRow);
+                bzRow->setVisible(false); // 默认隐藏，选中自定义时显示
+                connect(easeBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                        this, [bzRow](int idx)
+                        { bzRow->setVisible(idx == (int)EasingType::kCustomBezier); });
+
+                // ---- ⭕ 打关键帧：把实体当前姿态写入当前时间的三条轨道 ----
+                auto *keyBtn = new QPushButton("⭕ 打关键帧（记录当前姿态）");
+                l->addRow(keyBtn);
+                connect(keyBtn, &QPushButton::clicked, this,
+                        [this, mutate, clip, entity, rebuildLater, easeBox,
+                         bzSpin0 = bzSpin[0], bzSpin1 = bzSpin[1],
+                         bzSpin2 = bzSpin[2], bzSpin3 = bzSpin[3]]()
+                        {
+                    auto *d = mutate(); if (!d) return;
+                    auto *tf = (const TransformComponent *)ecs_get_id(
+                        m_world->c_ptr(), entity.raw_id(),
+                        m_world->component<TransformComponent>().raw_id());
+                    if (!tf) return;
+                    float t = d->time;
+                    int easing = easeBox->currentIndex(); // 选中的缓动算法
+                    float bz[4] = {(float)bzSpin0->value(), (float)bzSpin1->value(),
+                                   (float)bzSpin2->value(), (float)bzSpin3->value()};
+                    // Transform 三轨（Property Track 反射路径写法）
+                    clip->track("TransformComponent", "position").setKey(t, tf->position, easing, bz);
+                    clip->track("TransformComponent", "rotation").setKey(t, tf->rotation, easing, bz);
+                    clip->track("TransformComponent", "scale").setKey(t, tf->scale, easing, bz);
+                    rebuildLater(); }); // 重建以刷新关键帧列表
+
+                // ---- ➕ 属性轨道（Property Track：任意 REFLECT 字段都能动画）----
+                // 下拉列出实体已挂组件的全部反射字段（来自 EcsStruct 元数据），
+                // 选中后按钮把"该字段当前值"打为当前时间的关键帧
+                auto *propBox = new QComboBox;
+                {
+                    ecs_world_t *wp = m_world->c_ptr();
+                    const ecs_type_t *type = ecs_get_type(wp, entity.raw_id());
+                    for (int32_t ci = 0; type && ci < type->count; ++ci)
+                    {
+                        ecs_id_t id = type->array[ci];
+                        if (ECS_IS_PAIR(id))
+                            continue; // 跳过关系对（ChildOf 等）
+                        ecs_entity_t cid = (ecs_entity_t)(id & ECS_COMPONENT_MASK);
+                        if (!cid)
+                            continue;
+                        const EcsStruct *st = (const EcsStruct *)ecs_get_id(wp, cid, ecs_id(EcsStruct));
+                        if (!st)
+                            continue; // 无反射的组件不可动画
+                        const char *compName = ecs_get_name(wp, cid);
+                        if (!compName)
+                            continue;
+                        auto *members = (const ecs_member_t *)ecs_vec_first(&st->members);
+                        for (int32_t mi = 0; mi < ecs_vec_count(&st->members); ++mi)
+                            propBox->addItem(QString("%1/%2").arg(compName, members[mi].name));
+                    }
+                }
+                auto *propKeyBtn = new QPushButton("➕ 打属性关键帧");
+                auto *propRow = new QHBoxLayout;
+                propRow->addWidget(propBox, 1);
+                propRow->addWidget(propKeyBtn);
+                l->addRow("属性轨道", propRow);
+                connect(propKeyBtn, &QPushButton::clicked, this,
+                        [this, mutate, clip, entity, rebuildLater, easeBox, propBox]()
+                        {
+                    auto *d = mutate(); if (!d) return;
+                    QStringList parts = propBox->currentText().split('/');
+                    if (parts.size() != 2) return;
+                    std::string comp = parts[0].toStdString();
+                    std::string field = parts[1].toStdString();
+                    // 读字段当前值（反射：找 offset+类型 → 读内存 → 存进 vec3）
+                    ecs_world_t *wp = m_world->c_ptr();
+                    ecs_entity_t cid = ecs_lookup(wp, comp.c_str());
+                    if (!cid || !ecs_has_id(wp, entity.raw_id(), cid)) return;
+                    const EcsStruct *st = (const EcsStruct *)ecs_get_id(wp, cid, ecs_id(EcsStruct));
+                    if (!st) return;
+                    const void *data = ecs_get_id(wp, entity.raw_id(), cid);
+                    if (!data) return;
+                    auto *members = (const ecs_member_t *)ecs_vec_first(&st->members);
+                    for (int32_t mi = 0; mi < ecs_vec_count(&st->members); ++mi)
+                    {
+                        if (field != members[mi].name) continue;
+                        const char *p = (const char *)data + members[mi].offset;
+                        ecs_entity_t ft = members[mi].type;
+                        glm::vec3 v(0);
+                        if (ft == ecs_id(ecs_f32_t))       v.x = *(const float *)p;
+                        else if (ft == ecs_id(ecs_bool_t)) v.x = *(const bool *)p ? 1.f : 0.f;
+                        else if (ft == ecs_id(ecs_i32_t))  v.x = (float)*(const int32_t *)p;
+                        else                               v = *(const glm::vec3 *)p;
+                        auto &track = clip->track(comp, field);
+                        track.setKey(d->time, v, easeBox->currentIndex());
+                        track.invalidate(); // 新轨道/改动后重新解析
+                        break;
+                    }
+                    rebuildLater(); });
+
+                // ---- 关键帧列表（多帧管理：点击跳到该时刻，选中可删除）----
+                auto *keyList = new QListWidget;
+                keyList->setMaximumHeight(140);
+                for (size_t ti = 0; ti < clip->tracks.size(); ++ti)
+                {
+                    const AnimTrack &tr = clip->tracks[ti];
+                    for (size_t ki = 0; ki < tr.keys.size(); ++ki)
+                    {
+                        const AnimKeyframe &k = tr.keys[ki];
+                        auto *item = new QListWidgetItem(QString::asprintf(
+                            "%.2fs  %s (%.1f, %.1f, %.1f)  [%s]",
+                            k.t, tr.trackName().c_str(), k.v.x, k.v.y, k.v.z,
+                            easingName(k.easing)));
+                        item->setData(Qt::UserRole, (int)ti);     // 轨道下标
+                        item->setData(Qt::UserRole + 1, (int)ki); // 帧下标
+                        item->setData(Qt::UserRole + 2, k.t);     // 时间（跳转用）
+                        keyList->addItem(item);
+                    }
+                }
+                l->addRow("关键帧", keyList);
+
+                // 点击关键帧 → 时间滑块跳到该时刻（触发 scrub 预览）
+                connect(keyList, &QListWidget::itemClicked, this,
+                        [slider, clip](QListWidgetItem *item)
+                        {
+                    float t = item->data(Qt::UserRole + 2).toFloat();
+                    if (clip->duration > 0)
+                        slider->setValue(int(t / clip->duration * 1000)); });
+
+                // 删除选中关键帧
+                auto *delKeyBtn = new QPushButton("🗑 删除选中关键帧");
+                l->addRow(delKeyBtn);
+                connect(delKeyBtn, &QPushButton::clicked, this,
+                        [this, clip, keyList, rebuildLater]()
+                        {
+                    auto *item = keyList->currentItem();
+                    if (!item) return;
+                    int ti = item->data(Qt::UserRole).toInt();
+                    int ki = item->data(Qt::UserRole + 1).toInt();
+                    if (ti >= 0 && ti < (int)clip->tracks.size())
+                        clip->tracks[ti].removeKeyAt(ki);
+                    rebuildLater(); });
+
+                // ---- 事件轨道（Method Track：播到指定时刻发信号，Lua connect 接）----
+                auto *evtEdit = new QLineEdit;
+                evtEdit->setPlaceholderText("信号名，如 attack_hit");
+                auto *evtBtn = new QPushButton("➕ 打事件帧");
+                auto *evtRow = new QHBoxLayout;
+                evtRow->addWidget(evtEdit, 1);
+                evtRow->addWidget(evtBtn);
+                l->addRow("事件轨道", evtRow);
+                connect(evtBtn, &QPushButton::clicked, this,
+                        [mutate, clip, evtEdit, rebuildLater]()
+                        {
+                    auto *d = mutate(); if (!d) return;
+                    QString sig = evtEdit->text().trimmed();
+                    if (sig.isEmpty()) return;
+                    clip->addEvent(d->time, sig.toStdString()); // 当前时间打事件
+                    rebuildLater(); });
+
+                // 事件列表（有事件才显示）
+                if (!clip->events.empty())
+                {
+                    auto *evtList = new QListWidget;
+                    evtList->setMaximumHeight(80);
+                    for (size_t ei = 0; ei < clip->events.size(); ++ei)
+                    {
+                        auto &ev = clip->events[ei];
+                        auto *item = new QListWidgetItem(QString::asprintf(
+                            "%.2fs  📢 %s", ev.t, ev.signal.c_str()));
+                        item->setData(Qt::UserRole, (int)ei);
+                        evtList->addItem(item);
+                    }
+                    l->addRow("事件", evtList);
+                    auto *delEvtBtn = new QPushButton("🗑 删除选中事件");
+                    l->addRow(delEvtBtn);
+                    connect(delEvtBtn, &QPushButton::clicked, this,
+                            [clip, evtList, rebuildLater]()
+                            {
+                        auto *item = evtList->currentItem();
+                        if (!item) return;
+                        clip->removeEventAt(item->data(Qt::UserRole).toInt());
+                        rebuildLater(); });
+                }
+
+                // 删除当前动画（clip 多了需要清理废弃的）
+                auto *delClipBtn = new QPushButton("🗑 删除当前动画");
+                l->addRow(delClipBtn);
+                connect(delClipBtn, &QPushButton::clicked, this,
+                        [this, mutate, rebuildLater]()
+                        {
+                    auto *d = mutate(); if (!d || !d->animFile[0] || !d->current[0]) return;
+                    AnimLib *lb = AnimationLibraryManager::instance().getOrCreate(d->animFile);
+                    if (!lb) return;
+                    lb->clips.erase(d->current);
+                    d->current[0] = '\0'; // 回到未选择状态
+                    d->playing = false;
+                    rebuildLater(); });
+
+                // ---- 播放预览（对标 Godot 编辑器预览）----
+                auto *playChk = new QCheckBox;
+                playChk->setChecked(data && data->playing);
+                l->addRow("播放（预览）", playChk);
+                m_propWidgets["AnimationComponent|playing"] = playChk;
+                connect(playChk, &QCheckBox::toggled, this, [this, mutate](bool on)
+                        {
+                    auto *d = mutate(); if (!d) return;
+                    d->playing = on;
+                    if (on) d->time = 0.0f; // 从头预览
+                    emit valueChanged(); });
+
+                // ---- 运行时自动播放（Godot autoplay 同款：点"运行"自动开播）----
+                auto *autoChk = new QCheckBox;
+                autoChk->setChecked(!data || data->autoplay);
+                l->addRow("运行时自动播放", autoChk);
+                m_propWidgets["AnimationComponent|autoplay"] = autoChk;
+                connect(autoChk, &QCheckBox::toggled, this, [this, mutate](bool on)
+                        {
+                    auto *d = mutate(); if (d) { d->autoplay = on; } });
+
+                // ---- 循环 ----
+                auto *loopChk = new QCheckBox;
+                loopChk->setChecked(!data || data->loop);
+                l->addRow("循环", loopChk);
+                m_propWidgets["AnimationComponent|loop"] = loopChk;
+                connect(loopChk, &QCheckBox::toggled, this, [this, mutate](bool on)
+                        {
+                    auto *d = mutate(); if (d) { d->loop = on; emit valueChanged(); } });
+
+                // ---- 速度倍率 ----
+                auto *speedSpin = new QDoubleSpinBox;
+                speedSpin->setRange(-10, 10);
+                speedSpin->setSingleStep(0.1);
+                speedSpin->setValue(data ? data->speed : 1.0);
+                l->addRow("速度", speedSpin);
+                m_propWidgets["AnimationComponent|speed"] = speedSpin;
+                connect(speedSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+                        this, [this, mutate](double v)
+                        {
+                    auto *d = mutate(); if (d) { d->speed = (float)v; emit valueChanged(); } });
+
+                // ---- 💾 保存到 .anim 文件 ----
+                auto *saveBtn = new QPushButton("💾 保存动画文件");
+                l->addRow(saveBtn);
+                connect(saveBtn, &QPushButton::clicked, this, [this, mutate, saveBtn]()
+                        {
+                    auto *d = mutate(); if (!d || !d->animFile[0]) return;
+                    bool ok = AnimationLibraryManager::instance().save(d->animFile);
+                    saveBtn->setText(ok ? "💾 已保存 ✓" : "💾 保存失败 ✗"); });
+            }
+            else if (data && data->animFile[0])
+            {
+                l->addRow(new QLabel("（点“新建”创建第一个动画）"));
+            }
+            else
+            {
+                l->addRow(new QLabel("（先填写动画文件路径，回车确认）"));
+            }
+
+            return w;
+        }
+
         auto *w = new QWidget;
         w->setLayout(new QVBoxLayout);
         w->layout()->addWidget(new QLabel("（该组件无可编辑属性）"));
@@ -634,14 +1433,12 @@ QWidget *EditorPanel::createEditorForComponent(flecs::entity_t compId, flecs::en
             spin->setSingleStep(0.1);
             spin->setDecimals(2);
 
-            // 从组件内存中读取当前值（用偏移量定位字段）
-            spin->setValue(*(const float *)((const char *)data + m.offset));
-
             form->addRow(QString::fromUtf8(m.name), spin);
 
             QString key = compKey + "|" + m.name;
             m_propWidgets[key] = spin;
-            spin->setValue(*(const float *)((const char *)data + m.offset)); // 重设
+            // 先注册再设值，防止 setValue 触发 onPropertyChanged
+            spin->setValue(*(const float *)((const char *)data + m.offset));
             connect(spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
                     this, &EditorPanel::onPropertyChanged);
         }
@@ -679,6 +1476,28 @@ void EditorPanel::blockPropertySignals(bool block)
 }
 
 // ============================================================
+// 辅助：按实体 ID 选中列表项（视口射线拾取 → 列表同步高亮）
+// setCurrentItem 会触发 currentItemChanged → 自动刷新组件/属性面板
+// ============================================================
+void EditorPanel::selectEntityById(flecs::entity_t id)
+{
+    if (id == 0)
+    {
+        m_entityList->setCurrentItem(nullptr); // 点空白 = 取消选择
+        return;
+    }
+    for (int i = 0; i < m_entityList->count(); ++i)
+    {
+        auto *item = m_entityList->item(i);
+        if (item->data(Qt::UserRole).toULongLong() == id)
+        {
+            m_entityList->setCurrentItem(item);
+            return;
+        }
+    }
+}
+
+// ============================================================
 // 辅助：从 QListWidgetItem 的 UserRole 中读取实体 ID
 // ============================================================
 flecs::entity EditorPanel::selectedEntity() const
@@ -686,8 +1505,14 @@ flecs::entity EditorPanel::selectedEntity() const
     auto *item = m_entityList->currentItem(); // 当前选中的列表行
     if (!item || !m_world)
         return flecs::entity::null();
-    // UserRole 存的是实体 ID（raw_id），构造 flecs::entity 对象
-    return m_world->entity(item->data(Qt::UserRole).toULongLong());
+    // UserRole 存的是实体 ID（raw_id）
+    flecs::entity_t id = item->data(Qt::UserRole).toULongLong();
+    // ★ 必须检查 is_alive：删除后列表项可能仍引用已销毁的 ID，
+    //   而 ecs_get_type/ecs_get_id 对死实体会直接崩溃（flecs::entity 的
+    //   operator bool 只检查 id!=0，不检查存活，拦不住死实体）
+    if (!m_world->is_alive(id))
+        return flecs::entity::null();
+    return m_world->entity(id);
 }
 
 // ============================================================

@@ -2,77 +2,44 @@
 # my_demo — Flecs + Qt + OpenGL 渲染 Demo
 #
 # 支持独立构建和作为子目录引入两种模式。
-# 若父项目已定义 game_engine / flecs 目标则直接复用，
-# 否则自动创建所需依赖（Flecs 静态库 + 引擎 INTERFACE 库）。
 # ============================================================
 cmake_minimum_required(VERSION 3.15)
 project(MyDemo LANGUAGES C CXX)
 
-# ---- 公共路径（均相对于 my_demo/ 目录） ----
+# ---- 公共路径 ----
 set(ROOT_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/..")
 set(THIRDPARTY_DIR "${ROOT_DIR}/thirdparty")
 set(FLECS_DIR      "${THIRDPARTY_DIR}/flecs-4.1.6/distr")
 set(GLM_DIR        "${THIRDPARTY_DIR}/glm-1.0.3")
-set(NLOHMANN_DIR   "${THIRDPARTY_DIR}/nlohmann")
+set(NLOHMANN_DIR   "${THIRDPARTY_DIR}")
 set(SQLITE_DIR     "${THIRDPARTY_DIR}/sqlite")
 set(LOG_DIR        "${THIRDPARTY_DIR}/log")
-set(ENGINE_DIR     "${ROOT_DIR}/game_engine/engine")
+set(HFSM2_DIR     "${ROOT_DIR}/thirdparty/HFSM2-2.12.1/include")
+set(JOLT_DIR      "${THIRDPARTY_DIR}/JoltPhysics-master")
 set(SHADER_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/Shaders/")
 set(QT_PATH        "D:/QT/5.14.2/msvc2017_64")
-     
-# ---- 检测构建模式 ----
-# CMAKE_SOURCE_DIR == CMAKE_CURRENT_SOURCE_DIR → 独立构建（顶层项目）
-# 否则 → 由父项目通过 add_subdirectory 引入
+
+# ---- 独立构建时设置全局选项，子目录时跳过 ----
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    set(MY_DEMO_STANDALONE TRUE)
-else()
-    set(MY_DEMO_STANDALONE FALSE)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_AUTOMOC ON)
+    if(MSVC)
+        add_compile_options(/utf-8 /FS /Zc:__cplusplus)
+    endif()
+    set(CMAKE_PREFIX_PATH ${QT_PATH} ${CMAKE_PREFIX_PATH})
+    find_package(Qt5 REQUIRED COMPONENTS Widgets OpenGL)
+    find_package(OpenGL REQUIRED)
 endif()
 
-# ============================================================
-# 依赖配置：只在 game_engine 目标不存在时创建
-# ============================================================
-if(NOT TARGET game_engine)
-    # -- 仅在独立构建时设置全局选项（避免污染父项目） --
-    if(MY_DEMO_STANDALONE)
-        set(CMAKE_CXX_STANDARD 20)
-        set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-        if(MSVC)
-            add_compile_options(/utf-8 /FS /Zc:__cplusplus)
-        endif()
-
-        # Qt5（独立构建时需要 find_package，子目录时父项目已执行）
-        set(CMAKE_PREFIX_PATH ${QT_PATH} ${CMAKE_PREFIX_PATH})
-        find_package(Qt5 REQUIRED COMPONENTS Widgets OpenGL)
-        find_package(OpenGL REQUIRED)
-    endif()
-
-    # AUTOMOC 始终启用（EditorPanel 等需要 Qt MOC）
-    set(CMAKE_AUTOMOC ON)
-
-    # -- Flecs 静态库（完整版，含 C++ API） --
+# -- Flecs 静态库（只在不存在时创建） --
+if(NOT TARGET flecs)
     add_library(flecs STATIC "${FLECS_DIR}/flecs.c")
     target_include_directories(flecs PUBLIC "${FLECS_DIR}")
     if(MSVC)
         target_compile_options(flecs PRIVATE /utf-8 /wd4204 /wd4221)
     endif()
-
-    # -- 引擎核心（header-only INTERFACE 库） --
-    add_library(game_engine INTERFACE)
-    target_include_directories(game_engine INTERFACE
-        "${ENGINE_DIR}"
-        "${GLM_DIR}"
-        "${NLOHMANN_DIR}"
-    )
-    target_link_libraries(game_engine INTERFACE
-        flecs
-        Qt5::OpenGL
-        OpenGL::GL
-    )
 endif()
-
-# ---- SQLite3（数据库） ----
 if(NOT TARGET sqlite3)
     add_subdirectory(${SQLITE_DIR} ${CMAKE_BINARY_DIR}/sqlite3)
 endif()
@@ -106,36 +73,81 @@ if(NOT TARGET lua)
     endif()
 endif()
 
+# ---- Jolt Physics（工业级物理引擎）----
+if(NOT TARGET Jolt)
+    # 作为子目录引入时 Jolt 自动只编主库（不带 Samples/Tests）
+    set(GENERATE_DEBUG_SYMBOLS ON CACHE BOOL "" FORCE)
+    set(INTERPROCEDURAL_OPTIMIZATION OFF CACHE BOOL "" FORCE)  # 加快链接
+    set(OVERRIDE_CXX_FLAGS OFF CACHE BOOL "" FORCE)            # 不让 Jolt 劫持全局编译选项
+    add_subdirectory(${JOLT_DIR}/Build ${CMAKE_BINARY_DIR}/jolt)
+endif()
+
 # ============================================================
 # my_demo 可执行文件
 # ============================================================
 add_executable(my_demo WIN32
     main.cpp
     MainWindow.h    MainWindow.cpp
-    RenderWidget.h  RenderWidget.cpp
+    Core/Engine.h
+    Core/EngineState.h
+    Core/EngineFSM.h
+    Core/System.h
+    Core/Input.h
+    Core/Time.h
+    Core/JobSystem.h
+    Core/CommandStack.h
+    Core/Easing.h
+    Core/Raycast.h
     Components/MeshComponent.h
     Components/TagComponent.h
     Components/RotateBehavior.h
     Components/CameraComponent.h
+    Components/TransformComponent.h
+    Components/MaterialComponent.h
     Components/EditorVisible.h
-    System/CameraSystem.h
-    System/EditorCamera.h
-    System/Input.h
-    editor/EditorPanel.h   editor/EditorPanel.cpp
-    System/Shader.h
-    System/MeshFactory.h
-    System/RotationSystem.h
-    System/ScriptSystem.h
-    System/LuaApi.cpp
     Components/ScriptComponent.h
-    Engine.h
-    System/System.h
+    Components/SignalComponent.h
+    Components/RigidbodyComponent.h
+    Components/BoxColliderComponent.h
+    Components/AnimationComponent.h
+    Components/HealthComponent.h
+    Components/SpriteComponent.h
+    Components/Reflect.h
+    Systems/CameraSystem.h
+    Systems/RotationSystem.h
+    Systems/TransformSystem.h
+    Systems/AnimationSystem.h
+    Systems/ScriptSystem.h
+    Systems/PhysicsSystem.h
+    Systems/PhysicsEngine.cpp
+    Scripting/LuaApi.h
+    Scripting/LuaApi.cpp
+    Scripting/ScriptEngine.cpp
+    Scripting/LuaAsync.h
+    Scripting/LuaAsync.cpp
+    Render/RenderWidget.h  Render/RenderWidget.cpp
+    Render/Shader.h
+    Render/MeshFactory.h
+    Render/ResourceManager.h
+    Render/AnimationLibrary.h
+    Render/SceneSerializer.h
+    Editor/EditorPanel.h  Editor/EditorPanel.cpp
+    Editor/EditorCommands.h
 )
 
-target_include_directories(my_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(my_demo PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    "${GLM_DIR}"
+    "${NLOHMANN_DIR}"
+    "${HFSM2_DIR}"
+    "${JOLT_DIR}"
+)
 
 target_link_libraries(my_demo PRIVATE
-    game_engine
+    flecs
+    Jolt
+    Qt5::OpenGL
+    OpenGL::GL
     sqlite3
     mylog
     lua
@@ -145,11 +157,33 @@ target_link_libraries(my_demo PRIVATE
 
 if(MSVC)
     target_compile_options(my_demo PRIVATE /utf-8 /FS)
+    # strncpy 等 C 函数的 C4996 安全警告（项目已用 sizeof-1 限长，安全）
+    target_compile_definitions(my_demo PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
+# ---- mini-UHT：反射代码生成器 ----
+# 扫描 Components/*.h 的 REFLECT 宏标记 → 生成 Generated/ComponentReflection.inl
+# 每次构建 my_demo 前自动执行（内容不变则不写文件，避免无谓重编）
+add_executable(reflect_gen tools/reflect_gen.cpp)
+set_target_properties(reflect_gen PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+if(MSVC)
+    target_compile_options(reflect_gen PRIVATE /utf-8)
+endif()
+
+add_custom_target(run_reflect_gen
+    COMMAND $<TARGET_FILE:reflect_gen>
+        "${CMAKE_CURRENT_SOURCE_DIR}/Components"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Generated/ComponentReflection.inl"
+    COMMENT "reflect_gen: 扫描 REFLECT 宏标记生成反射注册"
+)
+add_dependencies(run_reflect_gen reflect_gen) # 先编生成器再跑
+add_dependencies(my_demo run_reflect_gen)
+
 # Shader 路径注入（指向 my_demo/Shaders/ 目录）
+# ASSET_DIR：资源根目录绝对路径（anims/scripts 等资源一律绝对路径，不依赖工作目录）
 target_compile_definitions(my_demo PRIVATE
     SHADER_DIR="${SHADER_DIR}"
+    ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
 # Visual Studio 调试器：启动时自动找到 Qt DLL

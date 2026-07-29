@@ -1,0 +1,47 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"thirdparty/log/spdlog-1.17.0/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "spdlog::@bad68644e005c63640a3"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "ALL_BUILD::@bad68644e005c63640a3",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"orderDependencies" : 
+	[
+		{
+			"id" : "spdlog::@bad68644e005c63640a3"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "mylog/spdlog-build",
+		"source" : "thirdparty/log/spdlog-1.17.0"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

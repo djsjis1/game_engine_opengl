@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"D:/code/.std/opengl/game_engine/build_new/cmake_install.cmake",
-		"D:/code/.std/opengl/game_engine/build_new/my_demo/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

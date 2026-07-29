@@ -1,0 +1,47 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"thirdparty/JoltPhysics-master/Build/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 9
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "Jolt::@aab4da6a6a7c0f108d52"
+		},
+		{
+			"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "ALL_BUILD::@aab4da6a6a7c0f108d52",
+	"isGeneratorProvided" : true,
+	"name" : "ALL_BUILD",
+	"orderDependencies" : 
+	[
+		{
+			"id" : "Jolt::@aab4da6a6a7c0f108d52"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "jolt",
+		"source" : "thirdparty/JoltPhysics-master/Build"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

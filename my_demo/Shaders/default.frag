@@ -3,6 +3,7 @@
 // 从顶点着色器接收
 in vec3 vFragPos;
 in vec3 vNormal;
+in vec2 vUV;
 
 // 方向光
 struct DirLight{
@@ -24,6 +25,10 @@ uniform Material uMaterial;
 
 uniform vec3 uCameraPos;
 
+// 精灵帧纹理（图片动画）：uHasTexture=0 时完全走原来的纯颜色光照路径
+uniform sampler2D uTexture;
+uniform int uHasTexture;
+
 out vec4 fragColor;
 
 void main()
@@ -44,5 +49,14 @@ void main()
     vec3 specular=uLight.specular*spec*uMaterial.specular;
     
     vec3 result=ambient+diffuse+specular;
-    fragColor=vec4(result,1.);
+    
+    // 有纹理：颜色乘到光照结果上（颜色轨道动画仍可叠加染色）
+    if(uHasTexture==1){
+        vec4 tex=texture(uTexture,vUV);
+        if(tex.a<.1)discard;// 透明像素不画（精灵镞空）
+        result*=tex.rgb;
+        fragColor=vec4(result,tex.a);
+    }else{
+        fragColor=vec4(result,1.);
+    }
 }

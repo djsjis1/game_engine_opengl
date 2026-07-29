@@ -2,12 +2,13 @@
 #define MATERIALCOMPONENT_H
 
 #include <glm/glm.hpp>
+#include "Components/Reflect.h"
 struct MaterialComponent
 {
-    glm::vec3 ambient{0.2f, 0.2f, 0.2f};
-    glm::vec3 diffuse{0.8f, 0.8f, 0.8f};
-    glm::vec3 specular{1.0f, 1.0f, 1.0f};
-    float shininess = 32.0f;
+    REFLECT glm::vec3 ambient{0.2f, 0.2f, 0.2f};
+    REFLECT glm::vec3 diffuse{0.8f, 0.8f, 0.8f};
+    REFLECT glm::vec3 specular{1.0f, 1.0f, 1.0f};
+    REFLECT float shininess = 32.0f;
 };
 
 #endif

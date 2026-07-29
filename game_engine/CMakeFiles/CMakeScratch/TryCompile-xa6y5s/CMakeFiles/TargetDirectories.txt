@@ -1,2 +1,0 @@
-D:/code/.std/opengl/game_engine/CMakeFiles/CMakeScratch/TryCompile-xa6y5s/CMakeFiles/cmTC_0b6b6.dir
-D:/code/.std/opengl/game_engine/CMakeFiles/CMakeScratch/TryCompile-xa6y5s/CMakeFiles/ALL_BUILD.dir

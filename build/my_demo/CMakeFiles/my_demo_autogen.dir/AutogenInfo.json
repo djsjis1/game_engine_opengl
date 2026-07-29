@@ -5,31 +5,25 @@
 	"CMAKE_CURRENT_BINARY_DIR" : "D:/code/.std/opengl/build/my_demo",
 	"CMAKE_CURRENT_SOURCE_DIR" : "D:/code/.std/opengl/my_demo",
 	"CMAKE_EXECUTABLE" : "C:/Program Files/CMake/bin/cmake.exe",
-	"CMAKE_LIST_FILES" : 
-	[
-		"D:/code/.std/opengl/my_demo/CMakeLists.txt",
-		"D:/code/.std/opengl/build/CMakeFiles/4.2.1/CMakeCCompiler.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/CMakeCInformation.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/CMakeLanguageInformation.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Compiler/MSVC-C.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Compiler/MSVC.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Windows-MSVC-C.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Windows-MSVC.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/CMakeCommonLanguageInclude.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Internal/CMakeCLinkerInformation.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Internal/CMakeCommonLinkerInformation.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Linker/MSVC-C.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Linker/MSVC.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Linker/Windows-MSVC-C.cmake",
-		"C:/Program Files/CMake/share/cmake-4.2/Modules/Platform/Linker/Windows-MSVC.cmake"
-	],
+	"CMAKE_LIST_FILES" : [ "D:/code/.std/opengl/my_demo/CMakeLists.txt" ],
 	"CMAKE_SOURCE_DIR" : "D:/code/.std/opengl",
 	"CROSS_CONFIG" : false,
 	"DEP_FILE" : "",
 	"DEP_FILE_RULE_NAME" : "",
 	"HEADERS" : 
 	[
+		[
+			"D:/code/.std/opengl/my_demo/Components/AnimationComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_AnimationComponent.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Components/BoxColliderComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_BoxColliderComponent.cpp",
+			null
+		],
 		[
 			"D:/code/.std/opengl/my_demo/Components/CameraComponent.h",
 			"Mu",
@@ -43,9 +37,33 @@
 			null
 		],
 		[
+			"D:/code/.std/opengl/my_demo/Components/HealthComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_HealthComponent.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Components/MaterialComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_MaterialComponent.cpp",
+			null
+		],
+		[
 			"D:/code/.std/opengl/my_demo/Components/MeshComponent.h",
 			"Mu",
 			"XUR7DU7GFW/moc_MeshComponent.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Components/Reflect.h",
+			"Mu",
+			"XUR7DU7GFW/moc_Reflect.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Components/RigidbodyComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_RigidbodyComponent.cpp",
 			null
 		],
 		[
@@ -61,15 +79,99 @@
 			null
 		],
 		[
+			"D:/code/.std/opengl/my_demo/Components/SignalComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_SignalComponent.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Components/SpriteComponent.h",
+			"Mu",
+			"XUR7DU7GFW/moc_SpriteComponent.cpp",
+			null
+		],
+		[
 			"D:/code/.std/opengl/my_demo/Components/TagComponent.h",
 			"Mu",
 			"XUR7DU7GFW/moc_TagComponent.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/Engine.h",
+			"D:/code/.std/opengl/my_demo/Components/TransformComponent.h",
 			"Mu",
-			"EWIEGA46WW/moc_Engine.cpp",
+			"XUR7DU7GFW/moc_TransformComponent.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/CommandStack.h",
+			"Mu",
+			"4VKJKCZPXG/moc_CommandStack.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/Easing.h",
+			"Mu",
+			"4VKJKCZPXG/moc_Easing.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/Engine.h",
+			"Mu",
+			"4VKJKCZPXG/moc_Engine.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/EngineFSM.h",
+			"Mu",
+			"4VKJKCZPXG/moc_EngineFSM.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/EngineState.h",
+			"Mu",
+			"4VKJKCZPXG/moc_EngineState.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/Input.h",
+			"Mu",
+			"4VKJKCZPXG/moc_Input.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/JobSystem.h",
+			"Mu",
+			"4VKJKCZPXG/moc_JobSystem.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/Raycast.h",
+			"Mu",
+			"4VKJKCZPXG/moc_Raycast.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/System.h",
+			"Mu",
+			"4VKJKCZPXG/moc_System.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/Time.h",
+			"Mu",
+			"4VKJKCZPXG/moc_Time.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Editor/EditorCommands.h",
+			"Mu",
+			"3HAKN7MTYQ/moc_EditorCommands.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Editor/EditorPanel.h",
+			"Mu",
+			"3HAKN7MTYQ/moc_EditorPanel.cpp",
 			null
 		],
 		[
@@ -79,63 +181,87 @@
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/RenderWidget.h",
+			"D:/code/.std/opengl/my_demo/Render/AnimationLibrary.h",
 			"Mu",
-			"EWIEGA46WW/moc_RenderWidget.cpp",
+			"Q6Y7IZYM6X/moc_AnimationLibrary.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/CameraSystem.h",
+			"D:/code/.std/opengl/my_demo/Render/MeshFactory.h",
 			"Mu",
-			"D4NBAXR44T/moc_CameraSystem.cpp",
+			"Q6Y7IZYM6X/moc_MeshFactory.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/EditorCamera.h",
+			"D:/code/.std/opengl/my_demo/Render/RenderWidget.h",
 			"Mu",
-			"D4NBAXR44T/moc_EditorCamera.cpp",
+			"Q6Y7IZYM6X/moc_RenderWidget.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/Input.h",
+			"D:/code/.std/opengl/my_demo/Render/ResourceManager.h",
 			"Mu",
-			"D4NBAXR44T/moc_Input.cpp",
+			"Q6Y7IZYM6X/moc_ResourceManager.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/MeshFactory.h",
+			"D:/code/.std/opengl/my_demo/Render/SceneSerializer.h",
 			"Mu",
-			"D4NBAXR44T/moc_MeshFactory.cpp",
+			"Q6Y7IZYM6X/moc_SceneSerializer.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/RotationSystem.h",
+			"D:/code/.std/opengl/my_demo/Render/Shader.h",
 			"Mu",
-			"D4NBAXR44T/moc_RotationSystem.cpp",
+			"Q6Y7IZYM6X/moc_Shader.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/ScriptSystem.h",
+			"D:/code/.std/opengl/my_demo/Scripting/LuaApi.h",
 			"Mu",
-			"D4NBAXR44T/moc_ScriptSystem.cpp",
+			"2TN7G6JME4/moc_LuaApi.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/Shader.h",
+			"D:/code/.std/opengl/my_demo/Scripting/LuaAsync.h",
 			"Mu",
-			"D4NBAXR44T/moc_Shader.cpp",
+			"2TN7G6JME4/moc_LuaAsync.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/System/System.h",
+			"D:/code/.std/opengl/my_demo/Systems/AnimationSystem.h",
 			"Mu",
-			"D4NBAXR44T/moc_System.cpp",
+			"VO5QMHL5JN/moc_AnimationSystem.cpp",
 			null
 		],
 		[
-			"D:/code/.std/opengl/my_demo/editor/EditorPanel.h",
+			"D:/code/.std/opengl/my_demo/Systems/CameraSystem.h",
 			"Mu",
-			"3HAKN7MTYQ/moc_EditorPanel.cpp",
+			"VO5QMHL5JN/moc_CameraSystem.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Systems/PhysicsSystem.h",
+			"Mu",
+			"VO5QMHL5JN/moc_PhysicsSystem.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Systems/RotationSystem.h",
+			"Mu",
+			"VO5QMHL5JN/moc_RotationSystem.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Systems/ScriptSystem.h",
+			"Mu",
+			"VO5QMHL5JN/moc_ScriptSystem.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Systems/TransformSystem.h",
+			"Mu",
+			"VO5QMHL5JN/moc_TransformSystem.cpp",
 			null
 		]
 	],
@@ -153,6 +279,21 @@
 	"MOC_DEFINITIONS" : [],
 	"MOC_DEFINITIONS_Debug" : 
 	[
+		"ASSET_DIR=\"D:/code/.std/opengl/my_demo/\"",
+		"JPH_DEBUG_RENDERER",
+		"JPH_FLOATING_POINT_EXCEPTIONS_ENABLED",
+		"JPH_OBJECT_STREAM",
+		"JPH_PROFILE_ENABLED",
+		"JPH_USE_AVX",
+		"JPH_USE_AVX2",
+		"JPH_USE_CPU_COMPUTE",
+		"JPH_USE_DX12",
+		"JPH_USE_F16C",
+		"JPH_USE_FMADD",
+		"JPH_USE_LZCNT",
+		"JPH_USE_SSE4_1",
+		"JPH_USE_SSE4_2",
+		"JPH_USE_TZCNT",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
 		"QT_OPENGL_LIB",
@@ -160,10 +301,23 @@
 		"SHADER_DIR=\"D:/code/.std/opengl/my_demo/Shaders/\"",
 		"SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE",
 		"SPDLOG_COMPILED_LIB",
-		"WIN32"
+		"WIN32",
+		"_CRT_SECURE_NO_WARNINGS"
 	],
 	"MOC_DEFINITIONS_MinSizeRel" : 
 	[
+		"ASSET_DIR=\"D:/code/.std/opengl/my_demo/\"",
+		"JPH_OBJECT_STREAM",
+		"JPH_USE_AVX",
+		"JPH_USE_AVX2",
+		"JPH_USE_CPU_COMPUTE",
+		"JPH_USE_DX12",
+		"JPH_USE_F16C",
+		"JPH_USE_FMADD",
+		"JPH_USE_LZCNT",
+		"JPH_USE_SSE4_1",
+		"JPH_USE_SSE4_2",
+		"JPH_USE_TZCNT",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
 		"QT_NO_DEBUG",
@@ -172,10 +326,23 @@
 		"SHADER_DIR=\"D:/code/.std/opengl/my_demo/Shaders/\"",
 		"SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE",
 		"SPDLOG_COMPILED_LIB",
-		"WIN32"
+		"WIN32",
+		"_CRT_SECURE_NO_WARNINGS"
 	],
 	"MOC_DEFINITIONS_RelWithDebInfo" : 
 	[
+		"ASSET_DIR=\"D:/code/.std/opengl/my_demo/\"",
+		"JPH_OBJECT_STREAM",
+		"JPH_USE_AVX",
+		"JPH_USE_AVX2",
+		"JPH_USE_CPU_COMPUTE",
+		"JPH_USE_DX12",
+		"JPH_USE_F16C",
+		"JPH_USE_FMADD",
+		"JPH_USE_LZCNT",
+		"JPH_USE_SSE4_1",
+		"JPH_USE_SSE4_2",
+		"JPH_USE_TZCNT",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
 		"QT_NO_DEBUG",
@@ -184,10 +351,27 @@
 		"SHADER_DIR=\"D:/code/.std/opengl/my_demo/Shaders/\"",
 		"SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE",
 		"SPDLOG_COMPILED_LIB",
-		"WIN32"
+		"WIN32",
+		"_CRT_SECURE_NO_WARNINGS"
 	],
 	"MOC_DEFINITIONS_Release" : 
 	[
+		"ASSET_DIR=\"D:/code/.std/opengl/my_demo/\"",
+		"JPH_DEBUG_RENDERER",
+		"JPH_FLOATING_POINT_EXCEPTIONS_ENABLED",
+		"JPH_OBJECT_STREAM",
+		"JPH_PROFILE_ENABLED",
+		"JPH_USE_AVX",
+		"JPH_USE_AVX2",
+		"JPH_USE_CPU_COMPUTE",
+		"JPH_USE_DX12",
+		"JPH_USE_F16C",
+		"JPH_USE_FMADD",
+		"JPH_USE_LZCNT",
+		"JPH_USE_SSE4_1",
+		"JPH_USE_SSE4_2",
+		"JPH_USE_TZCNT",
+		"NDEBUG",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
 		"QT_NO_DEBUG",
@@ -196,7 +380,8 @@
 		"SHADER_DIR=\"D:/code/.std/opengl/my_demo/Shaders/\"",
 		"SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE",
 		"SPDLOG_COMPILED_LIB",
-		"WIN32"
+		"WIN32",
+		"_CRT_SECURE_NO_WARNINGS"
 	],
 	"MOC_DEPEND_FILTERS" : 
 	[
@@ -209,10 +394,12 @@
 	"MOC_INCLUDES_Debug" : 
 	[
 		"D:/code/.std/opengl/my_demo",
-		"D:/code/.std/opengl/game_engine/engine",
 		"D:/code/.std/opengl/thirdparty/glm-1.0.3",
-		"D:/code/.std/opengl/thirdparty/nlohmann",
+		"D:/code/.std/opengl/thirdparty",
+		"D:/code/.std/opengl/thirdparty/HFSM2-2.12.1/include",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/flecs-4.1.6/distr",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
@@ -228,10 +415,12 @@
 	"MOC_INCLUDES_MinSizeRel" : 
 	[
 		"D:/code/.std/opengl/my_demo",
-		"D:/code/.std/opengl/game_engine/engine",
 		"D:/code/.std/opengl/thirdparty/glm-1.0.3",
-		"D:/code/.std/opengl/thirdparty/nlohmann",
+		"D:/code/.std/opengl/thirdparty",
+		"D:/code/.std/opengl/thirdparty/HFSM2-2.12.1/include",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/flecs-4.1.6/distr",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
@@ -247,10 +436,12 @@
 	"MOC_INCLUDES_RelWithDebInfo" : 
 	[
 		"D:/code/.std/opengl/my_demo",
-		"D:/code/.std/opengl/game_engine/engine",
 		"D:/code/.std/opengl/thirdparty/glm-1.0.3",
-		"D:/code/.std/opengl/thirdparty/nlohmann",
+		"D:/code/.std/opengl/thirdparty",
+		"D:/code/.std/opengl/thirdparty/HFSM2-2.12.1/include",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/flecs-4.1.6/distr",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
@@ -266,10 +457,12 @@
 	"MOC_INCLUDES_Release" : 
 	[
 		"D:/code/.std/opengl/my_demo",
-		"D:/code/.std/opengl/game_engine/engine",
 		"D:/code/.std/opengl/thirdparty/glm-1.0.3",
-		"D:/code/.std/opengl/thirdparty/nlohmann",
+		"D:/code/.std/opengl/thirdparty",
+		"D:/code/.std/opengl/thirdparty/HFSM2-2.12.1/include",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/flecs-4.1.6/distr",
+		"D:/code/.std/opengl/thirdparty/JoltPhysics-master",
 		"D:/code/.std/opengl/thirdparty/sqlite",
 		"D:/code/.std/opengl/thirdparty/log",
 		"D:/code/.std/opengl/thirdparty/log/spdlog-1.17.0/include",
@@ -293,11 +486,7 @@
 		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Debug.cpp",
 		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_MinSizeRel.cpp",
 		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_RelWithDebInfo.cpp",
-		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Release.cpp",
-		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_Debug.cpp",
-		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_MinSizeRel.cpp",
-		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_RelWithDebInfo.cpp",
-		"D:/code/.std/opengl/build/my_demo/lua_autogen/mocs_compilation_Release.cpp"
+		"D:/code/.std/opengl/build/my_demo/flecs_autogen/mocs_compilation_Release.cpp"
 	],
 	"MULTI_CONFIG" : true,
 	"PARALLEL" : 6,
@@ -317,10 +506,13 @@
 	"SETTINGS_FILE_Release" : "D:/code/.std/opengl/build/my_demo/CMakeFiles/my_demo_autogen.dir/AutogenUsed_Release.txt",
 	"SOURCES" : 
 	[
+		[ "D:/code/.std/opengl/my_demo/Editor/EditorPanel.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/MainWindow.cpp", "Mu", null ],
-		[ "D:/code/.std/opengl/my_demo/RenderWidget.cpp", "Mu", null ],
-		[ "D:/code/.std/opengl/my_demo/System/LuaApi.cpp", "Mu", null ],
-		[ "D:/code/.std/opengl/my_demo/editor/EditorPanel.cpp", "Mu", null ],
+		[ "D:/code/.std/opengl/my_demo/Render/RenderWidget.cpp", "Mu", null ],
+		[ "D:/code/.std/opengl/my_demo/Scripting/LuaApi.cpp", "Mu", null ],
+		[ "D:/code/.std/opengl/my_demo/Scripting/LuaAsync.cpp", "Mu", null ],
+		[ "D:/code/.std/opengl/my_demo/Scripting/ScriptEngine.cpp", "Mu", null ],
+		[ "D:/code/.std/opengl/my_demo/Systems/PhysicsEngine.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/main.cpp", "Mu", null ]
 	],
 	"USE_BETTER_GRAPH" : false,
