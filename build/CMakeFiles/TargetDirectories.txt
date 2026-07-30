@@ -30,6 +30,8 @@ D:/code/.std/opengl/build/my_demo/CMakeFiles/flecs.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/my_demo.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/reflect_gen.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/run_reflect_gen.dir
+D:/code/.std/opengl/build/my_demo/CMakeFiles/my_game.dir
+D:/code/.std/opengl/build/my_demo/CMakeFiles/test_gameplay.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/INSTALL.dir
 D:/code/.std/opengl/build/my_demo/CMakeFiles/ALL_BUILD.dir
 D:/code/.std/opengl/build/sqlite3/CMakeFiles/sqlite3.dir

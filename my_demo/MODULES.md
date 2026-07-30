@@ -386,6 +386,31 @@ ResourceManager（静态单例）曾直接持有 MeshFactory（继承 QOpenGLFun
 **解法**：区间跨越检测 `(prev, cur]`，loop 回绕拆两段（见 AnimClip::collectEvents）。
 **教训**：一切"到达某时刻/某位置触发"的需求都要用跨越检测，不要用相等判断。
 
+### 坑 14：动画混合过渡完成后必须清状态，否则永久双采样
+
+crossfade 用 `blendDuration>0 && prev[0]` 判断"是否在过渡中"。若权重到 1.0 后
+不把 `blendDuration=0` 且 `prev[0]='\0'`，系统会一直走混合分支：既浪费性能
+（每帧多采样一个 clip），又可能因 prevTime 持续推进采样到旧动画的奇怪位置。
+**解法**：`w>=1` 时立刻收尾切回单动画路径（applyClip），混合只存在于过渡窗口期。
+**教训**："临时叠加态"（过渡/临时 buff/瞬时特效）必须有明确的退出条件和状态清理，
+否则会从"临时"变成"永久"，这类 bug 不报错但持续消耗资源。
+
+### 混合能力速记（AnimationTree crossfade 最小实现）
+
+- 单动画走 `applyClip`（零额外开销）；过渡期走 `applyClipBlended`（双采样 lerp）
+- `applyClipBlended` 以新 clip 为主遍历轨道，在旧 clip 里按 comp/field 找同路径轨道
+  → `vFrom*(1-w)+vTo*w`；旧 clip 没有的轨道直接用新值
+- Lua：`anim_play`=硬切，`anim_crossfade(clip, duration)`=带过渡（默认 0.3s）
+- 演示脚本：scripts/crossfade_demo.lua（按 1/2 平滑切 spin/bounce）
+
+### 坑 15 及以后 → docs/troubleshooting.md
+
+「多场景游戏 + 导出」实战期抓出的坑（15~22：手写场景 JSON 静默失败、
+编辑器相机抢输入、Jolt 睡眠、场景名未登记、射线自击、UI 吃游戏按键、
+set_position 被物理回写覆盖、默认密度千斤方块）以及**排障方法论**
+（可视化诊断 / 分层探针 / 数值反推）统一记录在
+`docs/troubleshooting.md`——按"症状→根因→修复→快速定位"组织，排障先查它。
+
 ---
 
 ## 九、怎么添加新功能

@@ -1,0 +1,1507 @@
+{
+  "entities": [
+    {
+      "CameraComponent": {
+        "active": [
+          true
+        ],
+        "farPlane": [
+          100
+        ],
+        "fov": [
+          45
+        ],
+        "isEditor": [
+          false
+        ],
+        "mouseSens": [
+          0.1000000015
+        ],
+        "moveSpeed": [
+          5
+        ],
+        "nearPlane": [
+          0.1000000015
+        ],
+        "pitch": [
+          -35
+        ],
+        "position": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              10
+            ],
+            "z": [
+              14
+            ]
+          }
+        ],
+        "yaw": [
+          -90
+        ]
+      },
+      "TagComponent": {
+        "name": "Camera"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "ScriptComponent": {
+        "filePath": "D:/code/.std/opengl/my_demo/scripts/code_world.lua"
+      },
+      "TagComponent": {
+        "name": "Main"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0.400000006
+            ],
+            "y": [
+              0.5500000119
+            ],
+            "z": [
+              0.400000006
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          0
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ground"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              -0.5
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              16
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              16
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0.8535534143
+            ],
+            "y": [
+              0.8535534143
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring1"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              3.5355324745
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              3.5355360508
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring2"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              -6.847e-07
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              5.0000023842
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0.1464466155
+            ],
+            "y": [
+              0.8535534143
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring3"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              -3.5355353355
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              3.5355360508
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring4"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              -5.0000014305
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              1.7285e-06
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0.1464466155
+            ],
+            "y": [
+              0.1464466155
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring5"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              -3.5355353355
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              -3.5355317593
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring6"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              -1.3905e-06
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              -4.9999976158
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              0.8535534143
+            ],
+            "y": [
+              0.1464466155
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring7"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              3.5355324745
+            ],
+            "y": [
+              0.4999996424
+            ],
+            "z": [
+              -3.5355319977
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.6999999881
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "TagComponent": {
+        "name": "Ring8"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              4.9999985695
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              2.1086e-06
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "BoxColliderComponent": {
+        "halfExtents": [
+          {
+            "x": [
+              0.5
+            ],
+            "y": [
+              0.5
+            ],
+            "z": [
+              0.5
+            ]
+          }
+        ]
+      },
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              0.5500000119
+            ],
+            "z": [
+              0.150000006
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RigidbodyComponent": {
+        "friction": [
+          0.5
+        ],
+        "mass": [
+          1
+        ],
+        "motionType": [
+          2
+        ],
+        "restitution": [
+          0.200000003
+        ]
+      },
+      "ScriptComponent": {
+        "filePath": "D:/code/.std/opengl/my_demo/scripts/player.lua"
+      },
+      "TagComponent": {
+        "name": "Hero"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              -1.4124e-06
+            ],
+            "y": [
+              0.4999996126
+            ],
+            "z": [
+              2.0952e-06
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              0
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    },
+    {
+      "MaterialComponent": {
+        "ambient": [
+          {
+            "x": [
+              0.200000003
+            ],
+            "y": [
+              0.200000003
+            ],
+            "z": [
+              0.200000003
+            ]
+          }
+        ],
+        "diffuse": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              0.8500000238
+            ],
+            "z": [
+              0.1000000015
+            ]
+          }
+        ],
+        "shininess": [
+          32
+        ],
+        "specular": [
+          {
+            "x": [
+              1
+            ],
+            "y": [
+              1
+            ],
+            "z": [
+              1
+            ]
+          }
+        ]
+      },
+      "MeshComponent": {
+        "meshType": "cube"
+      },
+      "RotateBehavior": {
+        "speedX": [
+          0
+        ],
+        "speedY": [
+          120
+        ],
+        "speedZ": [
+          0
+        ]
+      },
+      "TagComponent": {
+        "name": "Pillar"
+      },
+      "TransformComponent": {
+        "position": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              2.5
+            ],
+            "z": [
+              -6
+            ]
+          }
+        ],
+        "rotation": [
+          {
+            "x": [
+              0
+            ],
+            "y": [
+              129.9599914551
+            ],
+            "z": [
+              0
+            ]
+          }
+        ],
+        "scale": [
+          {
+            "x": [
+              0.6000000238
+            ],
+            "y": [
+              3
+            ],
+            "z": [
+              0.6000000238
+            ]
+          }
+        ],
+        "visible": [
+          true
+        ]
+      }
+    }
+  ]
+}

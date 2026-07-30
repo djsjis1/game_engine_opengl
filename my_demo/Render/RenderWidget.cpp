@@ -4,6 +4,8 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <algorithm>
+#include <vector>
+#include "Core/GamePaths.h" // 运行时 shader/资源路径（导出/开发双模式）
 
 RenderWidget::RenderWidget(QWidget *parent) : QOpenGLWidget(parent) {}
 
@@ -11,59 +13,55 @@ void RenderWidget::initializeGL()
 {
     initializeOpenGLFunctions();
     glEnable(GL_DEPTH_TEST);
-    if (!m_shader.load(SHADER_DIR "default.vert", SHADER_DIR "default.frag"))
+    // Shader 路径运行时解析：导出包用 exe 旁 assets/Shaders/，开发用 SHADER_DIR
+    const std::string sd = GamePaths::shaderDir().toStdString();
+    if (!m_shader.load(sd + "default.vert", sd + "default.frag"))
         qWarning() << "Shader load failed";
-    if (!m_lineShader.load(SHADER_DIR "line.vert", SHADER_DIR "line.frag"))
+    if (!m_lineShader.load(sd + "line.vert", sd + "line.frag"))
         qWarning() << "Line shader load failed";
     initGizmo();
 }
 
+// ============================================================
+// Godot 风格视口参考线：网格地面 + 原点坐标轴
+//
+// 顶点布局（分段存入同一个 VBO，drawGizmo 分批上色绘制）：
+//   [0 .. m_gridVerts)          灰色网格线（XZ 平面，每 1m 一格）
+//   [m_gridVerts+0 .. +2)       X 轴（红，±L 穿过原点）
+//   [m_gridVerts+2 .. +4)       Y 轴（绿，向上短线 —— Godot 习惯）
+//   [m_gridVerts+4 .. +6)       Z 轴（蓝，±L）
+// ============================================================
 void RenderWidget::initGizmo()
 {
-    float L = 100.0f;
-    float lines[] = {
-        0,
-        0,
-        0,
-        L,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        L,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        L,
-        0,
-        0,
-        0,
-        -L,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -L,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -L,
+    const int kHalf = 20; // 网格半径：±20 米
+    const float kL = (float)kHalf;
+
+    std::vector<float> v; // 每顶点 3 float（位置）
+    auto line = [&v](float x1, float y1, float z1, float x2, float y2, float z2)
+    {
+        v.insert(v.end(), {x1, y1, z1, x2, y2, z2});
     };
+
+    // ① 网格线（跳过 0：原点处由彩色轴线代替，Godot 同款）
+    for (int i = -kHalf; i <= kHalf; ++i)
+    {
+        if (i == 0)
+            continue;
+        line((float)i, 0, -kL, (float)i, 0, kL); // 沿 Z 方向
+        line(-kL, 0, (float)i, kL, 0, (float)i); // 沿 X 方向
+    }
+    m_gridVerts = (int)(v.size() / 3);
+
+    // ② 彩色坐标轴（X红 Y绿 Z蓝 —— 图形学通用记法 RGB=XYZ）
+    line(-kL, 0, 0, kL, 0, 0); // X
+    line(0, 0, 0, 0, 5, 0);    // Y（短线向上，认方向用）
+    line(0, 0, -kL, 0, 0, kL); // Z
+
     glGenVertexArrays(1, &m_gizmoVao);
     glGenBuffers(1, &m_gizmoVbo);
     glBindVertexArray(m_gizmoVao);
     glBindBuffer(GL_ARRAY_BUFFER, m_gizmoVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(lines), lines, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, v.size() * sizeof(float), v.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
@@ -80,12 +78,19 @@ void RenderWidget::drawGizmo(const glm::mat4 &view, const glm::mat4 &proj)
     m_lineShader.setMat4("uProjection", proj);
     m_lineShader.setMat4("uModel", glm::mat4(1));
     glBindVertexArray(m_gizmoVao);
-    float bright[] = {1, 0, 0};
-    m_lineShader.setVec3("uColor", bright[0], bright[1], bright[2]);
-    glDrawArrays(GL_LINES, 0, 6);
-    float dim[] = {0.4f, 0, 0};
-    m_lineShader.setVec3("uColor", dim[0], dim[1], dim[2]);
-    glDrawArrays(GL_LINES, 6, 6);
+
+    // ① 灰色网格（Godot 地面色调）
+    m_lineShader.setVec3("uColor", 0.32f, 0.34f, 0.38f);
+    glDrawArrays(GL_LINES, 0, m_gridVerts);
+
+    // ② 彩色轴：X红 / Y绿 / Z蓝（各 2 顶点，紧跟在网格后）
+    m_lineShader.setVec3("uColor", 0.86f, 0.26f, 0.30f); // X 红
+    glDrawArrays(GL_LINES, m_gridVerts + 0, 2);
+    m_lineShader.setVec3("uColor", 0.35f, 0.75f, 0.30f); // Y 绿
+    glDrawArrays(GL_LINES, m_gridVerts + 2, 2);
+    m_lineShader.setVec3("uColor", 0.30f, 0.45f, 0.90f); // Z 蓝
+    glDrawArrays(GL_LINES, m_gridVerts + 4, 2);
+
     glBindVertexArray(0);
 }
 
@@ -94,7 +99,8 @@ void RenderWidget::paintGL()
     // 执行延迟删除：这里天然有 GL 上下文（ResourceManager 的待删队列）
     ResourceManager::instance().flushPendingDeletes();
 
-    glClearColor(0.15f, 0.15f, 0.2f, 1.f);
+    // Godot 风格深灰蓝背景（突出网格与实体）
+    glClearColor(0.11f, 0.125f, 0.155f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if (!m_world || !m_shader.isValid())
         return;
@@ -104,9 +110,15 @@ void RenderWidget::paintGL()
     glm::mat4 proj = glm::perspective(glm::radians(45.f), float(width()) / std::max(height(), 1), 0.1f, 100.f);
     glm::vec3 cameraPos = glm::vec3(0, 3, 8);
 
+    // 相机选择：编辑器相机（isEditor）优先——编辑器里场景可能带游戏相机，
+    // 不能让它抢走视角；游戏运行时（GameWindow）没有 editor 相机，
+    // 自然落到游戏相机——同一段代码两种环境都对
+    bool foundEditor = false;
     m_world->each([&](flecs::entity, const CameraComponent &cam)
                   {
         if (!cam.active) return;
+        if (foundEditor && !cam.isEditor) return; // 已有编辑器相机，游戏相机不覆盖
+        if (cam.isEditor) foundEditor = true;
         view = cam.viewMatrix;
         cameraPos = cam.position;
         // 用实际窗口宽高比重算投影矩阵（CameraSystem 用的是默认值）

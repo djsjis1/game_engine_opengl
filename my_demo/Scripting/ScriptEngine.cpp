@@ -153,6 +153,7 @@ struct ScriptSystem::Impl
     std::map<flecs::entity_t, bool> wasReady;
     std::map<flecs::entity_t, time_t> scriptMtimes;
     flecs::observer observer;
+    flecs::world *world = nullptr; // 保存 world（reloadScript 遍历实体用）
 };
 
 ScriptSystem::~ScriptSystem() = default;
@@ -162,6 +163,7 @@ void ScriptSystem::init(flecs::world &world)
     m_impl = new Impl;
     m_impl->L = luaL_newstate();
     luaL_openlibs(m_impl->L);
+    m_impl->world = &world; // reloadScript 需要遍历实体
 
     g_mainThreadId = std::this_thread::get_id();
 
@@ -252,4 +254,36 @@ void ScriptSystem::update(flecs::world &world, float dt)
 
         if (!m_impl->wasReady[e.raw_id()]) { callLifecycle(L, envRef, "ready"); m_impl->wasReady[e.raw_id()] = true; }
         callLifecycle(L, envRef, "update", dt); });
+}
+
+// ============================================================
+// 热重载：主动重置指定路径的脚本（内置编辑器保存后调用）
+//
+// 为什么不能只靠 update 里的 mtime 轮询：
+//   st_mtime 是整秒精度，同一秒内保存检测不到变化（Godot 靠主动通知）。
+// 做法：清编译缓存（强制下次重编）+ 释放匹配实体的 envRef
+//   → 下帧 update 发现 envRefs 无此实体 → 重新 initEntity + 重跑 ready()
+// ============================================================
+void ScriptSystem::reloadScript(const std::string &path)
+{
+    if (!m_impl || !m_impl->L || !m_impl->world || path.empty())
+        return;
+    lua_State *L = m_impl->L;
+
+    // 1. 清掉该文件的字节码缓存（键就是 filePath），强制重编译
+    g_compiledChunks.erase(path);
+
+    // 2. 释放匹配该路径的实体环境 → 下帧自然重建
+    m_impl->world->each([&](flecs::entity e, ScriptComponent &sc)
+                        {
+        if (path != sc.filePath) return;
+        flecs::entity_t id = e.raw_id();
+        auto refIt = m_impl->envRefs.find(id);
+        if (refIt != m_impl->envRefs.end())
+        {
+            luaL_unref(L, LUA_REGISTRYINDEX, refIt->second);
+            m_impl->envRefs.erase(refIt); // 下帧 update 会重新 initEntity
+        }
+        m_impl->wasReady.erase(id);       // 重跑 ready()
+        m_impl->scriptMtimes.erase(id); });
 }

@@ -6,6 +6,7 @@
 #include "Components/TransformComponent.h"
 #include "Components/TagComponent.h"
 #include <map>
+#include <string>
 
 // ============================================================
 // ScriptSystem — Lua 脚本引擎（1 个 lua_State + 每实体 table 环境）
@@ -21,6 +22,11 @@ public:
     void init(flecs::world &world);
     void shutdown() override;
     void update(flecs::world &world, float dt) override;
+
+    /// 热重载：内置编辑器保存脚本后主动调用，立即生效（对标 Godot）
+    /// 不依赖 mtime 轮询（整秒精度拓不准同秒保存）；清编译缓存 +
+    /// 重置匹配该路径的实体 → 下帧 update 重新 init 并重跑 ready()
+    void reloadScript(const std::string &path);
 
     int phase() const override { return 100; }
     int activeIn() const override { return (int)EngineState::Play; }

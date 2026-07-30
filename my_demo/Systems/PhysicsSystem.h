@@ -48,11 +48,20 @@ bool physicsApplyImpulse(flecs::entity_t id, float x, float y, float z);
 /// 直接设置实体速度
 bool physicsSetVelocity(flecs::entity_t id, float x, float y, float z);
 
+/// 读取刚体线速度（移动时保留 y 速度用）；无刚体返回 false
+bool physicsGetVelocity(flecs::entity_t id, float &x, float &y, float &z);
+
+/// 传送刚体（读档/重生用）：只改 Transform 会被物理回写拉回原地
+bool physicsSetPosition(flecs::entity_t id, float x, float y, float z);
+
 /// 玩法射线（脚本 raycast 调用）：命中返回 true 并填写命中实体/点/距离
 /// 只检测物理碰撞体（Jolt BVH 加速）；编辑器拾取另走 Core/Raycast.h
+/// ignoreEntity：忽略该实体的碰撞体（发射者自己——否则从自身中心发射
+/// 会命中自己；Godot intersect_ray 的 exclude 同款语义）
 bool physicsRaycast(float ox, float oy, float oz,
                     float dx, float dy, float dz, float maxDist,
                     flecs::entity_t &hitEntity,
-                    float &hitX, float &hitY, float &hitZ, float &hitDist);
+                    float &hitX, float &hitY, float &hitZ, float &hitDist,
+                    flecs::entity_t ignoreEntity = 0);
 
 #endif

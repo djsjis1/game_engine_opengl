@@ -472,6 +472,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\code\.std\opengl\my_demo\main.cpp" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\MainWindow.h" />
     <ClCompile Include="D:\code\.std\opengl\my_demo\MainWindow.cpp" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.h" />
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.cpp" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorCommands.h" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\ScriptEditor.h" />
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Editor\ScriptEditor.cpp" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\LuaHighlighter.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Engine.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\EngineState.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\EngineFSM.h" />
@@ -482,6 +488,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\CommandStack.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Easing.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Raycast.h" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\GamePaths.h" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\SaveGame.h" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\SceneRouter.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\MeshComponent.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\TagComponent.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\RotateBehavior.h" />
@@ -507,6 +516,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\LuaApi.h" />
     <ClCompile Include="D:\code\.std\opengl\my_demo\Scripting\LuaApi.cpp" />
     <ClCompile Include="D:\code\.std\opengl\my_demo\Scripting\ScriptEngine.cpp" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\ScriptApiRegistry.h" />
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\ScriptApiStub.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\LuaAsync.h" />
     <ClCompile Include="D:\code\.std\opengl\my_demo\Scripting\LuaAsync.cpp" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Render\RenderWidget.h" />
@@ -516,9 +527,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Render\ResourceManager.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Render\AnimationLibrary.h" />
     <ClInclude Include="D:\code\.std\opengl\my_demo\Render\SceneSerializer.h" />
-    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.h" />
-    <ClCompile Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.cpp" />
-    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorCommands.h" />
     <ClCompile Include="D:\code\.std\opengl\build\my_demo\my_demo_autogen\mocs_compilation_Release.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>

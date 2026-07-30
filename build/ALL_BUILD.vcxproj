@@ -282,6 +282,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{4793D804-7300-3243-B570-F54F7B3D1C3A}</Project>
       <Name>my_demo</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\code\.std\opengl\build\my_demo\my_game.vcxproj">
+      <Project>{423989DC-8408-3C1D-A2CA-3D7B118059C2}</Project>
+      <Name>my_game</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\code\.std\opengl\build\mylog\mylog.vcxproj">
       <Project>{EBC78556-5930-3BCE-ACDD-6631DC5138B5}</Project>
       <Name>mylog</Name>
@@ -293,6 +297,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="D:\code\.std\opengl\build\sqlite3\sqlite3.vcxproj">
       <Project>{A2A2C491-B8E0-3B11-86E0-27BF0DB2141C}</Project>
       <Name>sqlite3</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\code\.std\opengl\build\my_demo\test_gameplay.vcxproj">
+      <Project>{824661FB-5EFA-3428-B973-4273789202A0}</Project>
+      <Name>test_gameplay</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

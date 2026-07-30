@@ -32,8 +32,9 @@
 class CreateEntityCommand : public Command
 {
 public:
-    CreateEntityCommand(flecs::world *w, const std::string &entityName)
-        : m_world(w), m_name(entityName) {}
+    CreateEntityCommand(flecs::world *w, const std::string &entityName,
+                        flecs::entity_t parent = 0)
+        : m_world(w), m_name(entityName), m_parent(parent) {}
 
     void execute() override
     {
@@ -49,6 +50,9 @@ public:
             MeshComponent m;
             m.meshHandle = ResourceManager::instance().acquireMesh("cube");
             e.set<MeshComponent>(m);
+            // 指定了父实体则挂为子节点（对标 Godot “创建子节点”）
+            if (m_parent && m_world->is_alive(m_parent))
+                e.child_of(m_world->entity(m_parent));
             m_id = e.raw_id();
             // 立即快照，redo 时走重建路径
             m_snapshot = json::array();
@@ -74,6 +78,7 @@ public:
 private:
     flecs::world *m_world;
     std::string m_name;
+    flecs::entity_t m_parent = 0; // 可选父实体（0=创建为根）
     flecs::entity_t m_id = 0;
     json m_snapshot; // 空 = 还没首次执行
 };

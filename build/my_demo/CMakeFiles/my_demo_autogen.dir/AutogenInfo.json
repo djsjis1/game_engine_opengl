@@ -133,6 +133,12 @@
 			null
 		],
 		[
+			"D:/code/.std/opengl/my_demo/Core/GamePaths.h",
+			"Mu",
+			"4VKJKCZPXG/moc_GamePaths.cpp",
+			null
+		],
+		[
 			"D:/code/.std/opengl/my_demo/Core/Input.h",
 			"Mu",
 			"4VKJKCZPXG/moc_Input.cpp",
@@ -148,6 +154,18 @@
 			"D:/code/.std/opengl/my_demo/Core/Raycast.h",
 			"Mu",
 			"4VKJKCZPXG/moc_Raycast.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/SaveGame.h",
+			"Mu",
+			"4VKJKCZPXG/moc_SaveGame.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Core/SceneRouter.h",
+			"Mu",
+			"4VKJKCZPXG/moc_SceneRouter.cpp",
 			null
 		],
 		[
@@ -172,6 +190,18 @@
 			"D:/code/.std/opengl/my_demo/Editor/EditorPanel.h",
 			"Mu",
 			"3HAKN7MTYQ/moc_EditorPanel.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Editor/LuaHighlighter.h",
+			"Mu",
+			"3HAKN7MTYQ/moc_LuaHighlighter.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Editor/ScriptEditor.h",
+			"Mu",
+			"3HAKN7MTYQ/moc_ScriptEditor.cpp",
 			null
 		],
 		[
@@ -226,6 +256,18 @@
 			"D:/code/.std/opengl/my_demo/Scripting/LuaAsync.h",
 			"Mu",
 			"2TN7G6JME4/moc_LuaAsync.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Scripting/ScriptApiRegistry.h",
+			"Mu",
+			"2TN7G6JME4/moc_ScriptApiRegistry.cpp",
+			null
+		],
+		[
+			"D:/code/.std/opengl/my_demo/Scripting/ScriptApiStub.h",
+			"Mu",
+			"2TN7G6JME4/moc_ScriptApiStub.cpp",
 			null
 		],
 		[
@@ -507,6 +549,7 @@
 	"SOURCES" : 
 	[
 		[ "D:/code/.std/opengl/my_demo/Editor/EditorPanel.cpp", "Mu", null ],
+		[ "D:/code/.std/opengl/my_demo/Editor/ScriptEditor.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/MainWindow.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/Render/RenderWidget.cpp", "Mu", null ],
 		[ "D:/code/.std/opengl/my_demo/Scripting/LuaApi.cpp", "Mu", null ],

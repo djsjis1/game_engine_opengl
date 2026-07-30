@@ -1,6 +1,17 @@
 #ifndef SCENESERIALIZER_H
 #define SCENESERIALIZER_H
 
+// ============================================================
+// ⚠ 场景文件（.json/.prefab）禁止手写！（坑 15，实踩）
+//
+// flecs 反射的 JSON 格式是嵌套数组包裹（"x":[0.5] 而非 0.5），
+// 手写 [x,y,z] 或 {"x":..} 都会解析失败且【静默】跳过——
+// 所有字段变默认值 0，实体全挤原点，症状诡异难查。
+// 正确做法：编辑器 💾 保存 / SceneSerializer::save /
+// test_gameplay 程序化建场景后 save。
+// 详见 docs/troubleshooting.md 坑 15。
+// ============================================================
+
 #include <string>
 #include <vector>
 #include <fstream>

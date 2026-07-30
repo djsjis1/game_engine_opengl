@@ -38,11 +38,19 @@ struct AnimationComponent
 {
     char animFile[256] = {}; // .anim 文件路径
     char current[64] = {};   // 当前 clip 名
-    bool playing = false;
-    bool autoplay = true; // ★ 点"运行"自动开播（Godot autoplay 同款）
-    bool loop = true;
-    float speed = 1.0f;
-    float time = 0.0f;
+    bool playing = false;    // 是否播放中
+    bool autoplay = true;    // ★ 点"运行"自动开播（Godot autoplay 同款）
+    bool loop = true;        // 是否循环播放
+    float speed = 1.0f;      // 播放速度倍率（1=正常，2=两倍速，负数=倒放）
+    float time = 0.0f;       // 当前播放位置（秒，运行时状态）
+
+    // ---- 动画混合/过渡（对标 Godot AnimationTree 的 crossfade）----
+    // 从 prev 动画平滑混合到 current：两个同时采样，权重按 blendTime 爬升
+    //   blendDuration<=0 表示无过渡（硬切，与以前行为一致）
+    char prev[64] = {};         // 正在淡出的旧 clip 名（空=无过渡）
+    float prevTime = 0.0f;      // 旧动画的播放位置（过渡期继续推进）
+    float blendTime = 0.0f;     // 过渡已进行时长（秒）
+    float blendDuration = 0.0f; // 过渡总时长（0=无过渡）
 };
 
 #endif

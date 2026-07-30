@@ -83,11 +83,10 @@ if(NOT TARGET Jolt)
 endif()
 
 # ============================================================
-# my_demo 可执行文件
+# 引擎核心源文件（编辑器 my_demo 与游戏运行时 my_game 共享）
+# 不含：入口/窗口/Editor——那些是各自目标私有的
 # ============================================================
-add_executable(my_demo WIN32
-    main.cpp
-    MainWindow.h    MainWindow.cpp
+set(ENGINE_SOURCES
     Core/Engine.h
     Core/EngineState.h
     Core/EngineFSM.h
@@ -98,6 +97,9 @@ add_executable(my_demo WIN32
     Core/CommandStack.h
     Core/Easing.h
     Core/Raycast.h
+    Core/GamePaths.h
+    Core/SaveGame.h
+    Core/SceneRouter.h
     Components/MeshComponent.h
     Components/TagComponent.h
     Components/RotateBehavior.h
@@ -123,6 +125,8 @@ add_executable(my_demo WIN32
     Scripting/LuaApi.h
     Scripting/LuaApi.cpp
     Scripting/ScriptEngine.cpp
+    Scripting/ScriptApiRegistry.h
+    Scripting/ScriptApiStub.h
     Scripting/LuaAsync.h
     Scripting/LuaAsync.cpp
     Render/RenderWidget.h  Render/RenderWidget.cpp
@@ -131,8 +135,20 @@ add_executable(my_demo WIN32
     Render/ResourceManager.h
     Render/AnimationLibrary.h
     Render/SceneSerializer.h
+)
+
+# ============================================================
+# my_demo 可执行文件（编辑器：引擎核心 + 编辑器 UI）
+# ============================================================
+add_executable(my_demo WIN32
+    main.cpp
+    MainWindow.h    MainWindow.cpp
     Editor/EditorPanel.h  Editor/EditorPanel.cpp
     Editor/EditorCommands.h
+    Editor/ScriptEditor.h  Editor/ScriptEditor.cpp
+    Editor/LuaHighlighter.h
+    ${ENGINE_SOURCES}
+    Core/SaveGame.h
 )
 
 target_include_directories(my_demo PRIVATE
@@ -191,3 +207,74 @@ set_target_properties(my_demo PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     VS_DEBUGGER_ENVIRONMENT "PATH=${QT_PATH}/bin;%PATH%\nQT_QPA_PLATFORM_PLUGIN_PATH=${QT_PATH}/plugins"
 )
+
+# ============================================================
+# my_game 可执行文件（游戏运行时：引擎核心 + 游戏窗口，无编辑器）
+# 导出游戏 = 拷贝 my_game.exe + assets/ + game.json 到目标目录
+# ============================================================
+add_executable(my_game WIN32
+    Game/main_game.cpp
+    Game/GameWindow.h  Game/GameWindow.cpp
+    ${ENGINE_SOURCES}
+)
+
+target_include_directories(my_game PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    "${GLM_DIR}"
+    "${NLOHMANN_DIR}"
+    "${HFSM2_DIR}"
+    "${JOLT_DIR}"
+)
+
+target_link_libraries(my_game PRIVATE
+    flecs
+    Jolt
+    Qt5::OpenGL
+    OpenGL::GL
+    sqlite3
+    mylog
+    lua
+    Qt5::Widgets
+    Qt5::WinMain
+)
+
+if(MSVC)
+    target_compile_options(my_game PRIVATE /utf-8 /FS)
+    target_compile_definitions(my_game PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
+
+# 开发模式回退路径（exe 旁无 assets/ 时用，方便 F5 直接调试运行时）
+target_compile_definitions(my_game PRIVATE
+    SHADER_DIR="${SHADER_DIR}"
+    ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/"
+)
+add_dependencies(my_game run_reflect_gen)
+
+set_target_properties(my_game PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    VS_DEBUGGER_ENVIRONMENT "PATH=${QT_PATH}/bin;%PATH%\nQT_QPA_PLATFORM_PLUGIN_PATH=${QT_PATH}/plugins"
+)
+
+# ============================================================
+# test_gameplay：玩家控制链路最小复现测试（控制台，诊断用）
+# ============================================================
+add_executable(test_gameplay
+    tools/test_gameplay.cpp
+    ${ENGINE_SOURCES}
+)
+target_include_directories(test_gameplay PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    "${GLM_DIR}" "${NLOHMANN_DIR}" "${HFSM2_DIR}" "${JOLT_DIR}"
+)
+target_link_libraries(test_gameplay PRIVATE
+    flecs Jolt Qt5::OpenGL OpenGL::GL sqlite3 mylog lua Qt5::Widgets
+)
+if(MSVC)
+    target_compile_options(test_gameplay PRIVATE /utf-8 /FS)
+    target_compile_definitions(test_gameplay PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
+target_compile_definitions(test_gameplay PRIVATE
+    SHADER_DIR="${SHADER_DIR}"
+    ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/"
+)
+add_dependencies(test_gameplay run_reflect_gen)

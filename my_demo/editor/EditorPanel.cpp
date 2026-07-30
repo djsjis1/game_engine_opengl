@@ -41,29 +41,35 @@
 #include <QFile>
 #include <QRegularExpression>
 #include <QInputDialog>
+#include <QMenu>
+#include <QDir>
+#include <QFileInfo>
 #include <QFileDialog>
 #include <QColor>
 #include <QSlider>
 #include <QTimer>
 
 // ============================================================
-// 构造函数：搭建三个面板的骨架
+// 构造函数：搭建双面板（Godot 布局）
+//   本体 this   = 左侧场景树（实体层级 + 操作按钮）
+//   m_inspector = 右侧 Inspector（独立 widget，MainWindow 摆到视口右边）
 // ============================================================
 EditorPanel::EditorPanel(QWidget *parent) : QWidget(parent)
 {
-    setMinimumWidth(380);                     // 最小宽度（可通过分隔条拉宽，不再固定）
+    setMinimumWidth(240);                     // 左侧场景树：窄一些（Godot 风格）
     auto *mainLayout = new QVBoxLayout(this); // 垂直布局
-    buildEntitySection(mainLayout);           // 第一块：实体（列表限高）
-    buildComponentSection(mainLayout);        // 第二块：组件（列表限高）
-    buildPropertySection(mainLayout);         // 第三块：属性（占剩余全部空间）
+    buildEntitySection(mainLayout);           // 上：场景树
+    buildResourcePanel(mainLayout);           // 下：资源面板（目录浏览+双击复用）
+    buildInspector();                         // 右：Inspector（独立 widget）
 }
 
 // ============================================================
-// 实体区：[新建实体] [删除] + 实体列表
+// ============================================================
+// 场景树（对标 Godot 左上）：QTreeWidget 可折叠层级 + 右键菜单
 // ============================================================
 void EditorPanel::buildEntitySection(QVBoxLayout *layout)
 {
-    auto *group = new QGroupBox("实体"); // 分组框标题
+    auto *group = new QGroupBox("场景");
     auto *vlay = new QVBoxLayout(group);
     auto *btnRow = new QHBoxLayout;
     m_newBtn = new QPushButton("新建实体");
@@ -72,83 +78,79 @@ void EditorPanel::buildEntitySection(QVBoxLayout *layout)
     btnRow->addWidget(m_deleteBtn);
     vlay->addLayout(btnRow);
 
-    // 父子层级操作
-    auto *parentRow = new QHBoxLayout;
-    auto *setParentBtn = new QPushButton("设为子级...");
-    auto *unparentBtn = new QPushButton("解除父级");
-    auto *visToggleBtn = new QPushButton("👁 显示/隐藏");
-    parentRow->addWidget(setParentBtn);
-    parentRow->addWidget(unparentBtn);
-    parentRow->addWidget(visToggleBtn);
-    vlay->addLayout(parentRow);
+    // 场景树：真正的可折叠树形（不再是手工缩进的列表）
+    m_entityTree = new QTreeWidget;
+    m_entityTree->setHeaderHidden(true);                       // 不显示列头
+    m_entityTree->setContextMenuPolicy(Qt::CustomContextMenu); // 启用右键菜单
+    vlay->addWidget(m_entityTree, 1);
+    layout->addWidget(group, 2); // 场景树占左栏上方两份高
 
-    // 预制体操作（原型模式：模板复用）
-    auto *prefabRow = new QHBoxLayout;
-    auto *savePrefabBtn = new QPushButton("存预制体...");
-    auto *loadPrefabBtn = new QPushButton("实例化预制体...");
-    prefabRow->addWidget(savePrefabBtn);
-    prefabRow->addWidget(loadPrefabBtn);
-    vlay->addLayout(prefabRow);
-
-    m_entityList = new QListWidget;      // 实体列表（带层级缩进）
-    m_entityList->setMaximumHeight(150); // 限高：把垂直空间让给属性区
-    vlay->addWidget(m_entityList);
-    layout->addWidget(group);
-
-    // 信号连接：点击按钮 → 槽函数
     connect(m_newBtn, &QPushButton::clicked, this, &EditorPanel::onNewEntity);
     connect(m_deleteBtn, &QPushButton::clicked, this, &EditorPanel::onDeleteEntity);
-    connect(setParentBtn, &QPushButton::clicked, this, &EditorPanel::onSetParent);
-    connect(unparentBtn, &QPushButton::clicked, this, &EditorPanel::onUnparent);
-    connect(visToggleBtn, &QPushButton::clicked, this, &EditorPanel::onToggleVisible);
-    connect(savePrefabBtn, &QPushButton::clicked, this, &EditorPanel::onSavePrefab);
-    connect(loadPrefabBtn, &QPushButton::clicked, this, &EditorPanel::onInstantiatePrefab);
-    // 选中列表中某一行 → 刷新组件列表 + 属性编辑器
-    connect(m_entityList, &QListWidget::currentItemChanged, this, [this]()
+    // 选中树节点 → 刷新 Inspector
+    connect(m_entityTree, &QTreeWidget::currentItemChanged, this, [this]()
             { onEntitySelected(); });
+    // 右键菜单（添加子节点/设父/解父/显隐/存预制体）
+    connect(m_entityTree, &QTreeWidget::customContextMenuRequested,
+            this, &EditorPanel::onTreeContextMenu);
 }
 
 // ============================================================
-// 组件区：[下拉选组件] [+][-] + 组件列表
+// 资源面板（对标 Godot 左下 FileSystem）：扫描资源目录，双击复用
+//   prefab → 实例化到场景     scene → 加载场景
+//   anim/sprite/script → 展示（拖到实体上用的功能后续可加）
 // ============================================================
-void EditorPanel::buildComponentSection(QVBoxLayout *layout)
+void EditorPanel::buildResourcePanel(QVBoxLayout *layout)
 {
-    auto *group = new QGroupBox("组件");
+    auto *group = new QGroupBox("资源");
     auto *vlay = new QVBoxLayout(group);
-    auto *addRow = new QHBoxLayout;
-    m_addCompBox = new QComboBox;           // 下拉选择要添加的组件
-    m_addCompBtn = new QPushButton("+");    // 添加按钮
-    m_removeCompBtn = new QPushButton("-"); // 移除按钮
-    addRow->addWidget(m_addCompBox);
-    addRow->addWidget(m_addCompBtn);
-    addRow->addWidget(m_removeCompBtn);
-    vlay->addLayout(addRow);
-    m_compList = new QListWidget;      // 当前实体的组件列表
-    m_compList->setMaximumHeight(110); // 限高：把垂直空间让给属性区
-    vlay->addWidget(m_compList);
-    layout->addWidget(group);
+    auto *refreshBtn = new QPushButton("🔄 刷新资源");
+    vlay->addWidget(refreshBtn);
+    m_resourceTree = new QTreeWidget;
+    m_resourceTree->setHeaderHidden(true);
+    vlay->addWidget(m_resourceTree, 1);
+    layout->addWidget(group, 1); // 资源面板占左栏下方一份高
 
-    connect(m_addCompBtn, &QPushButton::clicked, this, &EditorPanel::onAddComponent);
-    connect(m_removeCompBtn, &QPushButton::clicked, this, &EditorPanel::onRemoveComponent);
-    // 选中列表中某一行 → 刷新属性编辑器
-    connect(m_compList, &QListWidget::currentItemChanged, this, [this]()
-            { onComponentSelected(); });
+    connect(refreshBtn, &QPushButton::clicked, this, &EditorPanel::refreshResourcePanel);
+    connect(m_resourceTree, &QTreeWidget::itemDoubleClicked,
+            this, &EditorPanel::onResourceActivated);
+    refreshResourcePanel(); // 初次扫描
 }
 
 // ============================================================
-// 属性区：滚动区域（内容由反射动态生成）
+// 右侧 Inspector（对标 Godot）：独立 widget，MainWindow 摆到视口右边
+//
+// 结构：
+//   [实体名标题]
+//   [滚动区：选中实体的全部组件逐个展开（每组件一个 GroupBox+✕）]
+//   [底部：添加组件下拉 + 按钮]
 // ============================================================
-void EditorPanel::buildPropertySection(QVBoxLayout *layout)
+void EditorPanel::buildInspector()
 {
-    auto *group = new QGroupBox("属性");
-    auto *vlay = new QVBoxLayout(group);
-    m_propScroll = new QScrollArea; // 滚动区域（容纳任意高度的编辑器）
+    m_inspector = new QWidget; // 无父：MainWindow addWidget 时接管所有权
+    m_inspector->setMinimumWidth(300);
+    auto *vlay = new QVBoxLayout(m_inspector);
+
+    m_inspectorTitle = new QLabel("（未选中实体）");
+    m_inspectorTitle->setStyleSheet("font-weight: bold; font-size: 14px;");
+    vlay->addWidget(m_inspectorTitle);
+
+    m_propScroll = new QScrollArea; // 滚动区：容纳任意多组件的展开面板
     m_propScroll->setWidgetResizable(true);
-    // 占位空白页：注意 QScrollArea::setWidget 会在下次 setWidget 时
+    // 占位空白页：QScrollArea::setWidget 会在下次 setWidget 时
     // 自动 delete 旧 widget，所以空白页每次现建，绝不能复用成员指针！
     m_propScroll->setWidget(new QWidget);
-    vlay->addWidget(m_propScroll);
-    layout->addWidget(group, 1); // stretch=1：属性区占据全部剩余垂直空间
+    vlay->addWidget(m_propScroll, 1); // 占满剩余空间
+
+    // 底部：添加组件（Godot Inspector 底部同款）
+    auto *addRow = new QHBoxLayout;
+    m_addCompBox = new QComboBox;
+    m_addCompBtn = new QPushButton("➕ 添加组件");
+    addRow->addWidget(m_addCompBox, 1);
+    addRow->addWidget(m_addCompBtn);
+    vlay->addLayout(addRow);
+
+    connect(m_addCompBtn, &QPushButton::clicked, this, &EditorPanel::onAddComponent);
 }
 
 // ============================================================
@@ -247,10 +249,9 @@ void EditorPanel::onDeleteEntity()
     if (!e)
         return;
     runCommand(std::make_unique<DeleteEntityCommand>(m_world, e.raw_id()));
-    m_entityList->setCurrentItem(nullptr); // 显式清除选择，避免残留死实体引用
+    m_entityTree->setCurrentItem(nullptr); // 显式清除选择，避免残留死实体引用
     refreshEntityList();                   // 重建实体列表
-    refreshComponentList();                // 清空组件列表
-    refreshPropertyEditor();               // 清空属性面板
+    refreshPropertyEditor();               // 清空 Inspector
     emit valueChanged();                   // 通知 MainWindow 刷新渲染
 }
 
@@ -269,9 +270,8 @@ void EditorPanel::undoLast()
     const char *n = CommandStack::instance().undo();
     if (!n)
         return;                            // 无可撤销
-    m_entityList->setCurrentItem(nullptr); // 防止选中项引用已撤销的实体
+    m_entityTree->setCurrentItem(nullptr); // 防止选中项引用已撤销的实体
     refreshEntityList();
-    refreshComponentList();
     refreshPropertyEditor();
     emit valueChanged();
 }
@@ -281,9 +281,8 @@ void EditorPanel::redoLast()
     const char *n = CommandStack::instance().redo();
     if (!n)
         return; // 无可重做
-    m_entityList->setCurrentItem(nullptr);
+    m_entityTree->setCurrentItem(nullptr);
     refreshEntityList();
-    refreshComponentList();
     refreshPropertyEditor();
     emit valueChanged();
 }
@@ -374,12 +373,17 @@ void EditorPanel::onSavePrefab()
     auto e = selectedEntity();
     if (!m_world || !e)
         return;
+    // 默认落 prefabs/ 目录（绝对路径），存完刷新资源面板 → 可双击复用
     QString path = QFileDialog::getSaveFileName(this, "保存预制体",
-                                                "entity.prefab", "Prefab (*.prefab)");
+                                                ASSET_DIR "prefabs/entity.prefab",
+                                                "Prefab (*.prefab)");
     if (path.isEmpty())
         return;
     if (SceneSerializer::savePrefab(*m_world, e, path.toStdString()))
+    {
+        refreshResourcePanel(); // ★ 新预制体立即出现在资源面板
         emit valueChanged();
+    }
 }
 
 // ============================================================
@@ -424,8 +428,7 @@ void EditorPanel::onAddComponent()
         MeshComponent m;
         m.meshHandle = ResourceManager::instance().acquireMesh("cube");
         e.set<MeshComponent>(m);
-        refreshComponentList();  // 刷新组件列表
-        refreshPropertyEditor(); // 刷新属性编辑区
+        refreshPropertyEditor(); // Inspector 重建（新组件段落出现）
         emit valueChanged();     // 触发重绘
         return;
     }
@@ -435,47 +438,32 @@ void EditorPanel::onAddComponent()
     e.add(compId);
 
     // 4. 刷新 UI
-    refreshComponentList();
     refreshPropertyEditor();
     emit valueChanged();
 }
 
 // ============================================================
-// 【移除组件】
+// 【移除组件】Inspector 每个组件段落标题栏的 ✕ 按钮调用
 // ============================================================
-void EditorPanel::onRemoveComponent()
+void EditorPanel::removeComponent(flecs::entity_t compId)
 {
     auto e = selectedEntity();
     if (!m_world || !e)
         return;
 
-    QString name = selectedComponentName(); // 当前选中的组件名
-    if (!m_componentMap.contains(name))
-        return;
-
-    flecs::entity_t compId = m_componentMap[name];
-
-    // 直接移除：Mesh 资源由 OnRemove Observer 自动释放，无需特殊处理
+    // 直接移除：Mesh/Sprite 资源由 OnRemove Observer 自动释放
     e.remove(compId);
 
-    refreshComponentList();
-    refreshPropertyEditor();
+    // 控件回调里不能立即重建面板（会销毁按钮自己）→ 延迟到事件循环
+    QTimer::singleShot(0, this, [this]()
+                       { refreshPropertyEditor(); });
     emit valueChanged();
 }
 
 // ============================================================
-// 信号槽：选中实体 → 刷新组件列表 + 属性面板
+// 信号槽：选中实体 → 重建 Inspector（全组件展开）
 // ============================================================
 void EditorPanel::onEntitySelected()
-{
-    refreshComponentList();  // 重建组件列表
-    refreshPropertyEditor(); // 重建属性编辑器
-}
-
-// ============================================================
-// 信号槽：选中组件 → 只刷新属性面板
-// ============================================================
-void EditorPanel::onComponentSelected()
 {
     refreshPropertyEditor();
 }
@@ -483,17 +471,9 @@ void EditorPanel::onComponentSelected()
 // ============================================================
 // 【核心】属性修改：UI 控件值 → 反射写回组件内存
 //
-// 流程：
-//   1. 获取当前的组件名和 Flecs 组件 ID
-//   2. 读取反射元数据（EcsStruct），获取成员名/类型/偏移量
-//   3. e.get_mut(compId) 拿到组件数据的 void* 指针
-//   4. 遍历成员，根据偏移量 (m.offset) 找到字段地址
-//   5. 从 m_propWidgets 查找对应的 UI 控件，读值写入
-//   6. ecs_modified_id 通知 Flecs 数据已变更
-//
-// 为什么用 ecs_get_mut_id 而不是 e.get_mut？
-// → Flecs C++ 的 e.get_mut(id_t) 内部有 assert，组件不存在会直接 abort。
-//   ecs_get_mut_id 安全返回 nullptr，我们做判空处理。
+// Inspector 全组件展开后，任何控件变化都调这里 →
+// 遍历实体上所有已展开的组件，逐个 writeBackComponent 回写。
+// （控件注册 key = "组件名|字段名"，回写时按同样 key 反查控件）
 // ============================================================
 void EditorPanel::onPropertyChanged()
 {
@@ -504,20 +484,43 @@ void EditorPanel::onPropertyChanged()
     if (!m_world || !e)
         return;
 
-    // 1. 获取组件信息
-    QString compName = selectedComponentName(); // 如 "Transform"
-    if (!m_componentMap.contains(compName))
+    // 遍历实体类型表：每个已注册组件都尝试回写
+    // （只有控件存在于 m_propWidgets 的字段才真正写入，其余自动跳过）
+    const ecs_type_t *type = ecs_get_type(m_world->c_ptr(), e.raw_id());
+    if (!type)
         return;
-    flecs::entity_t compId = m_componentMap[compName];
+    for (int i = 0; i < type->count; ++i)
+    {
+        flecs::entity_t compId = type->array[i];
+        if (ECS_IS_PAIR(compId))
+            continue;
+        flecs::entity compEnt(m_world->c_ptr(), compId);
+        const char *name = compEnt.name();
+        if (!name || !name[0] || !m_componentMap.contains(name))
+            continue;
+        writeBackComponent(QString::fromUtf8(name), compId, e);
+    }
+    emit valueChanged(); // 触发重绘
+}
+
+// ============================================================
+// 按反射把单个组件的控件值写回组件内存
+//
+// 为什么用 ecs_get_mut_id 而不是 e.get_mut？
+// → Flecs C++ 的 e.get_mut(id_t) 内部有 assert，组件不存在会直接 abort。
+//   ecs_get_mut_id 安全返回 nullptr，我们做判空处理。
+// ============================================================
+void EditorPanel::writeBackComponent(const QString &compName, flecs::entity_t compId, flecs::entity e)
+{
     flecs::entity compEnt(m_world->c_ptr(), compId);
 
-    // 2. 读取反射元数据：EcsStruct 含所有成员的 offset/type/name
+    // 读反射元数据：EcsStruct 含所有成员的 offset/type/name
     auto ecsStructId = m_world->component<EcsStruct>().raw_id();
     const EcsStruct *st = static_cast<const EcsStruct *>(
         ecs_get_id(m_world->c_ptr(), compEnt.raw_id(), ecsStructId));
     if (!st)
     {
-        // ScriptComponent properties 回写
+        // 无反射的特殊组件：ScriptComponent 的 properties 回写
         auto scrId = m_world->component<ScriptComponent>().raw_id();
         if (compId == scrId)
         {
@@ -537,15 +540,15 @@ void EditorPanel::onPropertyChanged()
                 ecs_modified_id(m_world->c_ptr(), e.raw_id(), compId);
             }
         }
-        return;
+        return; // Anim/Sprite 等特殊面板自己直接写组件，不走这条路
     }
 
-    // 3. 获取组件数据的可变指针（void* → 后面用偏移量转换为具体类型）
+    // 组件数据可变指针（void* → 后面用偏移量转换为具体类型）
     void *data = ecs_get_mut_id(m_world->c_ptr(), e.raw_id(), compId);
     if (!data)
         return;
 
-    // 4. 遍历所有成员
+    // 遍历成员，从控件注册表反查控件读值写入
     int count = ecs_vec_count(&st->members);
     auto *members = (ecs_member_t *)ecs_vec_first(&st->members);
 
@@ -570,7 +573,7 @@ void EditorPanel::onPropertyChanged()
         }
         else
         {
-            // float / bool 成员 → 直接写入
+            // float / bool / int 成员 → 直接写入
             QString key = compName + "|" + m.name;
             if (memType == m_world->component<float>())
             {
@@ -587,25 +590,24 @@ void EditorPanel::onPropertyChanged()
         }
     }
 
-    // 5. 通知 Flecs：此组件数据已被外部修改
+    // 通知 Flecs：此组件数据已被外部修改
     ecs_modified_id(m_world->c_ptr(), e.raw_id(), compId);
-    emit valueChanged(); // 触发重绘
 }
 
 // ============================================================
-// 【刷新实体列表】
-// 遍历所有带 TagComponent 的实体，填入 QListWidget。
-// 每个 item 的 UserRole 存储实体 ID，点击时通过它找回实体。
+// 【刷新场景树】
+// 根实体作为顶层节点，子实体递归作为子节点（QTreeWidget 天然可折叠）
+// 每个 item 的 UserRole 存实体 ID，点击时通过它找回实体。
 // ============================================================
 void EditorPanel::refreshEntityList()
 {
     if (!m_world)
         return;
 
-    m_entityList->blockSignals(true); // 先阻断信号，防止清空时触发级联刷新
-    m_entityList->clear();
+    m_entityTree->blockSignals(true); // 先阻断信号，防止清空时触发级联刷新
+    m_entityTree->clear();
 
-    // 层级显示：先添加根实体，递归缩进添加子实体
+    // 层级显示：根实体作顶层节点，子实体递归挂到父节点下
     m_world->each([this](flecs::entity e, const TagComponent &tag)
                   {
         // 跳过编辑器内部实体（如编辑器摄像机）
@@ -618,131 +620,123 @@ void EditorPanel::refreshEntityList()
         flecs::entity parent = e.parent();
         if (parent && parent.has<TagComponent>()) return;
 
-        addEntityToList(e, 0); });
+        addEntityToTree(e, nullptr); }); // 顶层：parentItem=nullptr
 
-    m_entityList->blockSignals(false); // 恢复信号
+    m_entityTree->expandAll();         // 默认展开全部层级
+    m_entityTree->blockSignals(false); // 恢复信号
 }
 
-/// 递归添加实体及其子实体到列表（depth 控制缩进）
-void EditorPanel::addEntityToList(flecs::entity e, int depth)
+/// 递归建树：parentItem=nullptr 时作为顶层节点，否则挂到父节点下
+void EditorPanel::addEntityToTree(flecs::entity e, QTreeWidgetItem *parentItem)
 {
     const auto *tag = static_cast<const TagComponent *>(ecs_get_id(
         m_world->c_ptr(), e.raw_id(), m_world->component<TagComponent>().raw_id()));
     if (!tag)
         return;
 
-    QString indent = QString("    ").repeated(depth);
-    QString prefix = depth > 0 ? "└ " : "";
-
-    // 隐藏的实体加标记（对标 Godot 场景树的👁划掉状态）
+    // 隐藏的实体加标记（对标 Godot 场景树的 👁 划掉状态）
     const auto *tf = static_cast<const TransformComponent *>(ecs_get_id(
         m_world->c_ptr(), e.raw_id(), m_world->component<TransformComponent>().raw_id()));
     QString visMark = (tf && !tf->visible) ? "👁‍🗨 " : "";
 
-    auto *item = new QListWidgetItem(indent + prefix + visMark + QString::fromUtf8(tag->name));
-    item->setData(Qt::UserRole, (qulonglong)e.raw_id());
-    // 隐藏的实体置灰显示
+    auto *item = new QTreeWidgetItem;
+    item->setText(0, visMark + QString::fromUtf8(tag->name));
+    item->setData(0, Qt::UserRole, (qulonglong)e.raw_id());
     if (tf && !tf->visible)
-        item->setForeground(QColor(128, 128, 128));
-    m_entityList->addItem(item);
+        item->setForeground(0, QColor(128, 128, 128)); // 隐藏的置灰
 
-    // 递归子实体
+    if (parentItem)
+        parentItem->addChild(item);
+    else
+        m_entityTree->addTopLevelItem(item);
+
+    // 递归子实体（挂到 item 下）
     e.children([&](flecs::entity child)
-               { addEntityToList(child, depth + 1); });
+               { addEntityToTree(child, item); });
 }
 
 // ============================================================
-// 【刷新组件列表】
-// 从实体类型信息中读取所有已挂载的组件，只保留在 m_componentMap
-// （即 Engine 里注册过的用户组件）里的那些。
+// 【重建 Inspector】—— Godot 风格：选中实体的全部组件一次性展开
 //
-// 为什么 blockSignals？
-// → clear() 和 setCurrentRow(0) 都会触发 currentItemChanged 信号。
-//   信号会级联调用 refreshPropertyEditor()，在列表重建期间会导致
-//   重入（re-entrancy）和潜在崩溃。所以用 blockSignals 整段包裹。
-// ============================================================
-void EditorPanel::refreshComponentList()
-{
-    auto e = selectedEntity();
-
-    m_compList->blockSignals(true); // ★ 阻断信号防重入
-    m_compList->clear();
-
-    if (!m_world || !e)
-    {
-        m_compList->blockSignals(false);
-        return;
-    }
-
-    // 获取实体的类型表：type->array 是实体上所有组件的 ID 数组
-    const ecs_type_t *type = ecs_get_type(m_world->c_ptr(), e.raw_id());
-    if (!type)
-    {
-        m_compList->blockSignals(false);
-        return;
-    }
-
-    for (int i = 0; i < type->count; ++i)
-    {
-        flecs::entity_t compId = type->array[i];
-        flecs::entity compEnt(m_world->c_ptr(), compId);
-        const char *name = compEnt.name(); // 组件名
-        if (!name || !name[0])
-            continue;
-
-        // 跳过内部组件
-        if (compId == m_world->component<TagComponent>().raw_id())
-            continue;
-        if (strcmp(name, "glm::vec3") == 0)
-            continue;
-
-        // 只显示在反射注册表里的用户组件
-        if (m_componentMap.contains(name))
-            m_compList->addItem(name);
-    }
-
-    if (m_compList->count() > 0)
-        m_compList->setCurrentRow(0); // 默认选中第一个组件
-    m_compList->blockSignals(false);  // ★ 恢复信号
-}
-
-// ============================================================
-// 【刷新属性编辑器】
+// 流程：
+//   1. 清控件注册表（旧控件即将被 setWidget 整体 delete）
+//   2. 遍历实体的类型表，对每个已注册的用户组件：
+//      createEditorForComponent 生成属性面板
+//      → 包进一个 QGroupBox（标题=组件名 + ✕ 移除按钮）
+//   3. 全部叠进一个垂直容器 → 放入滚动区
 //
-// 核心流程：
-//   1. 获取当前选中的组件名 → 查找 Flecs 组件 ID
-//   2. 设 m_updating = true（锁住 onPropertyChanged，防止
-//      创建 UI 时 setValue 触发回写）
-//   3. createEditorForComponent() 动态生成 UI
-//      → 读反射元数据 → 遍历成员 → 创建控件
-//   4. 把生成的编辑器放入滚动区域
-//   5. 解锁 m_updating
+// m_propWidgets 的 key 是 "组件名|字段名"，多组件同时展开不冲突
 // ============================================================
 void EditorPanel::refreshPropertyEditor()
 {
     auto e = selectedEntity();
-    QString compName = selectedComponentName();
 
-    // 没选中组件 → 显示空白页
-    if (!m_world || !e || compName.isEmpty() || !m_componentMap.contains(compName))
+    // ★ 先清控件注册表：setWidget 会 delete 旧面板（含全部子控件），
+    //   不清的话 m_propWidgets 里全是悬空指针，后续遍历必崩
+    clearDynamicEditors();
+
+    // 没选中实体 → 空白页（必须现建，setWidget 会 delete 旧的）
+    if (!m_world || !e)
     {
-        // ★ 先清空控件注册表：setWidget 会 delete 旧编辑器（含其全部子控件），
-        //   不清的话 m_propWidgets 里全是悬空指针，blockPropertySignals 遍历必崩
-        clearDynamicEditors();
-        // ★ 空白页必须现建：QScrollArea::setWidget 会在下次 setWidget 时
-        //   delete 旧 widget，复用同一指针 = use-after-free 崩溃
+        if (m_inspectorTitle)
+            m_inspectorTitle->setText("（未选中实体）");
         m_propScroll->setWidget(new QWidget);
         return;
     }
 
-    flecs::entity_t compId = m_componentMap[compName];
+    // Inspector 标题 = 实体名
+    const auto *tag = static_cast<const TagComponent *>(ecs_get_id(
+        m_world->c_ptr(), e.raw_id(), m_world->component<TagComponent>().raw_id()));
+    if (m_inspectorTitle)
+        m_inspectorTitle->setText(tag ? QString::fromUtf8(tag->name) : "Entity");
 
-    m_updating = true;          // ★ 上锁
-    blockPropertySignals(true); // 阻止旧控件的信号
-    QWidget *editor = createEditorForComponent(compId, e);
-    m_propScroll->setWidget(editor); // 替换旧编辑器
-    blockPropertySignals(false);
-    m_updating = false; // ★ 解锁
+    m_updating = true; // ★ 上锁：创建控件时 setValue 不触发回写
+
+    // 容器：所有组件段落垂直叠放
+    auto *page = new QWidget;
+    auto *pageLay = new QVBoxLayout(page);
+    pageLay->setSpacing(6);
+
+    // 遍历实体类型表：每个已注册的用户组件生成一个折叠段
+    const ecs_type_t *type = ecs_get_type(m_world->c_ptr(), e.raw_id());
+    if (type)
+    {
+        for (int i = 0; i < type->count; ++i)
+        {
+            flecs::entity_t compId = type->array[i];
+            if (ECS_IS_PAIR(compId))
+                continue; // 跳过关系对（ChildOf 等）
+            flecs::entity compEnt(m_world->c_ptr(), compId);
+            const char *name = compEnt.name();
+            if (!name || !name[0])
+                continue;
+            if (compId == m_world->component<TagComponent>().raw_id())
+                continue; // Tag 是实体名，标题已显示
+            if (!m_componentMap.contains(name))
+                continue; // 只展示注册过的用户组件
+
+            // —— 组件段落：GroupBox（标题 + ✕）+ 属性面板 ——
+            auto *box = new QGroupBox(QString::fromUtf8(name));
+            auto *boxLay = new QVBoxLayout(box);
+            boxLay->setContentsMargins(6, 4, 6, 6);
+
+            // 标题行右侧的移除按钮（GroupBox 自身不支持角标，放首行）
+            auto *removeBtn = new QPushButton("✕ 移除组件");
+            removeBtn->setMaximumWidth(100);
+            boxLay->addWidget(removeBtn, 0, Qt::AlignRight);
+            connect(removeBtn, &QPushButton::clicked, this,
+                    [this, compId]()
+                    { removeComponent(compId); });
+
+            // 属性面板（反射自动生成 / Script·Anim·Sprite 特殊面板）
+            boxLay->addWidget(createEditorForComponent(compId, e));
+            pageLay->addWidget(box);
+        }
+    }
+    pageLay->addStretch(1); // 底部留白（组件少时不拉伸段落）
+
+    m_propScroll->setWidget(page); // 替换旧页（旧页被自动 delete）
+    m_updating = false;            // ★ 解锁
 }
 
 void EditorPanel::clearDynamicEditors()
@@ -779,7 +773,8 @@ void EditorPanel::clearDynamicEditors()
 // ============================================================
 QWidget *EditorPanel::createEditorForComponent(flecs::entity_t compId, flecs::entity entity)
 {
-    clearDynamicEditors(); // 清空上一轮的控件注册表
+    // 注：不在这里清控件注册表！Inspector 全组件展开模式下，
+    // 本函数被连续调用多次（每组件一次），清表由 refreshPropertyEditor 开头统一做
 
     // 1. 读取反射元数据
     flecs::entity compEnt(m_world->c_ptr(), compId);
@@ -1476,37 +1471,37 @@ void EditorPanel::blockPropertySignals(bool block)
 }
 
 // ============================================================
-// 辅助：按实体 ID 选中列表项（视口射线拾取 → 列表同步高亮）
-// setCurrentItem 会触发 currentItemChanged → 自动刷新组件/属性面板
+// 辅助：按实体 ID 选中树节点（视口射线拾取 → 场景树同步高亮）
+// setCurrentItem 会触发 currentItemChanged → 自动刷新 Inspector
 // ============================================================
 void EditorPanel::selectEntityById(flecs::entity_t id)
 {
     if (id == 0)
     {
-        m_entityList->setCurrentItem(nullptr); // 点空白 = 取消选择
+        m_entityTree->setCurrentItem(nullptr); // 点空白 = 取消选择
         return;
     }
-    for (int i = 0; i < m_entityList->count(); ++i)
+    // QTreeWidgetItemIterator 递归遍历全树（含子节点）
+    for (QTreeWidgetItemIterator it(m_entityTree); *it; ++it)
     {
-        auto *item = m_entityList->item(i);
-        if (item->data(Qt::UserRole).toULongLong() == id)
+        if ((*it)->data(0, Qt::UserRole).toULongLong() == id)
         {
-            m_entityList->setCurrentItem(item);
+            m_entityTree->setCurrentItem(*it);
             return;
         }
     }
 }
 
 // ============================================================
-// 辅助：从 QListWidgetItem 的 UserRole 中读取实体 ID
+// 辅助：从当前选中的树节点读取实体 ID
 // ============================================================
 flecs::entity EditorPanel::selectedEntity() const
 {
-    auto *item = m_entityList->currentItem(); // 当前选中的列表行
+    auto *item = m_entityTree->currentItem(); // 当前选中的树节点
     if (!item || !m_world)
         return flecs::entity::null();
     // UserRole 存的是实体 ID（raw_id）
-    flecs::entity_t id = item->data(Qt::UserRole).toULongLong();
+    flecs::entity_t id = item->data(0, Qt::UserRole).toULongLong();
     // ★ 必须检查 is_alive：删除后列表项可能仍引用已销毁的 ID，
     //   而 ecs_get_type/ecs_get_id 对死实体会直接崩溃（flecs::entity 的
     //   operator bool 只检查 id!=0，不检查存活，拦不住死实体）
@@ -1516,10 +1511,162 @@ flecs::entity EditorPanel::selectedEntity() const
 }
 
 // ============================================================
-// 辅助：获取组件列表中当前选中的组件名
+// 【场景树右键菜单】对标 Godot：右键节点弹出操作菜单
 // ============================================================
-QString EditorPanel::selectedComponentName() const
+void EditorPanel::onTreeContextMenu(const QPoint &pos)
 {
-    auto *item = m_compList->currentItem();
-    return item ? item->text() : QString(); // 空列表 → 空字符串
+    QMenu menu(this);
+    auto e = selectedEntity();
+    bool hasSel = (bool)e; // 是否右键在某个实体上
+
+    menu.addAction("➕ 新建子节点", this, &EditorPanel::onNewChildEntity)
+        ->setEnabled(hasSel);
+    menu.addAction("🔗 设为子级...", this, &EditorPanel::onSetParent)
+        ->setEnabled(hasSel);
+    menu.addAction("⛓ 解除父级", this, &EditorPanel::onUnparent)
+        ->setEnabled(hasSel);
+    menu.addSeparator();
+    menu.addAction("👁 显示/隐藏", this, &EditorPanel::onToggleVisible)
+        ->setEnabled(hasSel);
+    menu.addAction("📦 存为预制体...", this, &EditorPanel::onSavePrefab)
+        ->setEnabled(hasSel);
+    menu.addSeparator();
+    menu.addAction("🗑 删除", this, &EditorPanel::onDeleteEntity)
+        ->setEnabled(hasSel);
+
+    menu.exec(m_entityTree->viewport()->mapToGlobal(pos));
+}
+
+// ============================================================
+// 【新建子节点】在当前选中实体下创建子实体（命令化，可撤销）
+// ============================================================
+void EditorPanel::onNewChildEntity()
+{
+    auto parent = selectedEntity();
+    if (!m_world || !parent)
+        return;
+
+    // 子节点自动编号（Child, Child2...）
+    int count = 1;
+    m_world->each([&](flecs::entity, const TagComponent &tag)
+                  {
+        if (strncmp(tag.name, "Child", 5) == 0) count++; });
+    char name[64];
+    if (count == 1)
+        strncpy(name, "Child", sizeof(name) - 1);
+    else
+        snprintf(name, sizeof(name), "Child%d", count);
+
+    runCommand(std::make_unique<CreateEntityCommand>(m_world, name, parent.raw_id()));
+    refreshEntityList();
+    emit valueChanged();
+}
+
+// ============================================================
+// 【资源面板扫描】对标 Godot FileSystem：分类列出各资源目录的文件
+//
+// 用绝对路径（ASSET_DIR 编译期注入，符合项目资源路径规范）扫描：
+//   prefabs/ scenes/ anims/ sprites/ scripts/
+// 每个文件项的 UserRole 存"绝对路径"，UserRole+1 存"类型"（双击时用）
+// ============================================================
+void EditorPanel::refreshResourcePanel()
+{
+    if (!m_resourceTree)
+        return;
+    m_resourceTree->clear();
+
+    // 分类目录（相对 ASSET_DIR）+ 显示名 + 过滤后缀
+    struct Cat
+    {
+        const char *dir;
+        const char *label;
+        QStringList filters;
+    };
+    const Cat cats[] = {
+        {"prefabs", "📦 预制体", {"*.prefab"}},
+        {"scenes", "🎬 场景", {"*.json"}},
+        {"anims", "🎞 动画", {"*.anim"}},
+        {"sprites", "🖼 精灵目录", {}}, // 精灵是目录，特殊处理
+        {"scripts", "📜 脚本", {"*.lua"}},
+    };
+
+    for (const auto &cat : cats)
+    {
+        auto *catItem = new QTreeWidgetItem;
+        catItem->setText(0, cat.label);
+        m_resourceTree->addTopLevelItem(catItem);
+
+        QString base = QString(ASSET_DIR) + cat.dir;
+        QDir dir(base);
+        if (!dir.exists())
+            continue;
+
+        if (QString(cat.dir) == "sprites")
+        {
+            // 精灵：每个子目录是一组帧
+            for (const QString &sub : dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name))
+            {
+                auto *item = new QTreeWidgetItem;
+                item->setText(0, sub);
+                item->setData(0, Qt::UserRole, dir.absoluteFilePath(sub));
+                item->setData(0, Qt::UserRole + 1, "sprite");
+                catItem->addChild(item);
+            }
+        }
+        else
+        {
+            for (const QString &f : dir.entryList(cat.filters, QDir::Files, QDir::Name))
+            {
+                if (f.startsWith("__"))
+                    continue; // 内部文件（如 __editor_backup.json Play备份）不展示
+                auto *item = new QTreeWidgetItem;
+                item->setText(0, f);
+                item->setData(0, Qt::UserRole, dir.absoluteFilePath(f));
+                item->setData(0, Qt::UserRole + 1, cat.dir); // 类型 = 目录名
+                catItem->addChild(item);
+            }
+        }
+    }
+    m_resourceTree->expandAll();
+}
+
+// ============================================================
+// 【双击资源】资源复用入口（对标 Godot 双击资源）
+//   prefab → 实例化到场景     scene → 加载整个场景
+//   anim/sprite/script → 提示用法（拖拽到实体的功能后续可加）
+// ============================================================
+void EditorPanel::onResourceActivated(QTreeWidgetItem *item, int /*col*/)
+{
+    if (!item || !m_world)
+        return;
+    QString path = item->data(0, Qt::UserRole).toString();
+    QString type = item->data(0, Qt::UserRole + 1).toString();
+    if (path.isEmpty())
+        return; // 点的是分类标题行
+
+    if (type == "prefabs")
+    {
+        // 预制体 → 实例化到场景（命令化，可撤销）
+        runCommand(std::make_unique<InstantiatePrefabCommand>(m_world, path.toStdString()));
+        refreshEntityList();
+        emit valueChanged();
+    }
+    else if (type == "scenes")
+    {
+        // 场景 → 加载（覆盖当前场景）
+        if (SceneSerializer::load(*m_world, path.toStdString()))
+        {
+            m_entityTree->setCurrentItem(nullptr);
+            refreshEntityList();
+            refreshPropertyEditor();
+            emit valueChanged();
+        }
+    }
+    // anim/sprite/script：
+    else if (type == "scripts")
+    {
+        // 脚本 → 发信号请主窗口用内置编辑器打开（跳到 Script 页）
+        emit openScriptRequested(path);
+    }
+    // anim/sprite：暂仅展示（后续可做拖到实体上自动挂组件）
 }

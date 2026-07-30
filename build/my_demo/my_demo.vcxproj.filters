@@ -10,6 +10,12 @@
     <ClCompile Include="D:\code\.std\opengl\my_demo\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\code\.std\opengl\my_demo\Editor\ScriptEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="D:\code\.std\opengl\my_demo\Systems\PhysicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -25,9 +31,6 @@
     <ClCompile Include="D:\code\.std\opengl\my_demo\Render\RenderWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="D:\code\.std\opengl\build\my_demo\my_demo_autogen\mocs_compilation_Release.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,6 +43,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\code\.std\opengl\my_demo\MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorCommands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\ScriptEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\LuaHighlighter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Engine.h">
@@ -70,6 +85,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Core\Raycast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\GamePaths.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\SaveGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Core\SceneRouter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Components\MeshComponent.h">
@@ -138,6 +162,12 @@
     <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\LuaApi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\ScriptApiRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\ScriptApiStub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Scripting\LuaAsync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -157,12 +187,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\code\.std\opengl\my_demo\Render\SceneSerializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\code\.std\opengl\my_demo\Editor\EditorCommands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -34,6 +34,7 @@
 #include <Jolt/Physics/Body/BodyInterface.h>        // 创建/删除/查询刹体
 #include <Jolt/Physics/Collision/ContactListener.h> // 碰撞回调
 #include <Jolt/Physics/Collision/RayCast.h>         // 射线查询（玩法射线：子弹/视线）
+#include <Jolt/Physics/Body/BodyFilter.h>           // IgnoreSingleBodyFilter（射线忽略自己）
 #include <Jolt/Physics/Collision/CastResult.h>
 
 #include "Systems/PhysicsSystem.h"
@@ -276,6 +277,15 @@ void PhysicsSystem::update(flecs::world &world, float dt)
         settings.mFriction = rb.friction;
         settings.mRestitution = rb.restitution;
         settings.mUserData = e.raw_id(); // 碰撞监听器通过它找回实体
+        // ★ 应用组件质量：不设的话 Jolt 按体积×密度(1000kg/m³)自动算——
+        //   1x1x1 方块=1000kg！apply_impulse(6) 只推出 0.006m/s，
+        //   跳跃看起来"完全失效"（实为被千倍质量吞掉，实猎的 bug）
+        if (motion == JPH::EMotionType::Dynamic)
+        {
+            settings.mOverrideMassProperties =
+                JPH::EOverrideMassProperties::CalculateInertia;
+            settings.mMassPropertiesOverride.mMass = rb.mass > 0 ? rb.mass : 1.0f;
+        }
 
         JPH::BodyID id = bodyIf.CreateAndAddBody(settings, JPH::EActivation::Activate);
         m_impl->bodies[e.raw_id()] = id;
@@ -333,8 +343,9 @@ bool physicsApplyImpulse(flecs::entity_t id, float x, float y, float z)
     auto it = g_physicsImpl->bodies.find(id);
     if (it == g_physicsImpl->bodies.end())
         return false;
-    g_physicsImpl->physicsSystem.GetBodyInterface().AddImpulse(
-        it->second, JPH::Vec3(x, y, z));
+    auto &bi = g_physicsImpl->physicsSystem.GetBodyInterface();
+    bi.ActivateBody(it->second); // 防睡眠（同 physicsSetVelocity）
+    bi.AddImpulse(it->second, JPH::Vec3(x, y, z));
     return true;
 }
 
@@ -345,8 +356,43 @@ bool physicsSetVelocity(flecs::entity_t id, float x, float y, float z)
     auto it = g_physicsImpl->bodies.find(id);
     if (it == g_physicsImpl->bodies.end())
         return false;
-    g_physicsImpl->physicsSystem.GetBodyInterface().SetLinearVelocity(
-        it->second, JPH::Vec3(x, y, z));
+    auto &bi = g_physicsImpl->physicsSystem.GetBodyInterface();
+    // ★ 先唤醒：Jolt 刚体静止后自动睡眠，SetLinearVelocity 不会唤醒
+    //   睡眠刚体 → 玩家落地站一会儿后 WASD 失效（推不动，实踩坑）
+    bi.ActivateBody(it->second);
+    bi.SetLinearVelocity(it->second, JPH::Vec3(x, y, z));
+    return true;
+}
+
+// 读取刚体线速度（玩家移动需要：水平速度改、竖直速度保留——
+// 否则 set_velocity 会把跳跃/重力的 y 速度抹掉）
+bool physicsGetVelocity(flecs::entity_t id, float &x, float &y, float &z)
+{
+    if (!g_physicsImpl)
+        return false;
+    auto it = g_physicsImpl->bodies.find(id);
+    if (it == g_physicsImpl->bodies.end())
+        return false;
+    JPH::Vec3 v = g_physicsImpl->physicsSystem.GetBodyInterface().GetLinearVelocity(it->second);
+    x = v.GetX();
+    y = v.GetY();
+    z = v.GetZ();
+    return true;
+}
+
+// 传送刚体到指定位置（读档/重生/传送门必需）
+// ★ 只改 Transform 没用：PhysicsSystem 每帧用刚体位置回写 Transform，
+//   脚本 set_position 一帧后被拉回原地（读档瞬移失效的实 bug）——
+//   位置的"真身"在物理引擎里，必须连刚体一起搬
+bool physicsSetPosition(flecs::entity_t id, float x, float y, float z)
+{
+    if (!g_physicsImpl)
+        return false;
+    auto it = g_physicsImpl->bodies.find(id);
+    if (it == g_physicsImpl->bodies.end())
+        return false;
+    g_physicsImpl->physicsSystem.GetBodyInterface().SetPosition(
+        it->second, JPH::RVec3(x, y, z), JPH::EActivation::Activate);
     return true;
 }
 
@@ -363,7 +409,8 @@ bool physicsSetVelocity(flecs::entity_t id, float x, float y, float z)
 bool physicsRaycast(float ox, float oy, float oz,
                     float dx, float dy, float dz, float maxDist,
                     flecs::entity_t &hitEntity,
-                    float &hitX, float &hitY, float &hitZ, float &hitDist)
+                    float &hitX, float &hitY, float &hitZ, float &hitDist,
+                    flecs::entity_t ignoreEntity)
 {
     if (!g_physicsImpl || maxDist <= 0)
         return false;
@@ -378,7 +425,22 @@ bool physicsRaycast(float ox, float oy, float oz,
     JPH::RRayCast ray{JPH::RVec3(ox, oy, oz), dir * maxDist};
     JPH::RayCastResult hit; // mFraction ∈ [0,1]
 
-    if (!g_physicsImpl->physicsSystem.GetNarrowPhaseQuery().CastRay(ray, hit))
+    // ★ 忽略发射者自己：不忽略的话，从自身中心/内部发射的射线
+    //   会以 fraction=0 命中自己 → 落地检测永远"命中"或起点微调地狱
+    JPH::BodyID ignoreBody;
+    if (ignoreEntity)
+    {
+        auto it = g_physicsImpl->bodies.find(ignoreEntity);
+        if (it != g_physicsImpl->bodies.end())
+            ignoreBody = it->second;
+    }
+    JPH::IgnoreSingleBodyFilter bodyFilter(ignoreBody); // 无效 BodyID = 不忽略任何
+
+    if (!g_physicsImpl->physicsSystem.GetNarrowPhaseQuery().CastRay(
+            ray, hit,
+            JPH::BroadPhaseLayerFilter{}, // 默认：所有层都测
+            JPH::ObjectLayerFilter{},
+            bodyFilter))
         return false;
 
     // BodyID → 实体 ID（创建时存在 mUserData）

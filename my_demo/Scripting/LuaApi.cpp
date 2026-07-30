@@ -65,6 +65,7 @@
 //               └── 每帧 → callLifecycle("update", dt) -- 脚本 update(dt)
 #include "LuaApi.h"
 #include "LuaAsync.h"
+#include "ScriptApiRegistry.h" // API 主表结构体 + scriptApiList() 声明
 #include "Systems/ScriptSystem.h"
 #include "Systems/PhysicsSystem.h" // physicsApplyImpulse / physicsSetVelocity
 #include "Components/ScriptComponent.h"
@@ -73,8 +74,18 @@
 #include "Components/TransformComponent.h"
 #include "Components/TagComponent.h"
 #include "Components/SignalComponent.h"
+#include "Components/MeshComponent.h"        // Lua 建造 API：add_mesh
+#include "Components/MaterialComponent.h"    // add_material
+#include "Components/RigidbodyComponent.h"   // add_rigidbody
+#include "Components/BoxColliderComponent.h" // add_collider
+#include "Components/CameraComponent.h"      // add_camera
+#include "Components/RotateBehavior.h"       // add_rotate
+#include "Render/ResourceManager.h"          // add_mesh 的资源句柄（纯记账，无 GL 时序要求）
+#include "Core/GamePaths.h"                  // add_script 相对路径 → 运行时绝对路径
 #include "Core/Input.h"
 #include "Core/Time.h"
+#include "Core/SaveGame.h"    // 玩家存档（save_set/save_write 系列 API）
+#include "Core/SceneRouter.h" // 运行时切场景（change_scene/get_scene）
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -250,6 +261,10 @@ static int api_setPosition(lua_State *L)
     c->tf->position.x = (float)luaL_checknumber(L, 1);
     c->tf->position.y = (float)luaL_checknumber(L, 2);
     c->tf->position.z = (float)luaL_checknumber(L, 3);
+    // ★ 同步物理体：带 Dynamic 刚体的实体位置"真身"在 Jolt 里，
+    //   只改 Transform 下一帧被物理回写拉回原地（读档/重生瞬移失效实bug）
+    //   无刚体实体 physicsSetPosition 找不到 body 返回 false，无副作用
+    physicsSetPosition(c->id, c->tf->position.x, c->tf->position.y, c->tf->position.z);
     return 0; // 无返回值
 }
 
@@ -360,14 +375,100 @@ static int api_getNode(lua_State *L)
 static int api_isKeyPressed(lua_State *L)
 {
     const char *k = luaL_checkstring(L, 1);
-    if (!k[0])
-    {
-        lua_pushboolean(L, 0);
-        return 1;
-    }
-    char c = (k[0] >= 'a' && k[0] <= 'z') ? k[0] - 32 : k[0];
-    lua_pushboolean(L, Input::instance().keyDown[(unsigned char)c]);
+    // 支持字母/数字 + 特殊键名（"space"/"left"/"shift"...）
+    lua_pushboolean(L, Input::instance().isDown(Input::keyFromName(k)));
     return 1;
+}
+
+/// is_key_just_pressed("key") → 本帧刚按下（边沿，跳跃/开枪用）
+static int api_isKeyJustPressed(lua_State *L)
+{
+    const char *k = luaL_checkstring(L, 1);
+    lua_pushboolean(L, Input::instance().isJustPressed(Input::keyFromName(k)));
+    return 1;
+}
+
+/// is_key_just_released("key") → 本帧刚松开（边沿）
+static int api_isKeyJustReleased(lua_State *L)
+{
+    const char *k = luaL_checkstring(L, 1);
+    lua_pushboolean(L, Input::instance().isJustReleased(Input::keyFromName(k)));
+    return 1;
+}
+
+/// is_action_pressed("jump") → 动作是否按住（经动作映射，键位可配）
+static int api_isActionPressed(lua_State *L)
+{
+    const char *a = luaL_checkstring(L, 1);
+    lua_pushboolean(L, Input::instance().isActionDown(a));
+    return 1;
+}
+
+/// is_action_just_pressed("jump") → 动作本帧刚触发（边沿）
+static int api_isActionJustPressed(lua_State *L)
+{
+    const char *a = luaL_checkstring(L, 1);
+    lua_pushboolean(L, Input::instance().isActionJustPressed(a));
+    return 1;
+}
+
+// ---------------- 鼠标（对标 Godot Input） ----------------
+
+/// is_mouse_pressed("left"/"middle"/"right") → 鼠标键是否按住（持续）
+static int api_isMousePressed(lua_State *L)
+{
+    const char *b = luaL_checkstring(L, 1);
+    lua_pushboolean(L, Input::instance().isMouseDown(Input::mouseFromName(b)));
+    return 1;
+}
+
+/// is_mouse_just_pressed("left") → 本帧刚按下（边沿，点击/射击用）
+static int api_isMouseJustPressed(lua_State *L)
+{
+    const char *b = luaL_checkstring(L, 1);
+    lua_pushboolean(L, Input::instance().isMouseJustPressed(Input::mouseFromName(b)));
+    return 1;
+}
+
+/// is_mouse_just_released("left") → 本帧刚松开（边沿，拖拽结束用）
+static int api_isMouseJustReleased(lua_State *L)
+{
+    const char *b = luaL_checkstring(L, 1);
+    lua_pushboolean(L, Input::instance().isMouseJustReleased(Input::mouseFromName(b)));
+    return 1;
+}
+
+/// get_mouse_position() → x, y（视口内像素坐标，配合 raycast 拾取）
+static int api_getMousePosition(lua_State *L)
+{
+    lua_pushnumber(L, Input::instance().mouseX());
+    lua_pushnumber(L, Input::instance().mouseY());
+    return 2;
+}
+
+/// get_mouse_delta() → dx, dy（本帧相对位移，FPS 视角控制用）
+static int api_getMouseDelta(lua_State *L)
+{
+    lua_pushnumber(L, Input::instance().mouseDeltaX());
+    lua_pushnumber(L, Input::instance().mouseDeltaY());
+    return 2;
+}
+
+/// get_mouse_wheel() → delta（本帧滚轮格数，上正下负；缩放/切武器用）
+static int api_getMouseWheel(lua_State *L)
+{
+    lua_pushnumber(L, Input::instance().wheel());
+    return 1;
+}
+
+/// set_mouse_mode("captured"/"visible") — 光标模式（Godot MOUSE_MODE 同款）
+///   captured：隐藏光标+锁视口中心（FPS 视角）；visible：恢复正常
+///   仅 Play 模式生效（编辑模式强制正常光标）；实际应用由 MainWindow 每帧执行
+static int api_setMouseMode(lua_State *L)
+{
+    const char *m = luaL_checkstring(L, 1);
+    Input::instance().setMouseMode(strcmp(m, "captured") == 0 ? 1 : 0);
+    return 0;
 }
 
 /// delta() → dt（帧间隔，秒）
@@ -394,6 +495,150 @@ static int api_createEntity(lua_State *L)
     e.set_ptr(c->w->component<TagComponent>().raw_id(), sizeof(TagComponent), &tc);
     lua_pushinteger(L, (lua_Integer)e.raw_id()); // 返回 entity ID
     return 1;
+}
+
+// ---------------- Lua 建造 API（纯代码造世界，LÖVE2D/Godot 纯脚本风格） ----------------
+// create_entity 只生"光杆"实体（Tag+Transform），下面这组负责"装配"：
+// 形状/颜色/物理/行为/相机——bootstrap 脚本在 ready() 里搭出整个游戏
+
+/// 取"活着的"目标实体（建造 API 公共入口；死实体/0 → 返回 null 实体）
+static flecs::entity buildTarget(lua_State *L, int argIdx)
+{
+    auto *c = getCtx(L);
+    if (!c || !c->w)
+        return flecs::entity::null();
+    flecs::entity_t id = (flecs::entity_t)luaL_checkinteger(L, argIdx);
+    if (!id || !c->w->is_alive(id))
+        return flecs::entity::null(); // 防御：脚本可能传过期 ID
+    return c->w->entity(id);
+}
+
+/// add_mesh(id, "cube") — 给实体加可见网格（不加就是不可见的逻辑实体）
+static int api_addMesh(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    const char *type = luaL_optstring(L, 2, "cube");
+    MeshComponent m{};
+    // 句柄化：同名网格命中缓存共享 GPU 数据；acquire 纯记账（延迟创建）
+    m.meshHandle = ResourceManager::instance().acquireMesh(type);
+    strncpy(m.meshType, type, sizeof(m.meshType) - 1);
+    e.set<MeshComponent>(m);
+    return 0;
+}
+
+/// add_material(id, r, g, b) — 漫反射颜色（0~1）
+static int api_addMaterial(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    MaterialComponent mat{};
+    mat.diffuse = {(float)luaL_checknumber(L, 2),
+                   (float)luaL_checknumber(L, 3),
+                   (float)luaL_checknumber(L, 4)};
+    e.set<MaterialComponent>(mat);
+    return 0;
+}
+
+/// add_rigidbody(id, motionType) — 物理刚体（0=静态地面 1=运动学 2=动态）
+static int api_addRigidbody(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    RigidbodyComponent rb{};
+    rb.motionType = (int)luaL_optinteger(L, 2, 2);
+    e.set<RigidbodyComponent>(rb);
+    return 0;
+}
+
+/// add_collider(id [, hx, hy, hz]) — 盒碰撞体半尺寸（默认 0.5 配 1x1 立方体）
+static int api_addCollider(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    BoxColliderComponent box{};
+    box.halfExtents = {(float)luaL_optnumber(L, 2, 0.5),
+                       (float)luaL_optnumber(L, 3, 0.5),
+                       (float)luaL_optnumber(L, 4, 0.5)};
+    e.set<BoxColliderComponent>(box);
+    return 0;
+}
+
+/// add_script(id, "scripts/xxx.lua") — 挂行为脚本（相对资源根路径）
+/// ★ 运行时拼绝对路径（开发=项目目录，导出=exe/assets/）→ 导出天然有效
+static int api_addScript(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    const char *rel = luaL_checkstring(L, 2);
+    ScriptComponent sc{};
+    QString abs = GamePaths::root() + QString::fromUtf8(rel);
+    strncpy(sc.filePath, abs.toUtf8().constData(), sizeof(sc.filePath) - 1);
+    e.set<ScriptComponent>(sc); // ScriptSystem 下帧自动初始化并跑 ready()
+    return 0;
+}
+
+/// add_camera(id, px, py, pz [, yaw=-90, pitch=-30]) — 游戏相机（active）
+static int api_addCamera(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    CameraComponent cam{};
+    cam.position = {(float)luaL_checknumber(L, 2),
+                    (float)luaL_checknumber(L, 3),
+                    (float)luaL_checknumber(L, 4)};
+    cam.yaw = (float)luaL_optnumber(L, 5, -90);
+    cam.pitch = (float)luaL_optnumber(L, 6, -30);
+    cam.isEditor = false; // 游戏相机：不吃编辑器 WASD
+    cam.active = true;
+    e.set<CameraComponent>(cam);
+    return 0;
+}
+
+/// add_rotate(id, sx, sy, sz) — 自转装饰（度/秒，传送门那种效果）
+static int api_addRotate(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    RotateBehavior rot{};
+    rot.speedX = (float)luaL_optnumber(L, 2, 0);
+    rot.speedY = (float)luaL_optnumber(L, 3, 0);
+    rot.speedZ = (float)luaL_optnumber(L, 4, 0);
+    e.set<RotateBehavior>(rot);
+    return 0;
+}
+
+/// set_node_scale(id, x, y, z) — 缩放任意实体（配合 add_collider 记得同步）
+static int api_setNodeScale(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    auto *tf = static_cast<TransformComponent *>(ecs_get_mut_id(
+        e.world().c_ptr(), e.raw_id(),
+        e.world().component<TransformComponent>().raw_id()));
+    if (!tf)
+        return 0;
+    tf->scale = {(float)luaL_checknumber(L, 2),
+                 (float)luaL_checknumber(L, 3),
+                 (float)luaL_checknumber(L, 4)};
+    return 0;
+}
+
+/// destroy_entity(id) — 删除实体（物理体/脚本环境/Mesh 引用由 OnRemove 自动清）
+static int api_destroyEntity(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (e)
+        e.destruct();
+    return 0;
 }
 
 /// get_node_position(entity_id) → x, y, z
@@ -437,6 +682,8 @@ static int api_setNodePosition(lua_State *L)
     tf->position.x = (float)luaL_checknumber(L, 2);
     tf->position.y = (float)luaL_checknumber(L, 3);
     tf->position.z = (float)luaL_checknumber(L, 4);
+    // 同步物理体（同 set_position：防止被物理回写覆盖）
+    physicsSetPosition(eid, tf->position.x, tf->position.y, tf->position.z);
     return 0;
 }
 
@@ -522,6 +769,34 @@ static int api_animPlay(lua_State *L)
     strncpy(ac->current, clip, sizeof(ac->current) - 1);
     ac->current[sizeof(ac->current) - 1] = '\0';
     ac->time = 0.0f;
+    ac->playing = true;
+    return 0;
+}
+
+/// anim_crossfade("clip", duration) — 带过渡切换到新动画（对标 Godot crossfade）
+///   旧动画不直接丢弃，而是在 duration 秒内从旧平滑混合到新（走→跑无缝过渡）
+static int api_animCrossfade(lua_State *L)
+{
+    auto *c = getCtx(L);
+    auto *ac = getAnimComp(c);
+    if (!ac)
+        return 0;
+    const char *clip = luaL_checkstring(L, 1);
+    float duration = (float)luaL_optnumber(L, 2, 0.3); // 默认 0.3s 过渡
+
+    // 已在播该动画则忽略（避免重复触发过渡卡在开头）
+    if (strncmp(ac->current, clip, sizeof(ac->current)) == 0)
+        return 0;
+
+    // 当前动画 → prev（淡出），新动画 → current（淡入，从头播）
+    strncpy(ac->prev, ac->current, sizeof(ac->prev) - 1);
+    ac->prev[sizeof(ac->prev) - 1] = '\0';
+    ac->prevTime = ac->time; // 旧动画从当前位置继续淡出
+    strncpy(ac->current, clip, sizeof(ac->current) - 1);
+    ac->current[sizeof(ac->current) - 1] = '\0';
+    ac->time = 0.0f;
+    ac->blendTime = 0.0f;
+    ac->blendDuration = duration > 0 ? duration : 0.0f;
     ac->playing = true;
     return 0;
 }
@@ -766,6 +1041,102 @@ static int api_setVelocity(lua_State *L)
     return 0;
 }
 
+/// get_velocity() → vx, vy, vz（无刚体返回 0,0,0）
+/// 玩家移动标准写法：改水平速度、保留 y（重力/跳跃不被抹掉）
+///   local vx,vy,vz = get_velocity(); set_velocity(mx, vy, mz)
+static int api_getVelocity(lua_State *L)
+{
+    auto *c = getCtx(L);
+    float x = 0, y = 0, z = 0;
+    if (c)
+        physicsGetVelocity(c->id, x, y, z);
+    lua_pushnumber(L, x);
+    lua_pushnumber(L, y);
+    lua_pushnumber(L, z);
+    return 3;
+}
+
+// ---------------- 玩家存档（对标 Godot user:// + ConfigFile） ----------------
+// 引擎只提供存取工具，存什么由游戏脚本决定（机制与策略分离）
+
+/// save_set(key, value) — 写入存档草稿（内存）；支持 number/string/bool
+static int api_saveSet(lua_State *L)
+{
+    const char *key = luaL_checkstring(L, 1);
+    nlohmann::json v;
+    if (lua_isboolean(L, 2))
+        v = (bool)lua_toboolean(L, 2);
+    else if (lua_isnumber(L, 2))
+        v = (double)lua_tonumber(L, 2);
+    else if (lua_isstring(L, 2))
+        v = std::string(lua_tostring(L, 2));
+    else
+        return luaL_error(L, "save_set: value 只支持 number/string/bool");
+    SaveGame::instance().set(key, v);
+    return 0;
+}
+
+/// save_get(key, default) → value — 从存档草稿读；无此键返回 default
+static int api_saveGet(lua_State *L)
+{
+    const char *key = luaL_checkstring(L, 1);
+    nlohmann::json v = SaveGame::instance().get(key);
+    if (v.is_boolean())
+        lua_pushboolean(L, v.get<bool>());
+    else if (v.is_number())
+        lua_pushnumber(L, v.get<double>());
+    else if (v.is_string())
+        lua_pushstring(L, v.get<std::string>().c_str());
+    else if (lua_gettop(L) >= 2)
+        lua_pushvalue(L, 2); // 键不存在 → 返回调用方给的默认值
+    else
+        lua_pushnil(L);
+    return 1;
+}
+
+/// save_write([slot=1]) → bool — 草稿落盘（玩家按"保存"时调）
+static int api_saveWrite(lua_State *L)
+{
+    int slot = (int)luaL_optinteger(L, 1, 1);
+    lua_pushboolean(L, SaveGame::instance().write(slot));
+    return 1;
+}
+
+/// save_load([slot=1]) → bool — 磁盘存档读入草稿（读档/继续游戏）
+static int api_saveLoad(lua_State *L)
+{
+    int slot = (int)luaL_optinteger(L, 1, 1);
+    lua_pushboolean(L, SaveGame::instance().load(slot));
+    return 1;
+}
+
+/// save_exists([slot=1]) → bool — 存档是否存在（主菜单"继续"按钮判断）
+static int api_saveExists(lua_State *L)
+{
+    int slot = (int)luaL_optinteger(L, 1, 1);
+    lua_pushboolean(L, SaveGame::instance().exists(slot));
+    return 1;
+}
+
+// ---------------- 多场景（对标 Godot change_scene） ----------------
+
+/// change_scene("scenes/level2.json") — 请求切换场景（帧末生效）
+/// ★ 延迟执行：脚本正在被遍历执行，立刻删所有实体会崩（deferred 同 Godot）
+static int api_changeScene(lua_State *L)
+{
+    const char *path = luaL_checkstring(L, 1);
+    SceneRouter::instance().requestChange(path);
+    return 0;
+}
+
+/// get_scene() → 当前场景相对路径（如 "scenes/level1.json"）
+/// 同一个玩家脚本能判断自己在哪关（传送门去向、存档记录关卡用）
+static int api_getScene(lua_State *L)
+{
+    lua_pushstring(L, SceneRouter::instance().current().c_str());
+    return 1;
+}
+
 /// raycast(ox,oy,oz, dx,dy,dz [, maxDist=100]) — 玩法射线（走 Jolt 物理世界）
 /// 命中返回 table: { entity, x, y, z, dist }；未命中返回 nil
 /// 只打得中有碰撞体的实体（Rigidbody+BoxCollider），且仅 Play 模式有效
@@ -782,7 +1153,11 @@ static int api_raycast(lua_State *L)
 
     flecs::entity_t hitId = 0;
     float hx, hy, hz, hd;
-    if (!physicsRaycast(ox, oy, oz, dx, dy, dz, maxDist, hitId, hx, hy, hz, hd))
+    // ★ 自动忽略发射者自己：脚本射线 99% 不想打中自己（落地检测/开枪），
+    //   否则从自身中心发射 fraction=0 命中自己（曾致跳跃永远失败）
+    auto *c = getCtx(L);
+    flecs::entity_t selfId = c ? c->id : 0;
+    if (!physicsRaycast(ox, oy, oz, dx, dy, dz, maxDist, hitId, hx, hy, hz, hd, selfId))
     {
         lua_pushnil(L);
         return 1;
@@ -1060,99 +1435,113 @@ static int api_disconnect(lua_State *L)
 //   lua_setfield(L, -2, "get_position")    — 设为 table 的字段
 void injectApi(lua_State *L)
 {
-    // ---- 当前实体的 Transform 读写 ----
-    lua_pushcfunction(L, api_getPosition);
-    lua_setfield(L, -2, "get_position");
-    lua_pushcfunction(L, api_setPosition);
-    lua_setfield(L, -2, "set_position");
-    lua_pushcfunction(L, api_getRotation);
-    lua_setfield(L, -2, "get_rotation");
-    lua_pushcfunction(L, api_setRotation);
-    lua_setfield(L, -2, "set_rotation");
-    lua_pushcfunction(L, api_getScale);
-    lua_setfield(L, -2, "get_scale");
-    lua_pushcfunction(L, api_setScale);
-    lua_setfield(L, -2, "set_scale");
-    lua_pushcfunction(L, api_setVisible);
-    lua_setfield(L, -2, "set_visible");
-    lua_pushcfunction(L, api_isVisible);
-    lua_setfield(L, -2, "is_visible");
+    // 遍历主表注册：对每个有函数指针的条目，压栈 + 设为字段
+    // 代替以前 40 行手写 lua_pushcfunction/lua_setfield（一处登记自动同步）
+    for (const auto &e : scriptApiList())
+    {
+        if (!e.func)
+            continue; // 非注入型（如 Lua 内置 print）只入元数据不注册
+        lua_pushcfunction(L, e.func);
+        lua_setfield(L, -2, e.name);
+    }
+}
 
-    // ---- 全局查询/创建 ----
-    lua_pushcfunction(L, api_getNode);
-    lua_setfield(L, -2, "get_node");
-    lua_pushcfunction(L, api_isKeyPressed);
-    lua_setfield(L, -2, "is_key_pressed");
-    lua_pushcfunction(L, api_delta);
-    lua_setfield(L, -2, "delta");
-    lua_pushcfunction(L, api_createEntity);
-    lua_setfield(L, -2, "create_entity");
-
-    // ---- 跨实体操作 ----
-    lua_pushcfunction(L, api_getNodePosition);
-    lua_setfield(L, -2, "get_node_position");
-    lua_pushcfunction(L, api_setNodePosition);
-    lua_setfield(L, -2, "set_node_position");
-
-    // ---- 信号系统 ----
-    lua_pushcfunction(L, api_connect);
-    lua_setfield(L, -2, "connect");
-    lua_pushcfunction(L, api_emit);
-    lua_setfield(L, -2, "emit");
-    lua_pushcfunction(L, api_connectTo);
-    lua_setfield(L, -2, "connect_to");
-    lua_pushcfunction(L, api_disconnect);
-    lua_setfield(L, -2, "disconnect");
-
-    // ---- 多线程异步计算（Godot 风格 WorkerThreadPool）----
-    lua_pushcfunction(L, api_asyncRun);
-    lua_setfield(L, -2, "async");
-
-    // ---- 脚本变量（Godot @export 风格）----
-    lua_pushcfunction(L, api_export);
-    lua_setfield(L, -2, "export");
-    lua_pushcfunction(L, api_getProp);
-    lua_setfield(L, -2, "get_prop");
-    lua_pushcfunction(L, api_setProp);
-    lua_setfield(L, -2, "set_prop");
-
-    // ---- 物理（Jolt）----
-    lua_pushcfunction(L, api_applyImpulse);
-    lua_setfield(L, -2, "apply_impulse");
-    lua_pushcfunction(L, api_setVelocity);
-    lua_setfield(L, -2, "set_velocity");
-    lua_pushcfunction(L, api_raycast);
-    lua_setfield(L, -2, "raycast");
-
-    // ---- 父子层级 ----
-    lua_pushcfunction(L, api_setParent);
-    lua_setfield(L, -2, "set_parent");
-    lua_pushcfunction(L, api_getParent);
-    lua_setfield(L, -2, "get_parent");
-
-    // ---- 动画（Godot AnimationPlayer 风格）----
-    lua_pushcfunction(L, api_animPlay);
-    lua_setfield(L, -2, "anim_play");
-    lua_pushcfunction(L, api_animStop);
-    lua_setfield(L, -2, "anim_stop");
-    lua_pushcfunction(L, api_animIsPlaying);
-    lua_setfield(L, -2, "anim_is_playing");
-    lua_pushcfunction(L, api_animSetSpeed);
-    lua_setfield(L, -2, "anim_set_speed");
-    lua_pushcfunction(L, api_animSetLoop);
-    lua_setfield(L, -2, "anim_set_loop");
-
-    // ---- 动画设计（脚本程序化创建，Godot Animation 资源 API 风格）----
-    lua_pushcfunction(L, api_animSetFile);
-    lua_setfield(L, -2, "anim_set_file");
-    lua_pushcfunction(L, api_animCreate);
-    lua_setfield(L, -2, "anim_create");
-    lua_pushcfunction(L, api_animAddKey);
-    lua_setfield(L, -2, "anim_add_key");
-    lua_pushcfunction(L, api_animAddEvent);
-    lua_setfield(L, -2, "anim_add_event");
-    lua_pushcfunction(L, api_animSave);
-    lua_setfield(L, -2, "anim_save");
+// ============================================================
+// kApiTable —— 引擎 Lua API 的单一事实来源（函数指针 + 元数据）
+//
+// 加一个新 API 只需：①写 api_xxx 实现 ②在本表加一行。
+// injectApi 注册、engine_api.lua 存根、补全词库、高亮词表四处自动同步。
+// func 填 nullptr 表示“只有元数据不注册”（如 Lua 内置 print）。
+// ============================================================
+const std::vector<ScriptApiEntry> &scriptApiList()
+{
+    static const std::vector<ScriptApiEntry> table = {
+        // ---- 基础 ----
+        {nullptr, "print", "...", "", "打印到控制台（Lua 内置）"},
+        {api_delta, "delta", "", "number", "本帧时间增量（秒）"},
+        {api_isKeyPressed, "is_key_pressed", "key", "boolean", "按键是否按住（持续），支持 \"W\"/\"space\"/\"left\"/\"shift\" 等"},
+        {api_isKeyJustPressed, "is_key_just_pressed", "key", "boolean", "按键本帧刚按下（边沿，跳跃/开枪用）"},
+        {api_isKeyJustReleased, "is_key_just_released", "key", "boolean", "按键本帧刚松开（边沿）"},
+        {api_isActionPressed, "is_action_pressed", "action", "boolean", "动作是否按住（如 \"jump\"，键位可配）"},
+        {api_isActionJustPressed, "is_action_just_pressed", "action", "boolean", "动作本帧刚触发（边沿）"},
+        // ---- 鼠标 ----
+        {api_isMousePressed, "is_mouse_pressed", "btn", "boolean", "鼠标键是否按住（\"left\"/\"middle\"/\"right\"）"},
+        {api_isMouseJustPressed, "is_mouse_just_pressed", "btn", "boolean", "鼠标键本帧刚按下（边沿，点击/射击用）"},
+        {api_isMouseJustReleased, "is_mouse_just_released", "btn", "boolean", "鼠标键本帧刚松开（边沿，拖拽结束用）"},
+        {api_getMousePosition, "get_mouse_position", "", "number x, number y", "鼠标视口像素坐标（配合拾取）"},
+        {api_getMouseDelta, "get_mouse_delta", "", "number dx, number dy", "本帧鼠标相对位移（FPS 视角用）"},
+        {api_getMouseWheel, "get_mouse_wheel", "", "number", "本帧滚轮格数（上正下负，缩放/切武器用）"},
+        {api_setMouseMode, "set_mouse_mode", "mode", "", "光标模式：\"captured\"锁中心(FPS) / \"visible\"正常"},
+        {api_getNode, "get_node", "name", "number", "按名字查实体 ID"},
+        {api_createEntity, "create_entity", "name", "number", "创建实体，返回其 ID"},
+        // ---- 建造 API（纯代码造世界：bootstrap 脚本 ready() 里搭场景）----
+        {api_addMesh, "add_mesh", "id, type", "", "加可见网格（\"cube\"），不加不可见"},
+        {api_addMaterial, "add_material", "id, r, g, b", "", "设置漫反射颜色（0~1）"},
+        {api_addRigidbody, "add_rigidbody", "id, motion", "", "加刚体（0=静态 1=运动学 2=动态）"},
+        {api_addCollider, "add_collider", "id, hx, hy, hz", "", "加盒碰撞体（半尺寸，默认0.5）"},
+        {api_addScript, "add_script", "id, path", "", "挂行为脚本（相对路径如 \"scripts/x.lua\"）"},
+        {api_addCamera, "add_camera", "id, px, py, pz, yaw, pitch", "", "加游戏相机（active）"},
+        {api_addRotate, "add_rotate", "id, sx, sy, sz", "", "自转装饰（度/秒）"},
+        {api_setNodeScale, "set_node_scale", "id, x, y, z", "", "缩放任意实体"},
+        {api_destroyEntity, "destroy_entity", "id", "", "删除实体（资源自动回收）"},
+        // ---- 当前实体 Transform ----
+        {api_getPosition, "get_position", "", "number x, number y, number z", "获取实体世界坐标"},
+        {api_setPosition, "set_position", "x, y, z", "", "设置实体世界坐标"},
+        {api_getRotation, "get_rotation", "", "number x, number y, number z", "获取实体旋转（欧拉角度）"},
+        {api_setRotation, "set_rotation", "x, y, z", "", "设置实体旋转（欧拉角度）"},
+        {api_getScale, "get_scale", "", "number x, number y, number z", "获取缩放"},
+        {api_setScale, "set_scale", "x, y, z", "", "设置缩放"},
+        {api_setVisible, "set_visible", "visible", "", "显示/隐藏实体"},
+        {api_isVisible, "is_visible", "", "boolean", "是否可见"},
+        // ---- 跨实体操作 ----
+        {api_getNodePosition, "get_node_position", "id", "number x, number y, number z", "获取指定实体位置"},
+        {api_setNodePosition, "set_node_position", "id, x, y, z", "", "设置指定实体位置"},
+        // ---- 物理（Jolt）----
+        {api_applyImpulse, "apply_impulse", "x, y, z", "", "施加冲量（瞬间推力，如跳跃）"},
+        {api_setVelocity, "set_velocity", "x, y, z", "", "直接设置刚体线速度"},
+        {api_getVelocity, "get_velocity", "", "number vx, number vy, number vz",
+         "读取刚体速度（移动时保留 y：set_velocity(mx, vy, mz)）"},
+        // ---- 玩家存档（exe旁 saves/，存什么由脚本定）----
+        {api_saveSet, "save_set", "key, value", "", "写存档草稿（number/string/bool）"},
+        {api_saveGet, "save_get", "key, default", "any", "读存档草稿（无此键返回 default）"},
+        {api_saveWrite, "save_write", "slot", "boolean", "草稿落盘到槽位（默认1），玩家按保存时调"},
+        {api_saveLoad, "save_load", "slot", "boolean", "读档到草稿（默认槽1），继续游戏时调"},
+        {api_saveExists, "save_exists", "slot", "boolean", "存档是否存在（主菜单'继续'判断）"},
+        // ---- 多场景 ----
+        {api_changeScene, "change_scene", "path", "", "切换场景（帧末生效），如 change_scene(\"scenes/level2.json\")"},
+        {api_getScene, "get_scene", "", "string", "当前场景相对路径（判断自己在哪关）"},
+        {api_raycast, "raycast", "ox, oy, oz, dx, dy, dz, maxDist", "table|nil",
+         "物理射线，命中返回 {entity,x,y,z,dist}，未命中 nil"},
+        // ---- 父子层级 ----
+        {api_setParent, "set_parent", "child, parent", "", "设置父子关系（child_of）"},
+        {api_getParent, "get_parent", "id", "number", "获取父实体 ID（无父返回 0）"},
+        // ---- 信号 ----
+        {api_connect, "connect", "signal, callback", "", "监听本实体信号"},
+        {api_emit, "emit", "signal, ...", "", "发射信号（可带参数）"},
+        {api_connectTo, "connect_to", "id, signal, callback", "", "监听指定实体的信号"},
+        {api_disconnect, "disconnect", "signal, ref", "", "断开信号监听"},
+        // ---- 异步（WorkerThreadPool）----
+        {api_asyncRun, "async", "fn, callback", "", "异步执行计算，完成后回调"},
+        // ---- 脚本变量（@export 风格）----
+        {api_export, "export", "name, default", "", "声明可导出变量（编辑器可调）"},
+        {api_getProp, "get_prop", "name", "any", "读取脚本变量"},
+        {api_setProp, "set_prop", "name, value", "", "设置脚本变量"},
+        // ---- 动画播放（AnimationPlayer 风格）----
+        {api_animPlay, "anim_play", "clip", "", "从头播放指定动画"},
+        {api_animCrossfade, "anim_crossfade", "clip, duration", "", "带过渡切换到新动画（默认0.3s，走→跑无缝混合）"},
+        {api_animStop, "anim_stop", "", "", "停止播放（保持当前姿态）"},
+        {api_animIsPlaying, "anim_is_playing", "", "boolean", "是否正在播放"},
+        {api_animSetSpeed, "anim_set_speed", "speed", "", "播放速度倍率（1=正常 2=两倍 负=倒放）"},
+        {api_animSetLoop, "anim_set_loop", "loop", "", "循环开关（true/false）"},
+        // ---- 动画设计（脚本程序化创建）----
+        {api_animSetFile, "anim_set_file", "path", "", "绑定动画文件（无组件时自动挂）"},
+        {api_animCreate, "anim_create", "clip, duration", "", "新建动画（同名覆盖）"},
+        {api_animAddKey, "anim_add_key", "clip, track, t, x, y, z, easing", "",
+         "打关键帧。track 如 \"position\" 或 \"组件名/字段名\"，easing 可选"},
+        {api_animAddEvent, "anim_add_event", "clip, t, signal", "", "事件轨道：播到 t 时发信号"},
+        {api_animSave, "anim_save", "", "boolean", "把动画库写回 .anim 文件"},
+    };
+    return table;
 }
 
 // ============================================================

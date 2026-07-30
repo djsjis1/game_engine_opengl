@@ -26,43 +26,45 @@ public:
 
         world.each([&](CameraComponent &cam)
                    {
-            if (!cam.isEditor) return;
+            // ★ 矩阵计算对所有相机，输入控制只对"激活的编辑器相机"：
+            //   Play 模式下 MainWindow 会把编辑器相机 active=false，
+            //   它就不再吃 WASD——否则玩家按 W 动的是相机不是角色（实踩坑）
+            if (cam.isEditor && cam.active)
+            {
+                // ↓↓↓ 编辑器飞行相机：输入驱动 ↓↓↓
 
-            // ↓↓↓ 所有逻辑在这里，Component 只是数据 ↓↓↓
+                // 1. 根据 yaw/pitch 计算 front/right 向量
+                float yr = glm::radians(cam.yaw);
+                float pr = glm::radians(cam.pitch);
+                glm::vec3 front(cos(yr) * cos(pr), sin(pr), sin(yr) * cos(pr));
+                front = glm::normalize(front);
+                glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0, 1, 0)));
 
-            // 1. 根据 yaw/pitch 计算 front/right 向量
-            float yr = glm::radians(cam.yaw);
-            float pr = glm::radians(cam.pitch);
-            glm::vec3 front(cos(yr) * cos(pr), sin(pr), sin(yr) * cos(pr));
-            front = glm::normalize(front);
-            glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0, 1, 0)));
-            glm::vec3 up(0, 1, 0);
+                // 2. WASD 移动
+                float speed = cam.moveSpeed * dt;
+                if (in.isDown('W')) cam.position += front * speed;
+                if (in.isDown('S')) cam.position -= front * speed;
+                if (in.isDown('A')) cam.position -= right * speed;
+                if (in.isDown('D')) cam.position += right * speed;
+                if (in.isDown('Q')) cam.position.y += speed;
+                if (in.isDown('E')) cam.position.y -= speed;
 
-            // 2. WASD 移动
-            float speed = cam.moveSpeed * dt;
-            if (in.keyDown['W']) cam.position += front * speed;
-            if (in.keyDown['S']) cam.position -= front * speed;
-            if (in.keyDown['A']) cam.position -= right * speed;
-            if (in.keyDown['D']) cam.position += right * speed;
-            if (in.keyDown['Q']) cam.position.y += speed;
-            if (in.keyDown['E']) cam.position.y -= speed;
-
-            // 3. 鼠标旋转
-            if (in.mouseRight) {
-                cam.yaw   += in.mouseDX * cam.mouseSens;
-                cam.pitch -= in.mouseDY * cam.mouseSens;
-                cam.pitch  = glm::clamp(cam.pitch, -89.0f, 89.0f);
+                // 3. 鼠标旋转（右键按住时）——只走 Input 查询接口
+                if (in.isMouseDown(MOUSE_RIGHT)) {
+                    cam.yaw   += in.mouseDeltaX() * cam.mouseSens;
+                    cam.pitch -= in.mouseDeltaY() * cam.mouseSens;
+                    cam.pitch  = glm::clamp(cam.pitch, -89.0f, 89.0f);
+                }
             }
 
-            // 4. 重算 front（yaw/pitch 变了）
-            yr = glm::radians(cam.yaw);
-            pr = glm::radians(cam.pitch);
-            front = glm::normalize(glm::vec3(cos(yr)*cos(pr), sin(pr), sin(yr)*cos(pr)));
-
-            // 5. 更新 view 矩阵（供 RenderWidget 读取）
-            //    注：proj 矩阵由 RenderWidget 根据实际窗口宽高比每帧重算，
-            //    这里不算（系统不知道窗口尺寸）
-            cam.viewMatrix = glm::lookAt(cam.position, cam.position + front, up); });
+            // 4. 用最新 yaw/pitch 算 front → view 矩阵（所有相机都要）
+            //    注：proj 矩阵由 RenderWidget 按实际窗口宽高比每帧重算
+            float yr = glm::radians(cam.yaw);
+            float pr = glm::radians(cam.pitch);
+            glm::vec3 front = glm::normalize(
+                glm::vec3(cos(yr)*cos(pr), sin(pr), sin(yr)*cos(pr)));
+            cam.viewMatrix = glm::lookAt(cam.position, cam.position + front,
+                                         glm::vec3(0, 1, 0)); });
     }
 };
 

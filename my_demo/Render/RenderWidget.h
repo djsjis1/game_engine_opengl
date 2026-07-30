@@ -45,6 +45,7 @@ private:
     Shader m_shader;
     Shader m_lineShader;
     GLuint m_gizmoVao = 0, m_gizmoVbo = 0;
+    int m_gridVerts = 0; // 网格线顶点数（彩色轴紧跟其后，分段绘制用）
     bool m_showGizmo = true;
 
     // 拾取用：paintGL 每帧存下 view/proj（鼠标点击时逆变换用）
