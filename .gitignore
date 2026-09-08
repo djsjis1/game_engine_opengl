@@ -1,5 +1,6 @@
 # 构建产物
 build/
+build_*/
 cmake-build-*/
 *.o
 *.obj

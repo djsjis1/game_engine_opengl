@@ -416,8 +416,6 @@ int main()
 {
     system("chcp 65001 > nul");
 
-    lua_State *L = luaL_newstate();// 创建 Lua 状态机
-    luaL_openlibs(L); // 加载标准库
-
-    
+    lua_State *L = luaL_newstate(); // 创建 Lua 状态机
+    luaL_openlibs(L);               // 加载标准库
 }
