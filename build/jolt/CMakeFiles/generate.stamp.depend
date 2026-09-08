@@ -1,8 +1,0 @@
-# CMake generation dependency list for this directory.
-C:/Program Files/CMake/share/cmake-4.2/Modules/CMakeDependentOption.cmake
-C:/Program Files/CMake/share/cmake-4.2/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-4.2/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-4.2/Modules/FindVulkan.cmake
-C:/Program Files/CMake/share/cmake-4.2/Modules/GNUInstallDirs.cmake
-D:/code/.std/opengl/thirdparty/JoltPhysics-master/Build/CMakeLists.txt
-D:/code/.std/opengl/thirdparty/JoltPhysics-master/Jolt/Jolt.cmake
