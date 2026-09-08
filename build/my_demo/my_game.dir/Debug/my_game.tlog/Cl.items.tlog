@@ -1,8 +1,0 @@
-D:\code\.std\opengl\build\my_demo\my_game_autogen\mocs_compilation_Debug.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\mocs_compilation_Debug.obj
-D:\code\.std\opengl\my_demo\Game\main_game.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\main_game.obj
-D:\code\.std\opengl\my_demo\Game\GameWindow.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\GameWindow.obj
-D:\code\.std\opengl\my_demo\Systems\PhysicsEngine.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\PhysicsEngine.obj
-D:\code\.std\opengl\my_demo\Scripting\LuaApi.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\LuaApi.obj
-D:\code\.std\opengl\my_demo\Scripting\ScriptEngine.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\ScriptEngine.obj
-D:\code\.std\opengl\my_demo\Scripting\LuaAsync.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\LuaAsync.obj
-D:\code\.std\opengl\my_demo\Render\RenderWidget.cpp;D:\code\.std\opengl\build\my_demo\my_game.dir\Debug\RenderWidget.obj

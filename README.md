@@ -1,13 +1,9 @@
-# OpenGL × Qt 学习课程
+# 3D 游戏引擎 × OpenGL 学习项目
 
-一套基于 **Qt 5 + QOpenGLWidget + OpenGL 3.3 Core Profile** 的渐进式 OpenGL 学习项目。
-每一节课都是独立可运行的可执行程序，配套着色器源码与详细中文注释，循序渐进掌握现代 OpenGL。
+基于 **Flecs ECS + Qt + OpenGL + Lua + Jolt Physics** 的 3D 游戏引擎原型，附带 21 节渐进式 OpenGL 学习课程。
 
-> 配套文档（建议按顺序阅读）：
->
-> - [Qt + OpenGL 学习手册](docs/Qt_OpenGL_学习手册.md) — 核心知识详解
-> - [API 速查表](docs/API速查表.md) — OpenGL / Qt 常用 API 索引
-> - [常见问题 FAQ](docs/常见问题FAQ.md) — 避坑指南
+> 引擎对标 Godot（编辑器三栏 UI + 内置脚本编辑器 + 导出游戏独立 exe）。
+> 能用三种方式做游戏：编辑器摆场景 / 脚本挂行为 / 纯代码 bootstrap。
 
 ---
 
@@ -15,199 +11,181 @@
 
 ```
 opengl/
-├── CMakeLists.txt           # 顶层构建脚本
-├── main.cpp                 # 自由练手入口（main_course 可执行文件）
-├── lesson/
-│   ├── CMakeLists.txt       # 各课程子项目注册
-│   ├── lesson01_hello_window/      # 创建 OpenGL 窗口
-│   ├── lesson02_hello_triangle/    # VBO + VAO + 着色器
-│   ├── lesson03_shader_uniform/    # uniform 变量、Shader 工具类
-│   ├── lesson04_ebo_rectangle/     # EBO 索引绘制、线框模式
-│   ├── lesson05_texture/           # 纹理贴图、混合
-│   ├── lesson06_transform/         # 矩阵变换、动画
-│   ├── lesson07_coordinate_3d/     # MVP 矩阵、深度测试
-│   ├── lesson08_camera/            # 摄像机、WASD + 鼠标
-│   ├── lesson09_basic_lighting/    # Phong 光照模型
-│   ├── lesson10_material/          # 材质属性
-│   ├── lesson11_lighting_maps/     # 光照贴图（漫反射+镜面贴图）
-│   ├── lesson12_light_casters/     # 投光物（方向光/点光源/聚光灯）
-│   ├── lesson13_multiple_lights/   # 多光源（方向光+4个点光源）
-│   ├── lesson14_framebuffer/       # 帧缓冲 FBO + 后期处理（反相/灰度/锐化/模糊/边缘检测）
-│   ├── lesson15_cubemap/           # 立方体贴图 + 天空盒（反射/折射）
-│   └── lesson16_instancing/        # 实例化渲染（1000颗小行星带）
-│   ├── lesson17_shadow_mapping/     # 阴影映射（PCF软化阴影）
-│   ├── lesson18_normal_mapping/     # 法线贴图（程序化砖墙凹凸）
-│   └── lesson19_bloom/              # 泛光 Bloom（HDR+高斯模糊+色调映射）
-│   ├── lesson20_geometry_shader/     # 几何着色器（炸裂 + 法线可视化）
-│   └── lesson21_deferred_shading/    # 延迟渲染（G-Buffer + 多光源）
-└── docs/
-    ├── Qt_OpenGL_学习手册.md
-    ├── API速查表.md
-    └── 常见问题FAQ.md
+├── CMakeLists.txt              # 引擎构建脚本（主目标：my_demo / my_game）
+├── main.cpp                    # 编辑器入口
+├── MainWindow.h / .cpp         # 编辑器主窗口（三栏 UI）
+│
+├── Core/                       # 引擎基础设施（无 UI 依赖）
+│   ├── Engine.h                #   World + System 管线 + 状态机
+│   ├── Input.h / Time.h        #   全局输入/时钟单例
+│   ├── SignalQueue.h           #   多线程信号队列（ADR-002）
+│   └── ...                     #   SaveGame/SceneRouter/NavGrid/Easing/...
+│
+├── Components/                 # ECS 纯数据组件（REFLECT 宏自动反射）
+├── Systems/                    # 逻辑系统（Camera/Rotation/Physics/Audio/Tween/...）
+├── Scripting/                  # Lua 脚本层（API 按域拆分 + 热重载）
+├── Render/                     # 渲染模块（多 Pass 管线：阴影→天空→后处理）
+├── editor/                     # 编辑器 UI（场景树/Inspector/脚本编辑器）
+├── Game/                       # 游戏运行时（导出后只有视口窗口）
+│
+├── assets/                     # 资源（Shaders/scenes/scripts/anims/sprites/prefabs）
+├── Generated/                  # 自动生成（ComponentReflection.inl）
+├── tools/                      # reflect_gen 反射代码生成器
+├── tests/                      # 测试（unit/ + integration/ + engine/）
+│
+├── lessons/                    # OpenGL 渐进式学习课程（21 节，独立可运行）
+│   ├── CMakeLists.txt
+│   ├── lesson01_hello_window/ ... lesson21_deferred_shading/
+│   └── docs/                   #   课程配套文档（flecs/hfsm2/lua/opengl）
+│
+├── docs/                       # 引擎文档
+│   ├── 模块文档.md             #   架构总览 + 模块职责
+│   ├── 脚本API手册.md          #   全部 Lua API 手册
+│   ├── 排障手册.md             #   实战坑 + 排障方法论
+│   └── adr/                    #   架构决策记录
+│
+├── thirdparty/                 # 第三方库（源码内嵌，锁定版本）
+│   ├── flecs-4.1.6/            #   ECS 框架
+│   ├── glm-1.0.3/              #   数学库
+│   ├── lua-5.4.7/              #   脚本引擎
+│   ├── JoltPhysics-master/     #   物理引擎
+│   ├── HFSM2-2.12.1/           #   层次状态机
+│   ├── miniaudio-master/       #   音频
+│   ├── nlohmann/               #   JSON
+│   ├── sqlite/                 #   本地存储
+│   ├── log/                    #   spdlog 封装
+│   └── googletest-main/        #   测试框架（可选）
+│
+└── 通用开发记忆.md             # 跨项目通用开发笔记
 ```
 
-每节课目录下通常包含：
+---
 
-| 文件 | 作用 |
-|---|---|
-| `main.cpp`         | 程序入口，构建 `QApplication` 并显示 OpenGL 控件 |
-| `openglwidget.h/.cpp` | 继承 `QOpenGLWidget` 的核心渲染类 |
-| `shader.h`         | 着色器加载/编译/链接工具类（lesson03 起） |
-| `shaders/*.vert`   | GLSL 顶点着色器 |
-| `shaders/*.frag`   | GLSL 片段着色器 |
+## 二、双可执行目标
+
+```
+       共享引擎核心（ENGINE_SOURCES）
+   Core / Components / Systems / Scripting / Render
+        │                                    │
+   ┌────┴─────────────┐          ┌───────────┴──────────┐
+   │  my_demo.exe     │          │   my_game.exe        │
+   │  （编辑器）       │          │   （游戏运行时）      │
+   │  + editor/       │          │   + Game/GameWindow  │
+   │  三栏UI/脚本编辑器 │          │   只有视口，启动即Play │
+   │  /导出按钮        │          │   给玩家的成品        │
+   └──────────────────┘          └──────────────────────┘
+```
 
 ---
 
-## 二、环境准备
+## 三、环境准备
 
 | 组件 | 版本 / 要求 |
-|---|---|
-| 操作系统 | Windows 10 / 11（已在 Win11 25H2 验证） |
-| Qt       | 5.14.2 (msvc2017_64)，安装在 `D:/QT/5.14.2/msvc2017_64` |
-| 编译器   | MSVC 2019 / 2022 (x64) |
-| CMake    | 3.10+ |
-| 显卡驱动 | 支持 OpenGL 3.3 Core Profile（基本 2010 年后所有显卡都满足） |
+| ------ | ------------ |
+| 操作系统 | Windows 10 / 11 |
+| Qt | 5.14.2 (msvc2017_64)，安装在 `D:/QT/5.14.2/msvc2017_64` |
+| 编译器 | MSVC 2019 / 2022 (x64) |
+| CMake | 3.15+ |
+| 显卡驱动 | 支持 OpenGL 3.3 Core Profile |
 
-> 如果 Qt 装在其他路径，编辑顶层 [CMakeLists.txt](CMakeLists.txt) 第 13 行的 `CMAKE_PREFIX_PATH`。
+> Qt 路径在 `CMakeLists.txt` 第 29 行配置，换路径改这一处即可。
 
 ---
 
-## 三、构建与运行
-
-### 1. 命令行构建（推荐）
-
-PowerShell 下执行：
+## 四、构建与运行
 
 ```powershell
 # 配置（生成 VS2022 工程）
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64
 
-# 构建全部课程（Release 配置）
+# 构建全部（Release）
 cmake --build build --config Release
 
-# 运行某节课（示例：第 10 课）
-./build/lesson/Release/lesson10_material.exe
-```
+# 运行编辑器
+./build/Release/my_demo.exe
 
-### 2. 单课构建
-
-```powershell
+# 单目标构建
+cmake --build build --config Release --target my_game
 cmake --build build --config Release --target lesson05_texture
 ```
 
-### 3. VSCode 调试
+### 构建目标一览
 
-项目已在 [lesson/CMakeLists.txt](lesson/CMakeLists.txt) 中通过
-`VS_DEBUGGER_WORKING_DIRECTORY` 设置每课的工作目录为其源码目录，
-并通过 `target_compile_definitions` 注入 `SHADER_DIR` 宏（绝对路径），
-**无论从哪里运行 exe，shader 文件都能正确加载**。
-
----
-
-## 四、课程索引（推荐学习顺序）
-
-| # | 课程 | 关键 API / 知识点 | 看完你能做什么 |
-|---|---|---|---|
-| 01 | [Hello Window](lesson/lesson01_hello_window/) | `QOpenGLWidget`、`initializeGL/resizeGL/paintGL`、`glClearColor`、`glClear` | 在 Qt 窗口里创建 OpenGL 上下文并清屏 |
-| 02 | [Hello Triangle](lesson/lesson02_hello_triangle/) | VBO / VAO、`glVertexAttribPointer`、最简顶点 + 片段着色器 | 画出第一个三角形 |
-| 03 | [Shader & Uniform](lesson/lesson03_shader_uniform/) | `uniform`、`varying`、Shader 工具类（从文件加载） | 让三角形动起来、变颜色 |
-| 04 | [EBO Rectangle](lesson/lesson04_ebo_rectangle/) | EBO（索引缓冲）、`glDrawElements`、`glPolygonMode` 线框模式 | 用更少顶点画矩形 / 显示网格线框 |
-| 05 | [Texture](lesson/lesson05_texture/) | `glTexImage2D`、纹理坐标、纹理单元、Mipmap、`QImage` 加载 | 给图形贴上图片，混合两张纹理 |
-| 06 | [Transform](lesson/lesson06_transform/) | `QMatrix4x4`、`translate/rotate/scale`、矩阵乘法顺序 | 让物体平移、旋转、缩放 |
-| 07 | [3D Coordinate](lesson/lesson07_coordinate_3d/) | Model / View / Projection 三大矩阵、`glEnable(GL_DEPTH_TEST)` | 画出真正的 3D 立方体 |
-| 08 | [Camera](lesson/lesson08_camera/) | 欧拉角(yaw/pitch)、`lookAt`、deltaTime、键盘 + 鼠标输入 | FPS 风格自由飞行视角 |
-| 09 | [Basic Lighting](lesson/lesson09_basic_lighting/) | Phong 光照模型（环境/漫反射/镜面）、法线变换 | 让 3D 物体看起来有立体感 |
-| 10 | [Material](lesson/lesson10_material/) | 材质 struct、6 种经典材质（翡翠/黄金/珍珠 等） | 不同材质表现差异 |
-| 11 | [Lighting Maps](lesson/lesson11_lighting_maps/) | 漫反射贴图、镜面光贴图、sampler2D | 木箱金属边框效果：木纹无高光、金属有高光 |
-| 12 | [Light Casters](lesson/lesson12_light_casters/) | 方向光/点光源/聚光灯，衰减公式，边缘软化 | 按 1/2/3 切换三种灯光，看效果差异 |
-| 13 | [Multiple Lights](lesson/lesson13_multiple_lights/) | 多光源混合、uniform 数组、`uPointLights[i]` | 方向光+4个旋转色灯，理解灯光叠加 |
-| 14 | [Framebuffer](lesson/lesson14_framebuffer/) | FBO 离屏渲染、颜色附件、后处理特效 | 6种特效：反相/灰度/锐化/模糊/边缘检测 |
-| 15 | [Cubemap](lesson/lesson15_cubemap/) | 立方体贴图、天空盒、环境反射/折射 | 6面程序化天空 + 反射折射双球 |
-| 16 | [Instancing](lesson/lesson16_instancing/) | `glDrawArraysInstanced`、`glVertexAttribDivisor` | 1000颗小行星带 + 中心行星 |
-| 17 | [Shadow Mapping](lesson/lesson17_shadow_mapping/) | 深度贴图FBO、光源空间矩阵、PCF滤波 | 方向光投射阴影，软阴影边缘 |
-| 18 | [Normal Mapping](lesson/lesson18_normal_mapping/) | TBN矩阵、切线空间、程序化法线贴图 | 砖墙凹凸细节，不增加顶点 |
-| 19 | [Bloom](lesson/lesson19_bloom/) | HDR浮点FBO、高斯模糊、色调映射 | 发光物体泛光效果，按1~5调强度 |
-| 20 | [Geometry Shader](lesson/lesson20_geometry_shader/) | `GL_GEOMETRY_SHADER`、`EmitVertex`、炸裂/法线可视化 | GPU上修改图元，1=炸裂 2=法线 3=普通 |
-| 21 | [Deferred Shading](lesson/lesson21_deferred_shading/) | G-Buffer MRT、延迟光照、多光源无性能损耗 | 10个彩色移动光源同时照亮场景 |
+| 目标 | 说明 |
+| ------ | ------ |
+| `my_demo` | 编辑器（做游戏用） |
+| `my_game` | 游戏运行时（导出的成品） |
+| `reflect_gen` | 反射代码生成器（构建自动执行） |
+| `unit_tests` | 单元测试（需放置 googletest 源码） |
+| `integration_tests` | 集成测试（物理/脚本/粒子/动画/补间/场景/资源） |
+| `engine_tests` | 无头引擎测试 |
+| `lesson01` ~ `lesson21` | OpenGL 学习课程（各自独立可运行） |
 
 ---
 
-## 五、知识图谱（一图掌握全局）
+## 五、OpenGL 学习课程
 
-```mermaid
-graph TB
-    A[Qt 应用] --> B[QOpenGLWidget]
-    B --> C[OpenGL 上下文]
-    C --> D[图形管线]
-    D --> D1[顶点着色器 VS]
-    D --> D2[图元装配]
-    D --> D3[光栅化]
-    D --> D4[片段着色器 FS]
-    D --> D5[测试与混合]
+21 节渐进式课程，从窗口创建到延迟渲染，每节独立可运行。
+详见 [lessons/ 目录](lessons/) 和 [课程 README](lessons/README.md)。
 
-    E[CPU 端数据] --> F[VBO 顶点缓冲]
-    E --> G[EBO 索引缓冲]
-    F --> H[VAO 顶点数组对象]
-    G --> H
-    H --> D1
-
-    I[Uniform 变量] --> D1
-    I --> D4
-    J[Texture 纹理] --> D4
-
-    K[变换] --> K1[Model 模型矩阵]
-    K --> K2[View 视图矩阵]
-    K --> K3[Projection 投影矩阵]
-    K1 --> D1
-    K2 --> D1
-    K3 --> D1
-
-    L[光照] --> L1[环境光 Ambient]
-    L --> L2[漫反射 Diffuse]
-    L --> L3[镜面光 Specular]
-    L1 --> D4
-    L2 --> D4
-    L3 --> D4
-```
+| # | 课程 | 核心知识点 |
+| --- | ------ | ----------- |
+| 01 | Hello Window | QOpenGLWidget + 清屏 |
+| 02 | Hello Triangle | VBO/VAO + 着色器 |
+| 03 | Shader Uniform | uniform 变量 + Shader 工具类 |
+| 04 | EBO Rectangle | 索引缓冲 + 线框模式 |
+| 05 | Texture | 纹理贴图 + 混合 |
+| 06 | Transform | 矩阵变换 + 动画 |
+| 07 | 3D Coordinate | MVP 矩阵 + 深度测试 |
+| 08 | Camera | FPS 摄像机 + WASD |
+| 09 | Basic Lighting | Phong 光照模型 |
+| 10 | Material | 材质属性 |
+| 11 | Lighting Maps | 漫反射/镜面光贴图 |
+| 12 | Light Casters | 方向光/点光源/聚光灯 |
+| 13 | Multiple Lights | 多光源混合 |
+| 14 | Framebuffer | FBO + 后处理特效 |
+| 15 | Cubemap | 立方体贴图 + 天空盒 |
+| 16 | Instancing | 实例化渲染 |
+| 17 | Shadow Mapping | 阴影映射 + PCF |
+| 18 | Normal Mapping | 法线贴图 |
+| 19 | Bloom | HDR + 泛光 |
+| 20 | Geometry Shader | 几何着色器 |
+| 21 | Deferred Shading | 延迟渲染 |
 
 ---
 
-## 六、编码约定
+## 六、引擎文档导航
 
-1. 所有源文件 **强制 UTF-8**，CMake 已配置 `/utf-8 /FS`。
-2. 类名与文件名采用 `小驼峰/PascalCase` 习惯（`OpenGLWidget`、`Shader`）。
-3. 着色器统一用 `#version 330 core`。
-4. 资源释放：在析构函数中使用 `makeCurrent()` … `doneCurrent()` 包裹 `glDelete*`。
-5. 每帧调用 `update()` 触发 `paintGL`，定时器周期 16ms（约 60 FPS）。
-
----
-
-## 七、推荐学习资源
-
-| 类型 | 名称 | 说明 |
-|---|---|---|
-| 教程 | [LearnOpenGL CN](https://learnopengl-cn.github.io/) | 本项目章节顺序与之高度对齐，强烈推荐配合阅读 |
-| 文档 | [Qt 5 Documentation](https://doc.qt.io/qt-5/) | `QOpenGLWidget` / `QOpenGLFunctions_3_3_Core` / `QMatrix4x4` |
-| 参考 | [OpenGL Reference Pages](https://registry.khronos.org/OpenGL-Refpages/gl4/) | 每个 `gl*` 函数的官方定义 |
-| 工具 | [RenderDoc](https://renderdoc.org/) | 抓帧调试，看每个 draw call 的顶点/纹理/uniform |
+| 文档 | 给谁看 | 内容 |
+| ------ | -------- | ------ |
+| [模块文档.md](docs/模块文档.md) | 想理解/扩展引擎的人 | 架构、模块职责、数据流、设计模式 |
+| [脚本API手册.md](docs/脚本API手册.md) | 用引擎做游戏的人 | 全部 Lua API + 三种开发方式 + 最小示例 |
+| [排障手册.md](docs/排障手册.md) | 遇到 bug 的人 | 实战坑 + 排障方法论 |
+| [功能更新计划.md](功能更新计划.md) | 规划功能的人 | 待实现功能路线图 |
 
 ---
 
-## 八、下一步可扩展
+## 七、依赖版本
 
-- [x] Lesson 11：光照贴图（Diffuse Map + Specular Map）
-- [x] Lesson 12：投光物（Directional / Point / Spot Light）
-- [x] Lesson 13：多光源
-- [x] Lesson 14：帧缓冲 FBO + 后期处理
-- [x] Lesson 15：立方体贴图 + 天空盒
-- [x] Lesson 16：实例化渲染
-- [x] Lesson 17：阴影映射 (Shadow Mapping)
-- [x] Lesson 18：法线贴图 (Normal Mapping)
-- [x] Lesson 19：泛光 Bloom
-- [x] Lesson 20：几何着色器
-- [x] Lesson 21：延迟渲染 (Deferred Shading)
-- [ ] Lesson 22：模型加载（Assimp + Mesh 抽象）
+| 库 | 版本 | 用途 |
+| ---- | ------ | ------ |
+| Qt | 5.14.2 | 窗口/输入/OpenGL 上下文 |
+| flecs | 4.1.6 | ECS 框架 |
+| GLM | 1.0.3 | 数学库 |
+| Lua | 5.4.7 | 脚本引擎 |
+| Jolt Physics | master | 物理引擎 |
+| HFSM2 | 2.12.1 | 层次状态机 |
+| miniaudio | master | 音频 |
+| nlohmann/json | — | JSON 序列化 |
+| sqlite | — | 本地存储 |
+| GoogleTest | main | 测试框架（可选） |
 
 ---
 
-> 有问题？先翻一下 [docs/常见问题FAQ.md](docs/常见问题FAQ.md)，90% 的"黑屏 / 编译错误 / shader 找不到"都能找到答案。
+## 八、编码约定
+
+- C++20，UTF-8 编码，MSVC 强制 `/utf-8 /FS`
+- 类名 PascalCase，函数 camelCase，成员 `m_` 前缀
+- RAII + 智能指针，禁止裸 new
+- 函数 ≤ 50 行，单一职责
+- 详细规范见 [AGENTS.md](AGENTS.md) 和 [.qoder/rules/](.qoder/rules/)

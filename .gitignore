@@ -1,0 +1,43 @@
+# 构建产物
+build/
+build_*/
+cmake-build-*/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.lib
+*.pdb
+*.ilk
+*.exp
+
+# IDE 临时文件
+.vs/
+*.user
+*.suo
+*.sdf
+*.opensdf
+.vscode/settings.json
+
+# 测试输出
+Testing/
+coverage/
+
+# 日志
+logs/
+
+# 临时文件
+*.tmp
+*.bak
+*~
+Thumbs.db
+Desktop.ini
+
+# Qt 自动生成（ Moc / UIC / RCC）
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# 自动生成
+Generated/*.inl
