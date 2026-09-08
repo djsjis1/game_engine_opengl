@@ -1,5 +1,6 @@
 ---
-trigger: always_on
+trigger: glob
+glob: "**/*.{h,hpp,cpp,cc,cxx},**/CMakeLists.txt"
 ---
 # C++ 企业级项目规范
 
@@ -31,25 +32,29 @@ engineering_rules.md 定义通用编码原则，本文件定义 C++ 工程实践
 
 # 类型安全规范
 
-使用固定宽度整型，禁止依赖平台相关类型大小：
+数据交换类型（协议、序列化、文件格式、跨模块接口）必须使用固定宽度整型，禁止依赖平台相关类型大小：
 
 | 禁止 | 必须 |
-|------|------|
+| ------ | ------ |
 | `int` | `int32_t` |
 | `unsigned int` | `uint32_t` |
 | `long` | `int64_t` |
 | `unsigned long` | `uint64_t` |
 
-禁止隐式类型转换：
+例外：局部循环计数与纯内存内统计量可用 `int`；尺寸与容量统一用 `size_t`。
+
+禁止有损隐式类型转换（宽转窄、有符号与无符号混用）：
 
 ```cpp
-// 禁止
-int32_t a = 100;
-int64_t b = a;  // 隐式转换
+// 禁止（int64_t → int32_t 可能截断）
+int64_t a = 100;
+int32_t b = a;  // 隐式有损转换
 
 // 必须
-int64_t b = static_cast<int64_t>(a);
+int32_t b = static_cast<int32_t>(a);  // 显式声明截断风险，需自行确认安全
 ```
+
+无损拓宽转换（如 `int32_t` → `int64_t`）可隐式进行。
 
 禁止 C 风格强制转换：
 
@@ -163,10 +168,6 @@ int32_t getFrameCount() const noexcept { return frame_count_; }
 
 ---
 
-> 测试框架、覆盖率、四类必测场景、用例命名等完整规范请参阅 `testing_rules.md`
-
----
-
 # 异常策略
 
 项目统一选择一种错误处理策略，禁止混用：
@@ -191,31 +192,15 @@ std::optional<VideoFrame> decodeFrame(const AVPacket* packet);
 
 # 命名空间规范
 
-每个模块必须定义独立命名空间：
-
-```cpp
-namespace player {
-namespace codec {
-
-class VideoDecoder { ... };
-
-} // namespace codec
-} // namespace player
-```
-
-禁止：
-
-* 在头文件中使用 `using namespace`
-* 全局命名空间中定义非 main 的业务符号
-* 命名空间嵌套超过 3 层
-
-推荐使用 C++17 嵌套命名空间语法：
+每个模块必须定义独立命名空间，推荐使用 C++17 嵌套语法：
 
 ```cpp
 namespace player::codec {
     class VideoDecoder { ... };
 }
 ```
+
+禁止：全局命名空间定义业务符号、命名空间嵌套超过 3 层、头文件中使用 `using namespace`。
 
 ---
 
@@ -365,12 +350,72 @@ std::optional<VideoFrame> decodeFrame(const AVPacket* packet);
 
 ---
 
+# C++ 文件头注释规范
+
+每个 C++ 文件（头文件和源文件）必须在文件顶部包含 Doxygen 格式的头注释，说明文件职责、关键类的公共接口摘要和使用示例。
+
+## 头文件（.h）格式
+
+```cpp
+/**
+ * @file VideoDecoder.h
+ * @brief 视频解码器——将编码包解码为视频帧
+ *
+ * 关键类：
+ *   VideoDecoder
+ *     - initialize(config) → 初始化解码器
+ *     - decodeFrame(packet) → std::optional<VideoFrame>，解码一帧
+ *     - getFrameCount() → int32_t，已解码帧数
+ *     - releaseBuffers() → 释放解码缓冲区
+ *
+ * 用法示例：
+ * @code
+ *   VideoDecoder decoder;
+ *   decoder.initialize(config);
+ *   auto frame = decoder.decodeFrame(packet);
+ *   if (frame) { render(*frame); }
+ * @endcode
+ */
+```
+
+## 源文件（.cpp）格式
+
+```cpp
+/**
+ * @file VideoDecoder.cpp
+ * @brief VideoDecoder 实现，基于 FFmpeg 硬解码
+ */
+```
+
+## 工具函数文件格式
+
+```cpp
+/**
+ * @file string_utils.h
+ * @brief 字符串工具函数集
+ *
+ * 导出函数：
+ *   - trim(str) → 去除首尾空白
+ *   - split(str, delim) → std::vector<std::string>，按分隔符拆分
+ *   - toLower(str) → 转小写
+ */
+```
+
+## 强制要求
+
+* 新增文件必须编写头注释，修改文件时若头注释过时须同步更新
+* 头注释只描述「是什么」和「怎么用」，不重复实现细节
+* 接口变更时头注释必须同步更新（与公共接口 Doxygen 注释同等重要）
+* AI 探索陌生代码时优先读头注释快速定位，因此头注释的准确性直接影响开发效率
+
+---
+
 # C++ 安全规范
 
 ## 禁止不安全的 C 函数
 
 | 禁止 | 替代 |
-|------|------|
+| ------ | ------ |
 | `strcpy` | `strncpy` / `std::string` |
 | `sprintf` | `snprintf` / `std::format` |
 | `gets` | `fgets` |
@@ -379,7 +424,7 @@ std::optional<VideoFrame> decodeFrame(const AVPacket* packet);
 ## 边界检查
 
 * 数组下标访问前必须检查边界
-* `std::vector::at()` 替代 `operator[]`（Debug 模式越界抛异常）
+* 外部输入的下标优先用 `std::vector::at()`（越界抛异常）；内部热路径在已证明边界安全后可用 `operator[]`
 * 外部传入的偏移量、长度必须验证合法性
 
 ## 整数安全
@@ -395,7 +440,7 @@ std::optional<VideoFrame> decodeFrame(const AVPacket* packet);
 ## 零警告原则
 
 * 必须在 `-Wall -Wextra -Werror` 下无警告编译
-* 禁止使用 `#pragma warning(disable)` 屏蔽警告
+* 禁止无差别屏蔽警告；确需屏蔽第三方库警告时，可用 `#pragma` / `NOLINT`，但必须附注释说明原因，且作用域限缩到最小范围
 * 禁止强制类型转换绕过编译器警告
 
 ## 头文件规范
@@ -407,149 +452,31 @@ std::optional<VideoFrame> decodeFrame(const AVPacket* packet);
 
 ---
 
-# Git 工作流规范
-
-> Commit 规范、分支策略、PR/MR 要求、Tag 版本、AI 提交建议等完整规范
-> 请参阅 `git_rules.md`
-
----
-
-# 代码审查规范
-
-## 必须审查的场景
-
-* 所有 PR 合并前必须至少 1 人 Review
-* 以下场景必须至少 2 人 Review：
-  * 公共接口变更
-  * 并发相关代码
-  * 安全敏感代码（输入解析、权限控制）
-  * 性能关键路径变更
-
-## Review Checklist
-
-审查者必须检查：
-
-**正确性**
-
-* [ ] 逻辑是否正确，边界条件是否处理
-* [ ] 错误路径是否有返回值
-* [ ] 资源是否在所有路径上正确释放
-
-**并发安全**
-
-* [ ] 共享数据是否有锁保护
-* [ ] 锁的获取顺序是否一致
-* [ ] 是否存在 TOCTOU（检查时/使用时）竞争
-
-**性能**
-
-* [ ] 热路径是否引入不必要的分配
-* [ ] 是否有不必要的数据拷贝
-
-**可维护性**
-
-* [ ] 命名是否清晰表达意图
-* [ ] 是否有必要的注释（为什么，而非做什么）
-* [ ] 测试是否覆盖新增逻辑
-
-**安全**
-
-* [ ] 外部输入是否已验证
-* [ ] 是否使用了不安全的 C 函数
-
----
-
 # 工具链规范
 
-## 代码格式化
+配置细节以项目内的 `.clang-format` / `.clang-tidy` 文件与 CI 为准（工具强制，不在规则中复述），仅声明行为要求：
 
-必须使用 `clang-format`：
-
-* `.clang-format` 配置文件必须纳入版本控制
-* 提交前必须自动格式化（建议配置 pre-commit hook）
-* 禁止手动格式化与工具格式化混用
-* CI 流水线中必须检查格式化合规
-
-推荐基础配置：
-
-```yaml
-BasedOnStyle: Google
-IndentWidth: 4
-ColumnLimit: 100
-```
-
-## 静态分析
-
-必须使用 `clang-tidy`：
-
-* `.clang-tidy` 配置文件纳入版本控制
-* CI 流水线中 `clang-tidy` 必须零错误通过
-* 禁止使用 `// NOLINT` 跳过检查（特殊情况需注释原因）
-
-推荐启用的检查组：
-
-* `bugprone-*`（常见 bug 模式）
-* `cppcoreguidelines-*`（C++ Core Guidelines）
-* `modernize-*`（现代 C++ 用法）
-* `performance-*`（性能问题）
-* `readability-*`（可读性）
-
-## 内存与运行时检测
-
-Debug 构建必须开启 Sanitizer：
-
-```cmake
-# CMakeLists.txt
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        -fsanitize=address,undefined
-        -fno-omit-frame-pointer
-    )
-    target_link_options(${PROJECT_NAME} PRIVATE
-        -fsanitize=address,undefined
-    )
-endif()
-```
-
-| Sanitizer | 检测内容 |
-|-----------|----------|
-| `AddressSanitizer (ASAN)` | 内存越界、use-after-free |
-| `UndefinedBehaviorSanitizer (UBSAN)` | 未定义行为、整数溢出 |
-| `ThreadSanitizer (TSAN)` | 数据竞争（与 ASAN 互斥） |
-
-发布版本禁止开启 Sanitizer。
+* 格式化遵循 `.clang-format`（推荐 BasedOnStyle: Google / IndentWidth: 4 / ColumnLimit: 100），提交前自动格式化，禁止手动格式化混用
+* 静态分析遵循 `.clang-tidy`（推荐启用 `bugprone-*` / `cppcoreguidelines-*` / `modernize-*` / `performance-*` / `readability-*`），屏蔽第三方库警告用 `NOLINT` / `#pragma` 并注释原因，作用域限缩到最小
+* Debug 构建开启 ASAN + UBSAN（`-fsanitize=address,undefined`）；TSAN 检测数据竞争（与 ASAN 互斥）；发布版本禁止开启 Sanitizer
 
 ---
 
 # 构建系统规范
 
-## CMake 规范
+## CMake
 
-必须使用 target-based CMake（CMake 3.15+）：
-
-```cmake
-# 禁止
-include_directories(${PROJECT_SOURCE_DIR}/include)
-link_libraries(FFmpeg::avcodec)
-
-# 必须
-target_include_directories(VideoDecoder
-    PRIVATE ${PROJECT_SOURCE_DIR}/include
-)
-target_link_libraries(VideoDecoder
-    PRIVATE FFmpeg::avcodec
-)
-```
+使用 target-based CMake（CMake 3.15+）：禁止 `include_directories()` / `link_libraries()` 全局设置，统一使用 `target_include_directories()` / `target_link_libraries()` 并显式声明 `PRIVATE` / `PUBLIC` 可见性。
 
 ## 构建配置
 
 必须支持以下构建类型：
 
-| 类型 | 用途 | Sanitizer |
-|------|------|-----------|
-| `Debug` | 开发调试 | 必须开启 ASAN/UBSAN |
-| `RelWithDebInfo` | 集成测试 | 不开启 |
-| `Release` | 生产发布 | 禁止开启 |
+| 类型 | 用途 | Sanitizer | 测试钩子（PROJECT_ENABLE_TEST_HOOKS） |
+| ------ | ------ | ----------- | -------------------------------------- |
+| `Debug` | 开发调试 | 必须开启 ASAN/UBSAN | 开启（AI 自测与钩子用例需要） |
+| `RelWithDebInfo` | 集成测试 | 不开启 | 开启（钩子集成测试需要） |
+| `Release` | 生产发布 | 禁止开启 | 必须关闭（发布版零钩子开销） |
 
 ## 依赖管理
 
@@ -557,7 +484,9 @@ target_link_libraries(VideoDecoder
 
 1. 评估许可证是否与项目兼容
 2. 锁定具体版本号（禁止使用 `latest`）
-3. 优先使用系统包管理或 CMake FetchContent，不得直接复制源码到项目（特殊情况需在 ADR 中说明）
+3. 已有成熟开源库时优先直接集成，不重复造轮子；二选一：
+   * 集成到 `third/` 目录，并在 `third/README.md` 记录版本、来源、许可证（推荐用于 header-only 或源码集成的库）
+   * 系统包管理或 CMake FetchContent 锁定版本管理
 4. 在 `docs/architecture.md` 中记录引入原因
 
 ```cmake
@@ -603,69 +532,102 @@ VideoFrame* decodeFrame(const AVPacket* packet);
 ## 动态库导出规范
 
 ```cpp
-// 统一使用宏控制符号导出
+// 统一使用宏控制符号导出/导入（构建库时定义 PROJECT_EXPORTS）
 #if defined(_WIN32)
-    #define PLAYER_API __declspec(dllexport)
+    #if defined(PROJECT_EXPORTS)
+        #define PROJECT_API __declspec(dllexport)
+    #else
+        #define PROJECT_API __declspec(dllimport)  // 使用方需要导入分支
+    #endif
 #else
-    #define PLAYER_API __attribute__((visibility("default")))
+    #define PROJECT_API __attribute__((visibility("default")))
 #endif
 
-class PLAYER_API VideoDecoder {
+class PROJECT_API VideoDecoder {
     // 仅暴露必要接口
 };
 ```
 
 ---
 
-# 测试规范（细化）
+# AI 自测钩子（Test Hook）规范
 
-> 测试框架、覆盖率、四类必测场景（单元/集成/压力/异常）、用例命名等完整规范
-> 请参阅 `testing_rules.md`
+## 目的
+
+AI 编写的代码必须保留可验证入口：UI 点击、硬件依赖、时序敏感等无法自动化的路径，必须能让 AI 通过程序化调用完成自测（配合总纲的完成定义 DoD）。
+
+## 设计原则：解耦优先，宏不污染业务代码
+
+1. **根治手段是入口-逻辑分离**：事件处理拆成「事件入口 + 动作逻辑」，UI 回调与测试钩子都转发到同一动作函数；钩子是薄封装，只转发调用，禁止在钩子里写业务逻辑。
+2. **集中声明**：钩子声明集中在类内一处 `PROJECT_TEST_HOOK:` 段（或独立的 `<模块>TestHook.h`）；禁止在业务逻辑函数体内散落 `#ifdef`。
+3. **发布版零开销**：开关关闭时钩子编译期不可见，无任何运行时开销。
+4. **函数体内零插桩**：若某段逻辑「必须从函数体内部观测」，正确做法是把该段拆成独立动作函数供钩子直接调用，而非在函数体内加 `#ifdef` 插桩。
+
+## 宏开关：单点定义，构建系统控制
+
+开关只允许在构建系统中定义，禁止在源文件里硬编码 `#define`：
+
+```cmake
+option(PROJECT_ENABLE_TEST_HOOKS "启用 AI 自测钩子（仅限 Debug/测试构建）" OFF)
+target_compile_definitions(core PRIVATE
+    $<$<BOOL:${PROJECT_ENABLE_TEST_HOOKS}>:PROJECT_ENABLE_TEST_HOOKS>)
+
+# 依赖钩子的测试用例目标：开关关闭时不参与编译，避免 Release 构建因钩子不可见而失败
+if(PROJECT_ENABLE_TEST_HOOKS)
+    add_subdirectory(tests/hook_tests)      # 或按文件条件添加可执行目标
+endif()
+```
+
+可见性宏统一放在一个头文件（如 `core/TestHookConfig.h`），全项目只此一处定义：
+
+```cpp
+#ifdef PROJECT_ENABLE_TEST_HOOKS
+    #define PROJECT_TEST_HOOK public
+#else
+    #define PROJECT_TEST_HOOK private   // 发布构建中钩子不可见
+#endif
+```
+
+## 示例：动作转发 + 状态读取钩子（首选模式）
+
+```cpp
+class TimelineController {
+public:
+    void onUndoButtonClicked();      // UI 入口：转发到动作层，不写逻辑
+
+PROJECT_TEST_HOOK:
+    // AI 自测钩子：薄封装，仅转发/读取，无业务逻辑
+    void testHook_triggerUndo() { performUndo(); }
+    int32_t testHook_getUndoDepth() const noexcept {
+        return static_cast<int32_t>(undo_stack_.size());
+    }
+
+private:
+    void performUndo();              // 真实逻辑，UI 与钩子共用
+    std::vector<std::unique_ptr<Command>> undo_stack_;
+};
+```
+
+时序 / 异步场景（如等待渲染完成）：钩子只做**同步状态查询**，等待与超时控制放在测试侧（GoogleTest 的轮询断言），禁止在钩子内 sleep 轮询或挂起业务线程：
+
+```cpp
+PROJECT_TEST_HOOK:
+    // 供测试侧轮询：渲染是否已完成（自测用途）
+    bool testHook_isRenderFinished() const noexcept { return render_finished_.load(); }
+```
+
+涉及 UI 线程的钩子必须声明线程语义（在哪个线程调用）；只读查询用 `std::atomic` 或锁保护，与「C++ 并发实现规范」一致。
+
+## 强制约束
+
+* 钩子统一 `testHook_` 前缀，便于全局检索与批量剔除；每个钩子附一行注释说明自测用途；新增 / 删除钩子必须同步登记到 `docs/test_hooks.md`（清单格式见 `testing_rules.md`）
+* 钩子禁止出现在 `include/` 公共头，禁止导出到动态库符号表（仅限内部构建使用）
+* 单个类内 `PROJECT_TEST_HOOK` 段最多一处；业务函数体内钩子相关 `#ifdef` 必须为零
+* 钩子数量受控：只暴露验证所需的路径，禁止借钩子把内部实现全部开放（绕过封装）
+* 需要剔除时：关闭构建开关即可；彻底移除只需删除集中的钩子段，不会散落残留
 
 ---
 
 # CI/CD 规范
 
-每次 PR 必须自动触发以下流水线，全部通过才能合并：
-
-| 检查项 | 工具 |
-|--------|------|
-| 代码格式 | `clang-format --dry-run` |
-| 静态分析 | `clang-tidy` |
-| 编译（零警告） | `-Wall -Wextra -Werror` |
-| 单元测试 | `ctest` |
-| 内存检测（Debug） | ASAN + UBSAN |
-
-CI 构建失败必须在 4 小时内修复，不得带红灯合并。
-
----
-
-# 最终检查
-
-提交前确认：
-
-✓ C++ 标准版本一致
-
-✓ 所有变量已初始化
-
-✓ 枚举使用 enum class
-
-✓ 遵循 Rule of 0/3/5
-
-✓ 移动语义函数标记 noexcept
-
-✓ 无全局变量
-
-✓ 命名空间正确封装
-
-✓ Commit message 格式正确
-
-✓ clang-format 通过
-
-✓ clang-tidy 零错误
-
-✓ 单元测试覆盖新增逻辑
-
-✓ Debug 构建 Sanitizer 无报告
-
-不满足必须修复后再提交。
+每次 PR 必须通过全部 CI 检查（格式化 / `clang-tidy` / 零警告编译 / `ctest` / Debug Sanitizer）后方可合并；禁止带红灯合并。

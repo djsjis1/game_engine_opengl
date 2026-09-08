@@ -64,14 +64,14 @@ cmake --build build --config Debug --target integration_tests
 
 ## 代码约定速查
 
-* 每个文件头部有注释：文件职责 + 关键接口 + 用法示例
-* 命名表达真实含义，禁止 `tmp` / `data` / `obj` 等无意义命名
-* 注释解释「为什么」，不解释「做什么」
-* 错误必须处理，禁止空 catch / 静默失败
-* 资源一律 RAII / 智能指针，禁止裸 `new`
-* 模块间通过接口 / 依赖注入通信，禁止直接引用内部实现
-* 新增功能先判断能否复用已有模块
-* 无法自动化的路径（UI 点击 / 硬件 / 时序）留 `testHook_` 测试钩子自测，宏单点开关（见 cpp_project_rules.md）
+- 每个文件头部有注释：文件职责 + 关键接口 + 用法示例
+- 命名表达真实含义，禁止 `tmp` / `data` / `obj` 等无意义命名
+- 注释解释「为什么」，不解释「做什么」
+- 错误必须处理，禁止空 catch / 静默失败
+- 资源一律 RAII / 智能指针，禁止裸 `new`
+- 模块间通过接口 / 依赖注入通信，禁止直接引用内部实现
+- 新增功能先判断能否复用已有模块
+- 无法自动化的路径（UI 点击 / 硬件 / 时序）留 `testHook_` 测试钩子自测，宏单点开关（见 cpp_project_rules.md）
 
 ## 变更流程
 
@@ -83,12 +83,12 @@ cmake --build build --config Debug --target integration_tests
 
 ## Git
 
-* 用户：`xiefujun <853240265@qq.com>`
-* Commit 格式：`type(scope): 中文描述`，一次提交一件事
-* Commit 粒度：一次 commit = 一个逻辑变更（可含多文件增删改），禁止每文件一 commit；S/M/L ≈ 1 / 1~3 / 每子任务 1 个
-* 会话中断时允许 `wip` 保存点（仅 feature/fix 分支），合入前 squash 整理；commit 前必须审查 `git status` / `git diff`
-* 分支：S 级直接 commit（在 main/develop 上时先建 `feature/描述` 分支）；M/L 级自动创建 `feature/TASK-XXX-描述` 分支
-* 禁止改写已 push 的历史（rebase / reset / force push）除非用户同意
+- 用户：`xiefujun <853240265@qq.com>`
+- Commit 格式：`type(scope): 中文描述`，一次提交一件事
+- Commit 粒度：一次 commit = 一个逻辑变更（可含多文件增删改），禁止每文件一 commit；S/M/L ≈ 1 / 1~3 / 每子任务 1 个
+- 会话中断时允许 `wip` 保存点（仅 feature/fix 分支），合入前 squash 整理；commit 前必须审查 `git status` / `git diff`
+- 分支：S 级直接 commit（在 main/develop 上时先建 `feature/描述` 分支）；M/L 级自动创建 `feature/TASK-XXX-描述` 分支
+- 禁止改写已 push 的历史（rebase / reset / force push）除非用户同意
 
 ## 详细规则索引
 

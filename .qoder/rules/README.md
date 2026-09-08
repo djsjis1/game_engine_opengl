@@ -1,106 +1,117 @@
-# Player — 项目说明
+# AI 开发工作流规则体系
 
-## 项目简介
-
-（请补充项目一句话描述）
+本目录是一套完整的 AI 开发工作流规范，用于约束 AI Agent（及开发者）先分析、再设计、后编码，并保证代码、文档、任务、架构决策同步可追溯。
 
 ---
 
-## 快速启动
+## 文件组成（共 10 份）
 
-（请补充构建和运行方式）
+| 文件 | 一句话职责 | 加载方式 |
+| ------ | ----------- | ---------- |
+| `AGENTS.md` | 跨工具通用入口（Codex/Copilot/Cursor/Amp 均识别） | 项目根目录，AI 自动读取 |
+| `engineering_rules.md` | 工程总纲（入口）：架构约定 / 通用约定 / 红线约束 / 命令 | 常驻（always_on） |
+| `ai_workflow_rules.md` | 七步工作流 + S/M/L 变更分级 + 唯一自检清单 | 常驻 |
+| `cpp_project_rules.md` | C++ 语言与工程细节 | 按需：glob（编辑 C++ 源文件 / CMake 时） |
+| `testing_rules.md` | 测试怎么写、测什么场景 | 按需：model_decision |
+| `git_rules.md` | Commit 格式、分支策略、PR 规范 | 常驻（always_on） |
+| `project_structure_rules.md` | 目录划分与文件命名 | 按需：model_decision |
+| `task_management_rules.md` | 任务建档与状态流转 | 按需：model_decision |
+| `architecture_decision_record.md` | 重要设计决策的 ADR 记录 | 按需：model_decision |
+| `documentation_rules.md` | 文档编写与同步 | 按需：model_decision |
 
 ---
 
----
+## 冲突裁决优先级
 
-## 开发规范体系
-
-本项目使用一套完整的 AI 驱动软件工程规范，位于 `.qoder/rules/` 目录下。
-
-### 规范文件（9 份）
-
-| 文件 | 用途 |
-|------|------|
-| `engineering_rules.md` | 软件工程总纲 — SOLID、架构、设计模式等通用原则 |
-| `documentation_rules.md` | 文档体系 — 文档怎么写、何时更新、放哪里 |
-| `project_structure_rules.md` | 项目结构 — 目录划分、文件命名、模块组织 |
-| `task_management_rules.md` | 任务管理 — 任务跟踪、状态流转、需求拆分 |
-| `testing_rules.md` | 测试体系 — 四类必测场景、覆盖率、用例规范 |
-| `architecture_decision_record.md` | 架构决策 — 重要设计决策的书面记录 |
-| `ai_workflow_rules.md` | AI 工作流 — AI 开发七步流程 |
-| `cpp_project_rules.md` | C++ 工程实践 — 语言特性、工具链、构建系统 |
-| `git_rules.md` | Git 规范 — Commit 格式、分支策略、PR 流程 |
-
-### 如何使用
-
-**对开发者：**
-
-- 新增模块 → 查看 `project_structure_rules.md`
-- 写测试 → 查看 `testing_rules.md`
-- 提交代码 → 查看 `git_rules.md`
-- 做架构决策 → 查看 `architecture_decision_record.md`
-- 了解全貌 → 从 `engineering_rules.md` 开始
-
-**对 AI Agent：**
-
-所有规范文件设置 `trigger: always_on`，AI 每次对话自动加载全部 9 份规范，
-按 [ai_workflow_rules.md](.qoder/rules/ai_workflow_rules.md) 定义的七步流程工作。
-
-### 规则优先级
-
-当规则冲突时：**项目专属规则 > 语言规则 > 工作流规则 > 工程总则**
-
-详见 [engineering_rules.md](.qoder/rules/engineering_rules.md) 中的「规则冲突优先级」章节。
-
-### 扩展项目专属规则
+规则冲突时，越接近具体项目的规则优先级越高：
 
 ```
-.qoder/rules/
-├── ...（9 份通用规范，保持不变）
-└── projects/                          ← 按需新增
-    ├── motion_control_project_rules.md
-    └── timeline_project_rules.md
+项目专属规则 > 语言规则（cpp_project_rules.md）
+            > 工作流与领域规范（工作流 / 测试 / Git / 文档 / 目录 / 任务 / ADR）
+            > 工程总则（engineering_rules.md）
 ```
+
+同一文件内的权衡原则：**可维护性 > 可扩展性 > 性能 > 开发速度**。
 
 ---
 
-## 项目目录结构
+## 核心工作流
+
+任何需求按 `ai_workflow_rules.md` 执行，流程深度由变更级别决定：
+
+| 级别 | 判定 | 流程要求 |
+| ------ | ------ | ---------- |
+| S | 单文件、< 30 行、不涉公共接口 | 简述意图 → 编码 → 简化自检 |
+| M | 单模块、< 300 行 | Step 1、2、5、6、7 |
+| L | 跨模块 / 公共接口 / 引入新依赖 | 完整七步 + 双方案比较 + 按需 ADR |
+
+完整七步：需求分析 → 影响范围 → 设计方案 → 文档计划 → 编码实现 → 自检 → 最终确认。
+
+---
+
+## 使用方式
+
+1. 将本目录全部文件复制到目标项目的 `.qoder/rules/` 目录。
+2. 将 `AGENTS.md` 复制到目标项目根目录（跨工具通用入口，AI 自动读取）。
+3. 总纲、工作流与 Git 三份常驻；其余按需加载（glob / model_decision）。
+4. **必须**先填写 `AGENTS.md` 和 `engineering_rules.md` 中的「技术栈」「红线约束」「命令」模板位（见下节）。
+5. 项目可按自身特点新增项目专属规则（优先级最高），并在 `engineering_rules.md` 索引中登记。
+6. 项目初始化时按 `project_structure_rules.md` 建立目录，预置 `docs/` 与 `docs/tasks/`。
+7. Monorepo 项目可按子目录配置嵌套规则：子目录规则覆盖顶层（就近优先，AGENTS.md 标准做法）。
+
+---
+
+## 目标项目必须填写：红线与命令（最高价值内容）
+
+template 位于 `engineering_rules.md`，复制后替换为项目真实内容：
+
+**红线约束**（每条针对一个代价高昂的错误，而非抽象风格要求）：
+
+* 禁止修改 `xxx/migrations/` 下的历史文件，只能新增
+* 禁止变更已发布的公共头接口签名（走废弃流程）
+* 禁止提交 `.env` 或硬编码密钥
+
+**命令**（构建 / 测试 / 覆盖率 / 格式化 / 静态检查），示例：
 
 ```
-player/
-├── src/                        # 源代码
-├── include/                    # 公共头文件
-├── tests/                      # 测试
-├── docs/                       # 文档（架构、API、ADR、变更日志）
-├── docs/tasks/                 # 任务跟踪
-├── .qoder/rules/               # 开发规范（9 份）
-├── scripts/                    # 构建脚本
-├── tools/                      # 辅助工具
-├── third_party/                # 第三方库
-├── CMakeLists.txt
-└── README.md                   # 本文件
+构建：cmake -B build && cmake --build build
+测试：ctest --test-dir build
+格式化：clang-format -i src/**/*.cpp
+静态检查：clang-tidy
 ```
 
 ---
 
-## 文档
+## 规则维护
 
-- 架构设计 → `docs/architecture.md`
-- 模块说明 → `docs/modules.md`
-- API 接口 → `docs/api.md`
-- 变更日志 → `docs/changelog.md`
-- 架构决策 → `docs/adr/`
-- 任务跟踪 → `docs/tasks/`
+* 规则文件纳入版本控制，与代码同等评审；建议为规则本身记录变更（changelog）。
+* 新增规则的原则：只写「删掉它，AI 会犯光靠读代码无法自行恢复的错误」的内容；优先「默认 + 例外」而非绝对化条款。
+* 规则与现实冲突时，先修规则，再执行。
+* 常驻内容总量建议控制在 500 行以内；超出时把任务型流程移入按需规则。
 
 ---
 
-## 依赖
+## 跨工具兼容
 
-（请补充项目依赖说明）
+本目录内置 `AGENTS.md` 作为跨工具通用入口（Codex / Copilot / Cursor / Windsurf / Amp 均识别）。
+
+* `AGENTS.md` 放在项目根目录，AI 自动读取，包含技术栈 + 命令 + 边界 + 约定速查 + 规则索引
+* Claude Code 用户执行 `ln -s AGENTS.md CLAUDE.md` 即可双向兼容
+* 详细规则仍在 `.qoder/rules/` 目录，按 frontmatter 触发加载
+* 常驻内容总量建议控制在 500 行以内（含 AGENTS.md），超出时把任务型流程移入按需规则
 
 ---
 
-## 版本
+## 配套文档结构（在目标项目内建立）
 
-（请补充版本信息）
+```
+docs/
+├── architecture.md          # 系统架构
+├── modules.md               # 模块职责
+├── class_reference.md       # 公共类参考
+├── api.md / protocol.md     # 接口与协议
+├── changelog.md             # 变更日志
+├── test_hooks.md            # 测试钩子清单（存在钩子时）
+├── adr/                     # 架构决策记录（见 architecture_decision_record.md）
+└── tasks/                   # 任务跟踪（见 task_management_rules.md）
+```

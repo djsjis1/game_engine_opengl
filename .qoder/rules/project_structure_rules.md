@@ -1,5 +1,6 @@
 ---
-trigger: always_on
+trigger: model_decision
+description: 任务涉及项目初始化、新建模块/目录、文件命名、目录结构调整或 .gitignore 配置时加载本规范
 ---
 # 项目目录结构规范
 
@@ -19,7 +20,7 @@ project/
 │   ├── core/                   # 核心库（无平台依赖）
 │   │   ├── data_structures/    # 通用数据结构
 │   │   ├── algorithms/         # 通用算法
-│   │   └── utils/              # 工具函数
+│   │   └── utils/              # 工具函数（仅允许存在于 core/ 下）
 │   ├── module_a/               # 业务模块 A
 │   │   ├── ModuleA.cpp
 │   │   ├── ModuleA.h
@@ -59,11 +60,14 @@ project/
 ├── docs/                       # 文档
 │   ├── architecture.md
 │   ├── modules.md
+│   ├── class_reference.md
 │   ├── api.md
 │   ├── protocol.md
+│   ├── database.md
 │   ├── deployment.md
 │   ├── troubleshooting.md
 │   ├── changelog.md
+│   ├── test_hooks.md            # 测试钩子清单（存在钩子时，格式见 testing_rules.md）
 │   └── adr/
 
 ├── scripts/                    # 构建/部署/工具脚本
@@ -74,8 +78,8 @@ project/
 ├── tools/                      # 项目相关工具
 │   └── codegen/
 
-├── third_party/                # 第三方库（非包管理器管理）
-│   └── README.md               # 记录每个库的版本和来源
+├── third/                      # 第三方库（源码 / header-only 直接集成）
+│   └── README.md               # 记录每个库的版本、来源、许可证
 
 ├── CMakeLists.txt              # 顶层构建文件
 ├── .clang-format               # 代码格式化配置
@@ -104,14 +108,14 @@ module_a/                  # 目录名 = 模块名（snake_case）
 
 * 模块文件散落到 src/ 根目录
 * 一个目录包含多个不相关的模块
-* 头文件和 .cpp 文件放在不同目录
+* 模块内部的头文件和 .cpp 文件放在不同目录（例外：对外公共头统一放 `include/`）
 
 ---
 
 # 文件命名规范
 
 | 类型 | 命名 | 示例 |
-|------|------|------|
+| ------ | ------ | ------ |
 | 类文件 | PascalCase | `MotionController.h` |
 | 工具函数文件 | snake_case | `string_utils.h` |
 | 测试文件 | 类名_test | `MotionController_test.cpp` |
@@ -140,9 +144,9 @@ src/
 ```
 
 ```txt
-// 禁止：目录名无意义
+// 禁止：业务层级出现无意义杂物箱目录（utils 仅允许在 core/ 下）
 src/
-├── utils/           // 垃圾桶目录
+├── utils/           // 垃圾桶目录（业务层禁止）
 ├── helpers/         // 另一个垃圾桶
 ├── common/          // 第三个垃圾桶
 └── misc/            // 第四个垃圾桶
@@ -164,51 +168,6 @@ src/
 
 # Git 忽略规范
 
-`.gitignore` 必须包含：
+`.gitignore` 必须覆盖五类：构建产物（`build/`、`cmake-build-*/`、`*.o/obj/exe/dll/so`）、IDE 临时文件（`.vs/`、`*.user`、`*.suo`）、测试输出（`Testing/`、`coverage/`）、包管理器与第三方构建产物（`vcpkg_installed/`、`third/` 构建输出）、临时文件（`*.tmp`、`*.bak`、`*~`）。
 
-```gitignore
-# 构建产物
-build/
-cmake-build-*/
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-
-# IDE
-.vs/
-.vscode/           # 除非共享团队配置
-*.user
-*.suo
-
-# 测试输出
-Testing/
-coverage/
-
-# 包管理器
-vcpkg_installed/
-
-# 临时文件
-*.tmp
-*.bak
-*~
-```
-
----
-
-# 最终检查
-
-✓ 每个模块有独立目录
-
-✓ 目录名表达模块职责
-
-✓ 文件命名符合规范
-
-✓ 无文件散落在 src/ 根目录
-
-✓ 无 `utils` / `helpers` / `misc` 垃圾桶目录
-
-✓ 无 `new.cpp` / `temp.cpp` / `old_code.cpp` 等文件
-
-✓ `.gitignore` 已正确配置
+> 具体清单由工具模板生成，不在规则中手工维护。
