@@ -189,7 +189,6 @@ add_executable(my_demo WIN32
     editor/ScriptEditor.h  editor/ScriptEditor.cpp
     editor/LuaHighlighter.h
     ${ENGINE_SOURCES}
-    Core/SaveGame.h
 )
 
 target_include_directories(my_demo PRIVATE
