@@ -1,6 +1,6 @@
-# 07 · 项目 LuaApi.cpp 完整走读
+﻿# 07 · 项目 LuaApi.cpp 完整走读
 
-> 把前 6 篇的知识串起来，详细解析本项目 `my_demo/System/LuaApi.cpp` 的每一部分。
+> 把前 6 篇的知识串起来，详细解析本项目 `Scripting/LuaApi.cpp` 的每一部分。
 
 ---
 

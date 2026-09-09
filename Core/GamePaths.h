@@ -54,7 +54,7 @@ namespace GamePaths
     }
 
     /// 把开发机绝对路径重定位到运行时资源根（仅导出模式需要）。
-    /// 例：D:/code/.../my_demo/scripts/foo.lua → <exe>/assets/scripts/foo.lua
+    /// 例：D:/code/.../assets/scripts/foo.lua → <exe>/assets/scripts/foo.lua
     /// 原理：找到已知资源目录名（scripts/anims/sprites/scenes/prefabs），
     /// 从它开始截断，拼到 root() 上。找不到标记则原样返回。
     inline QString rebase(const QString &devPath)

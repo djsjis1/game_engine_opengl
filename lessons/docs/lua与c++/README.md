@@ -1,6 +1,6 @@
-# Lua 调用 C++ 完整教学
+﻿# Lua 调用 C++ 完整教学
 
-> 基于本项目 `my_demo/System/LuaApi.cpp` 的实战讲解，从零理解 Lua↔C++ 交互。
+> 基于本项目 `Scripting/LuaApi.cpp` 的实战讲解，从零理解 Lua↔C++ 交互。
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## 🔗 相关项目文件
 
-- [my_demo/System/LuaApi.cpp](../../my_demo/System/LuaApi.cpp) — 本教程的核心讲解对象
-- [my_demo/System/ScriptSystem.h](../../my_demo/System/ScriptSystem.h) — 脚本系统接口
-- [my_demo/Components/SignalComponent.h](../../my_demo/Components/SignalComponent.h) — 信号组件数据结构
-- [my_demo/scripts/demo.lua](../../my_demo/scripts/demo.lua) — 示例脚本
+- [Scripting/LuaApi.cpp](../../../Scripting/LuaApi.cpp) — 本教程的核心讲解对象
+- [Systems/ScriptSystem.h](../../../Systems/ScriptSystem.h) — 脚本系统接口
+- [Components/SignalComponent.h](../../../Components/SignalComponent.h) — 信号组件数据结构
+- [assets/scripts/demo.lua](../../../assets/scripts/demo.lua) — 示例脚本
