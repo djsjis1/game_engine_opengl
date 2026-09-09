@@ -182,11 +182,12 @@ set(ENGINE_SOURCES
 add_executable(my_demo WIN32
     main.cpp
     MainWindow.h    MainWindow.cpp
-    Editor/EditorPanel.h  Editor/EditorPanel.cpp
-    Editor/DragSpinBox.h
-    Editor/EditorCommands.h
-    Editor/ScriptEditor.h  Editor/ScriptEditor.cpp
-    Editor/LuaHighlighter.h
+    editor/EditorPanel.h  editor/EditorPanel.cpp
+    editor/DragSpinBox.h
+    editor/EditorCommands.h
+    editor/GameExporter.h
+    editor/ScriptEditor.h  editor/ScriptEditor.cpp
+    editor/LuaHighlighter.h
     ${ENGINE_SOURCES}
     Core/SaveGame.h
 )

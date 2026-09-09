@@ -1,13 +1,13 @@
 # OpenGL 完整教学
 
-> 基于本项目 `my_demo/` 的实际代码，从零理解现代 OpenGL 渲染。
+> 基于本项目引擎的实际代码，从零理解现代 OpenGL 渲染。
 
 ---
 
 ## 📚 阅读顺序（推荐）
 
 | 序号 | 文档 | 核心内容 | 预计时间 |
-|------|------|----------|----------|
+| ------ | ------ | ---------- | ---------- |
 | **01** | [渲染管线概述](./01-OpenGL渲染管线概述.md) | GPU 流水线各阶段、第一个三角形 | 15 分钟 |
 | **02** | [VAO/VBO/EBO 与顶点数据](./02-VAO-VBO-EBO与顶点数据.md) | 数据上传 GPU、属性格式、索引绘制 | 20 分钟 |
 | **03** | [GLSL 着色器基础](./03-GLSL着色器基础.md) | 顶点/片段着色器语法、编译链接流程 | 20 分钟 |
@@ -29,14 +29,14 @@
 
 ## 🔗 相关项目文件
 
-- [my_demo/Render/RenderWidget.cpp](../../my_demo/Render/RenderWidget.cpp) — 渲染核心（paintGL）
-- [my_demo/Render/Shader.h](../../my_demo/Render/Shader.h) — 着色器封装（编译/Uniform）
-- [my_demo/Render/MeshFactory.h](../../my_demo/Render/MeshFactory.h) — 几何体工厂 + 纹理创建
-- [my_demo/Render/ResourceManager.h](../../my_demo/Render/ResourceManager.h) — 资源句柄/缓存/延迟GPU
-- [my_demo/Components/TransformComponent.h](../../my_demo/Components/TransformComponent.h) — Model 矩阵（含 worldMatrix）
-- [my_demo/Components/MaterialComponent.h](../../my_demo/Components/MaterialComponent.h) — 材质数据
-- [my_demo/Shaders/default.vert](../../my_demo/Shaders/default.vert) — 顶点着色器
-- [my_demo/Shaders/default.frag](../../my_demo/Shaders/default.frag) — 片段着色器（多光源+阴影）
+- [Render/RenderWidget.cpp](../../../Render/RenderWidget.cpp) — 渲染核心（paintGL）
+- [Render/Shader.h](../../../Render/Shader.h) — 着色器封装（编译/Uniform）
+- [Render/MeshFactory.h](../../../Render/MeshFactory.h) — 几何体工厂 + 纹理创建
+- [Render/ResourceManager.h](../../../Render/ResourceManager.h) — 资源句柄/缓存/延迟GPU
+- [Components/TransformComponent.h](../../../Components/TransformComponent.h) — Model 矩阵（含 worldMatrix）
+- [Components/MaterialComponent.h](../../../Components/MaterialComponent.h) — 材质数据
+- [assets/Shaders/default.vert](../../../assets/Shaders/default.vert) — 顶点着色器
+- [assets/Shaders/default.frag](../../../assets/Shaders/default.frag) — 片段着色器（多光源+阴影）
 
 ---
 
