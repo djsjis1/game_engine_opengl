@@ -89,6 +89,7 @@ if(NOT TARGET Jolt)
     set(GENERATE_DEBUG_SYMBOLS ON CACHE BOOL "" FORCE)
     set(INTERPROCEDURAL_OPTIMIZATION OFF CACHE BOOL "" FORCE)  # 加快链接
     set(OVERRIDE_CXX_FLAGS OFF CACHE BOOL "" FORCE)            # 不让 Jolt 劫持全局编译选项
+    set(USE_STATIC_MSVC_RUNTIME_LIBRARY OFF CACHE BOOL "" FORCE) # Jolt 用 /MD（与 Qt 一致）
     add_subdirectory(${JOLT_DIR}/Build ${CMAKE_BINARY_DIR}/jolt)
 endif()
 
