@@ -114,6 +114,7 @@ set(ENGINE_SOURCES
     Core/GamePaths.h
     Core/SaveGame.h
     Core/SceneRouter.h
+    Core/SceneSnapshot.h
     Core/NavGrid.h
     Core/SignalQueue.h
     Core/SignalQueue.cpp
