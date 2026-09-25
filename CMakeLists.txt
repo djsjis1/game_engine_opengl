@@ -413,7 +413,7 @@ if(EXISTS "${GTEST_DIR}/CMakeLists.txt")
     )
     message(STATUS "engine_tests enabled (headless engine test)")
 else()
-    message(STATUS "unit_tests skipped: put googletest-1.14.0 in thirdparty/ to enable")
+    message(STATUS "unit_tests skipped: put googletest-main (with CMakeLists.txt) under thirdparty/ to enable")
 endif()
 
 # ============================================================

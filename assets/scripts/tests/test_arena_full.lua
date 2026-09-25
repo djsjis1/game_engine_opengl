@@ -39,7 +39,7 @@ function ready()
     add_material(player, 1.0, 0.75, 0.2, 0.3, 0.4)
     add_rigidbody(player, 2)
     add_collider(player)
-    add_script(player, "D:/code/.std/opengl/my_demo/assets/scripts/arena_player.lua")
+    add_script(player, "D:/code/.std/opengl/assets/scripts/arena_player.lua")
 
     -- Enemy + AI script
     local enemy = create_entity("Enemy")
@@ -48,7 +48,7 @@ function ready()
     add_material(enemy, 0.85, 0.15, 0.12, 0.3, 0.4)
     add_rigidbody(enemy, 2)
     add_collider(enemy)
-    add_script(enemy, "D:/code/.std/opengl/my_demo/assets/scripts/arena_enemy.lua")
+    add_script(enemy, "D:/code/.std/opengl/assets/scripts/arena_enemy.lua")
 
     -- Camera
     local cam = create_entity("ArenaCam")

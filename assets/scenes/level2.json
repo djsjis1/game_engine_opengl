@@ -578,7 +578,7 @@
         ]
       },
       "ScriptComponent": {
-        "filePath": "D:/code/.std/opengl/my_demo/assets/scripts/player.lua"
+        "filePath": "D:/code/.std/opengl/assets/scripts/player.lua"
       },
       "TagComponent": {
         "name": "Player"
