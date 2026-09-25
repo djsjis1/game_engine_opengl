@@ -1,9 +1,9 @@
 #include "MainWindow.h"
 #include "Render/RenderWidget.h"
 #include "Core/Engine.h"
-#include "Editor/EditorPanel.h"
-#include "Editor/ScriptEditor.h"     // 内置脚本编辑器（主屏 Script 页）
-#include "Editor/GameExporter.h"     // 导出游戏（纯逻辑类，UI 只管对话框）
+#include "editor/EditorPanel.h"
+#include "editor/ScriptEditor.h"     // 内置脚本编辑器（主屏 Script 页）
+#include "editor/GameExporter.h"     // 导出游戏（纯逻辑类，UI 只管对话框）
 #include "Core/EngineLog.h"          // 输出面板：注册脚本错误 sink
 #include "Scripting/ScriptApiStub.h" // 生成 VSCode API 存根
 #include "Systems/RotationSystem.h"
@@ -22,7 +22,7 @@
 #include "Core/Time.h"
 #include "Core/SceneRouter.h" // 运行时切场景（Play 模式帧末执行）
 #include "Core/CommandStack.h"
-#include "Editor/EditorCommands.h" // MoveEntityCommand（Gizmo 拖动撤销）
+#include "editor/EditorCommands.h" // MoveEntityCommand（Gizmo 拖动撤销）
 #include "Render/SceneSerializer.h"
 
 #include <QHBoxLayout>

@@ -13,6 +13,7 @@
 #include "Components/AnimationComponent.h"
 #include "Render/AnimationLibrary.h"
 #include "Systems/AnimFsmSystem.h" // 动画状态机（anim_fsm_* API）
+#include "Core/GamePaths.h"       // anim_set_file 相对路径 → 运行时绝对路径
 #include <cstring>
 #include <thread>
 
@@ -305,13 +306,20 @@ static AnimationComponent *getOrAddAnimComp(LuaCtx *c)
 }
 
 /// anim_set_file("anims/xxx.anim") — 绑定动画文件（无组件时自动挂）
+/// ★ 相对路径拼 GamePaths::root()，绝对路径直接用（与 add_script 一致）
 int api_animSetFile(lua_State *L)
 {
     auto *ac = getOrAddAnimComp(getCtx(L));
     if (!ac)
         return 0;
     const char *path = luaL_checkstring(L, 1);
-    strncpy(ac->animFile, path, sizeof(ac->animFile) - 1);
+    // 绝对路径直接用，相对路径拼 GamePaths::root()
+    QString p = QString::fromUtf8(path);
+    QString abs = (p.size() >= 2 && p[1] == ':') || p.startsWith('/')
+                      ? p
+                      : GamePaths::root() + p;
+    QByteArray utf8 = abs.toUtf8();
+    strncpy(ac->animFile, utf8.constData(), sizeof(ac->animFile) - 1);
     ac->animFile[sizeof(ac->animFile) - 1] = '\0';
     return 0;
 }

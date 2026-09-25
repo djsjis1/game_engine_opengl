@@ -64,9 +64,9 @@ function ready()
 
     -- ② 角色
     player = makeFighter("Player", 0, 6, 1.0, 0.75, 0.2)
-    add_script(player, "D:/code/.std/opengl/assets/scripts/arena_player.lua")
+    add_script(player, "scripts/arena_player.lua")
     enemy = makeFighter("Enemy", 0, -6, 0.85, 0.15, 0.12)
-    add_script(enemy, "D:/code/.std/opengl/assets/scripts/arena_enemy.lua")
+    add_script(enemy, "scripts/arena_enemy.lua")
 
     -- ③ 火盆
     local brazier = create_entity("Brazier")
@@ -100,7 +100,7 @@ function ready()
         tween(me, "position", 0, 0, 0.001, 3.0, "linear", "restart_timer_done")
     end
     connect("restart_timer_done", function()
-        change_scene("D:/code/.std/opengl/assets/scenes/arena.json")
+        change_scene("scenes/arena.json")
     end)
     connect_to(player, "died", function()
         if gameOver then return end

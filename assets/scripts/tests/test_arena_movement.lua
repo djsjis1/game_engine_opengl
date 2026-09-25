@@ -21,7 +21,7 @@ function ready()
     add_rigidbody(player, 2)
     add_collider(player)
     -- Attach the actual arena_player.lua to Player entity
-    add_script(player, "D:/code/.std/opengl/assets/scripts/arena_player.lua")
+    add_script(player, "scripts/arena_player.lua")
 
     phase = 1
 end

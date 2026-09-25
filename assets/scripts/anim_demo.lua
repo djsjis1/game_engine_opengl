@@ -11,8 +11,8 @@
 -- ============================================================
 
 function ready()
-    -- ① 绑定动画文件（绝对路径，不依赖工作目录；文件不存在也行，内存库立即可用）
-    anim_set_file("D:/code/.std/opengl/anims/lua_made.anim")
+    -- ① 绑定动画文件（相对资源根路径，运行时自动拼绝对路径）
+    anim_set_file("anims/lua_made.anim")
 
     -- ② 设计动画 A：水平旋转 2 秒一圈（对标 Godot track_insert_key）
     anim_create("lua_spin", 2.0)

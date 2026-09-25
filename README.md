@@ -32,6 +32,7 @@ opengl/
 ├── Generated/                  # 自动生成（ComponentReflection.inl）
 ├── tools/                      # reflect_gen 反射代码生成器
 ├── tests/                      # 测试（unit/ + integration/ + engine/）
+├── 模块文档.md                 # 架构总览 + 模块职责
 │
 ├── lessons/                    # OpenGL 渐进式学习课程（21 节，独立可运行）
 │   ├── CMakeLists.txt
@@ -39,7 +40,6 @@ opengl/
 │   └── docs/                   #   课程配套文档（flecs/hfsm2/lua/opengl）
 │
 ├── docs/                       # 引擎文档
-│   ├── 模块文档.md             #   架构总览 + 模块职责
 │   ├── 脚本API手册.md          #   全部 Lua API 手册
 │   ├── 排障手册.md             #   实战坑 + 排障方法论
 │   └── adr/                    #   架构决策记录
@@ -158,7 +158,7 @@ cmake --build build --config Release --target lesson05_texture
 
 | 文档 | 给谁看 | 内容 |
 | ------ | -------- | ------ |
-| [模块文档.md](docs/模块文档.md) | 想理解/扩展引擎的人 | 架构、模块职责、数据流、设计模式 |
+| [模块文档.md](模块文档.md) | 想理解/扩展引擎的人 | 架构、模块职责、数据流、设计模式 |
 | [脚本API手册.md](docs/脚本API手册.md) | 用引擎做游戏的人 | 全部 Lua API + 三种开发方式 + 最小示例 |
 | [排障手册.md](docs/排障手册.md) | 遇到 bug 的人 | 实战坑 + 排障方法论 |
 | [功能更新计划.md](功能更新计划.md) | 规划功能的人 | 待实现功能路线图 |
