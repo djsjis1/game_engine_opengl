@@ -33,6 +33,8 @@
 #include "Components/SignalComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Components/BoxColliderComponent.h"
+#include "Components/SphereColliderComponent.h"
+#include "Components/CapsuleColliderComponent.h"
 #include "Components/AnimationComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/SpriteComponent.h"
@@ -40,14 +42,11 @@
 #include "Components/EnvironmentComponent.h"
 #include "Components/AudioComponent.h"       // OnRemove observer 释放音源
 #include "Components/ParticleComponent.h"    // 粒子发射器（Inspector 可调）
-#include "Systems/AudioSystem.h"             // audioReleaseHandle（接口，零 miniaudio 依赖）
-#include "Render/ResourceManager.h"          // Mesh OnRemove Observer 自动释放资源
 #include "Generated/ComponentReflection.inl" // ★ reflect_gen 自动生成的反射注册
 
-// 前置声明（实现在 Scripting/LuaApi.cpp）：实体销毁时清理信号连接的 Lua
-// 注册表引用。用前置声明而非 include LuaApi.h——避免给 Engine.h 的众多
-// 下游文件拉入 lua 头（解耦：Engine 不该依赖脚本层的完整头）。
-void cleanupEntitySignals(flecs::world world, flecs::entity_t deadId);
+// 生命周期观察者依赖资源、音频和脚本服务，放在独立编译单元中，
+// 避免这些服务的头文件传播给所有包含 Engine.h 的 UI 和测试代码。
+void registerEngineObservers(flecs::world &world);
 
 // ============================================================
 // Engine — HFSM2 状态机 + ECS Pipeline
@@ -91,6 +90,8 @@ class Engine
         m_world.component<ScriptComponent>().add<EditorVisible>();
         m_world.component<RigidbodyComponent>().add<EditorVisible>();
         m_world.component<BoxColliderComponent>().add<EditorVisible>();
+        m_world.component<SphereColliderComponent>().add<EditorVisible>();
+        m_world.component<CapsuleColliderComponent>().add<EditorVisible>();
         // AnimationComponent：float/bool 字段走自动反射，char[](animFile/current/prev)手工补充
         m_world.component<AnimationComponent>().add<EditorVisible>();
         m_world.component<HealthComponent>().add<EditorVisible>();
@@ -117,39 +118,13 @@ public:
         m_world.component<SignalComponent>();
         m_world.component<RigidbodyComponent>();
         m_world.component<BoxColliderComponent>();
+        m_world.component<SphereColliderComponent>();
+        m_world.component<CapsuleColliderComponent>();
         m_world.component<AnimationComponent>();
         m_world.component<HealthComponent>();
         m_world.component<SpriteComponent>();
         registerReflection(); // 注册组件反射
-
-        // ★ 资源自动释放（解耦关键）：MeshComponent 被移除时自动归还引用。
-        // 覆盖所有死亡路径：destruct/级联删除/手动移除组件 ——
-        // 任何调用方都不再需要"记得释放"（releaseMesh 是纯记账，无 GL 依赖）
-        m_world.observer<MeshComponent>()
-            .event(flecs::OnRemove)
-            .each([](flecs::entity, MeshComponent &m)
-                  { ResourceManager::instance().releaseMesh(m.meshHandle); });
-
-        // 精灵帧集同模式自动释放
-        m_world.observer<SpriteComponent>()
-            .event(flecs::OnRemove)
-            .each([](flecs::entity, SpriteComponent &s)
-                  { ResourceManager::instance().releaseSprite(s.spriteHandle); });
-
-        // 音源同模式自动释放（P4：挂循环音效的实体销毁后，声音必须停+销毁，
-        // 否则永远播下去——听得见的 bug）。audioReleaseHandle 内部判空安全。
-        m_world.observer<AudioComponent>()
-            .event(flecs::OnRemove)
-            .each([](flecs::entity, AudioComponent &a)
-                  { audioReleaseHandle(a.soundHandle); });
-
-        // 信号连接自动清理（P1：防 Lua 注册表泄漏 + 孤儿回调）。
-        // OnRemove 时 SignalComponent 仍可读，cleanupEntitySignals 遍历
-        // signalMap/listensTo 逐个 unref。无脚本 VM 时内部安全跳过。
-        m_world.observer<SignalComponent>()
-            .event(flecs::OnRemove)
-            .each([](flecs::entity e, SignalComponent &)
-                  { cleanupEntitySignals(e.world(), e.raw_id()); });
+        registerEngineObservers(m_world);
     }
 
     ~Engine()

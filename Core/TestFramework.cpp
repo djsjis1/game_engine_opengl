@@ -1,7 +1,10 @@
 #include "Core/TestFramework.h"
 #include "Core/EngineLog.h" // 断言失败走引擎日志（UI 输出面板可见）
 
+#include <algorithm>
+#include <cmath>
 #include <sstream>
+#include <vector>
 
 namespace EngineTest
 {
@@ -23,6 +26,20 @@ namespace EngineTest
         stats().textureBinds.store(0, std::memory_order_relaxed);
     }
 
+    void recordPaintCpuTime(uint64_t microseconds)
+    {
+        if (!ENABLE_ENGINE_TESTING)
+            return;
+        Stats &s = stats();
+        const uint64_t sample = s.paintSampleCount.load(std::memory_order_relaxed);
+        s.paintCpuUs[sample % Stats::kFrameTimingSamples].store(
+            microseconds, std::memory_order_relaxed);
+        s.paintLastUs.store(microseconds, std::memory_order_relaxed);
+        // Publish the sample after writing its slot. statsReport may read from
+        // another thread; atomic slots keep snapshots race-free.
+        s.paintSampleCount.store(sample + 1, std::memory_order_release);
+    }
+
     bool checkImpl(bool ok, const char *expr, const char *what,
                    const char *file, int line)
     {
@@ -42,14 +59,38 @@ namespace EngineTest
     std::string statsReport()
     {
         Stats &s = stats();
+        std::vector<uint64_t> paintSamples;
+        const uint64_t sampleCount = s.paintSampleCount.load(std::memory_order_acquire);
+        const std::size_t count = static_cast<std::size_t>(
+            std::min<uint64_t>(sampleCount, Stats::kFrameTimingSamples));
+        paintSamples.reserve(count);
+        const std::size_t first = sampleCount >= Stats::kFrameTimingSamples
+                                 ? static_cast<std::size_t>(sampleCount % Stats::kFrameTimingSamples)
+                                 : 0;
+        for (std::size_t i = 0; i < count; ++i)
+        {
+            const uint64_t value = s.paintCpuUs[(first + i) % Stats::kFrameTimingSamples]
+                                       .load(std::memory_order_relaxed);
+            if (value)
+                paintSamples.push_back(value);
+        }
+        std::sort(paintSamples.begin(), paintSamples.end());
+        auto percentile = [&paintSamples](double p) -> uint64_t
+        {
+            if (paintSamples.empty()) return 0;
+            const std::size_t index = static_cast<std::size_t>(std::ceil(p * paintSamples.size())) - 1;
+            return paintSamples[std::min(index, paintSamples.size() - 1)];
+        };
         std::ostringstream o;
         o << "===== Engine Stats =====\n";
         o << "frames          : " << s.frameCounter.load() << "\n";
         o << "entities        : " << s.entityCount.load() << "\n";
-        o << "draw calls/frame: " << s.drawCalls.load() << "\n";
+        o << "main draws/frame: " << s.drawCalls.load() << "\n";
         o << "uniforms /frame : " << s.uniformSets.load() << "\n";
         o << "shadow passes   : " << s.shadowPasses.load() << "\n";
-        o << "texture binds   : " << s.textureBinds.load() << "\n";
+        o << "scene tex binds : " << s.textureBinds.load() << "\n";
+        o << "paintGL CPU us  : last " << s.paintLastUs.load()
+          << ", p50 " << percentile(0.50) << ", p95 " << percentile(0.95) << "\n";
         o << "checks pass/fail: " << s.checkPasses.load() << " / "
           << s.checkFailures.load() << "\n";
         o << "========================";

@@ -2,6 +2,8 @@
 #define TESTFRAMEWORK_H
 
 #include <atomic>
+#include <array>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 
@@ -34,11 +36,15 @@ namespace EngineTest
     // ============================================================
     struct Stats
     {
+        static constexpr std::size_t kFrameTimingSamples = 120;
         std::atomic<uint64_t> drawCalls{0};     // 本帧 DrawCall 次数（每帧归零）
         std::atomic<uint64_t> uniformSets{0};   // 本帧 uniform 设置次数
         std::atomic<uint64_t> shadowPasses{0};  // 本帧阴影深度 Pass 次数
         std::atomic<uint64_t> textureBinds{0};  // 本帧纹理绑定次数
         std::atomic<uint64_t> frameCounter{0};  // 累计帧数（不归零）
+        std::array<std::atomic<uint64_t>, kFrameTimingSamples> paintCpuUs{};
+        std::atomic<uint64_t> paintSampleCount{0};
+        std::atomic<uint64_t> paintLastUs{0};
         std::atomic<uint64_t> entityCount{0};   // 最近一次统计的实体总数
         std::atomic<uint64_t> checkFailures{0}; // 断言失败累计
         std::atomic<uint64_t> checkPasses{0};   // 断言通过累计
@@ -49,6 +55,9 @@ namespace EngineTest
 
     /// 每帧开始调用：把"本帧"计数归零（累计值保留）
     void beginFrame();
+
+    /// 记录一次 paintGL CPU 提交耗时；仅在 ENABLE_ENGINE_TESTING 构建中生效。
+    void recordPaintCpuTime(uint64_t microseconds);
 
     /// 生成多行文本快照（Lua engine_stats() / Agent 排障用）
     std::string statsReport();
@@ -90,6 +99,11 @@ namespace EngineTest
     {
         if (ENABLE_ENGINE_TESTING)
             ++stats().textureBinds;
+    }
+    inline void countShadowPass()
+    {
+        if (ENABLE_ENGINE_TESTING)
+            ++stats().shadowPasses;
     }
 } // namespace EngineTest
 
