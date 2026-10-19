@@ -33,6 +33,7 @@
 #include <QKeyEvent>
 #include <QDebug>
 #include <algorithm>
+#include <chrono>
 #include <vector>
 #include <string>           // std::to_string（光源 uniform 名拼接）
 #include <cmath>            // std::cos（聚光锥角）
@@ -63,16 +64,29 @@ void RenderWidget::resizeGL(int w, int h) { glViewport(0, 0, w, h); }
 // ============================================================
 void RenderWidget::paintGL()
 {
+#if ENABLE_ENGINE_TESTING
+    const auto paintStarted = std::chrono::steady_clock::now();
+    auto recordPaintTime = [&paintStarted]
+    {
+        const auto elapsed = std::chrono::steady_clock::now() - paintStarted;
+        EngineTest::recordPaintCpuTime(static_cast<uint64_t>(
+            std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count()));
+    };
+#endif
     // 帧统计归零（TestFramework；宏关闭时零开销）
     EngineTest::beginFrame();
 
     // 执行延迟删除：这里天然有 GL 上下文（ResourceManager 的待删队列）
     ResourceManager::instance().flushPendingDeletes();
+    ResourceManager::instance().pumpUploads();
 
     if (!m_world || !m_shader.isValid())
     {
         glClearColor(0.11f, 0.125f, 0.155f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+#if ENABLE_ENGINE_TESTING
+        recordPaintTime();
+#endif
         return;
     }
 
@@ -81,13 +95,18 @@ void RenderWidget::paintGL()
     m_world->each([&](const EnvironmentComponent &ec)
                   { m_env = ec; });
 
+    // Snapshot ready meshes once for shadows, main view and camera preview.
+    m_renderList.build(*m_world);
+
     // ★ Pass 0：阴影（方向光优先；无方向光时聚光灯投影）
     int shadowLightType = -1;
     glm::vec3 shadowLightPos(0);
-    glm::mat4 lightSpace = m_shadow.renderDirSpot(*m_world, shadowLightType, shadowLightPos);
+    glm::mat4 lightSpace = m_shadow.renderDirSpot(*m_world, m_renderList,
+                                                  shadowLightType, shadowLightPos);
     glm::vec3 pointShadowPos(0);
     float pointShadowFar = 20.0f;
-    bool pointShadowOn = m_shadow.renderPoint(*m_world, pointShadowPos, pointShadowFar);
+    bool pointShadowOn = m_shadow.renderPoint(*m_world, m_renderList,
+                                              pointShadowPos, pointShadowFar);
 
     // ★ Pass 1 准备：主场景渲染到离屏 FBO（后处理关闭时回退默认 FBO）
     m_post.ensureFbo(width(), height());
@@ -200,34 +219,50 @@ void RenderWidget::paintGL()
     m_shader.setVec3("uFogColor", m_env.fogColor.x, m_env.fogColor.y, m_env.fogColor.z);
     m_shader.setFloat("uFogDensity", m_env.fogDensity);
 
-    // ---- 实体遍历（数据 → uniform → draw call）----
-    m_world->each([this](flecs::entity e, TransformComponent &tf, const MeshComponent &ms)
-                  {
-        if (!ms.isValid() || !tf.visibleInTree) return;
-        m_shader.setMat4("uModel", tf.worldMatrix);
-        m_shader.setMat3("uNormalMatrix", tf.worldNormalMatrix);
+    // Keep ECS order for now; transparent materials may need depth ordering.
+    const RenderFrustum mainFrustum = RenderFrustum::fromViewProjection(proj * view);
+    GLuint boundTexture = 0;
+    GLuint boundVao = 0;
+    bool hasBoundMaterial = false;
+    glm::vec3 boundAlbedo(0.0f);
+    float boundMetallic = 0.0f;
+    float boundRoughness = 0.0f;
+    float boundAo = 0.0f;
+    int boundHasTexture = -1;
+    glActiveTexture(GL_TEXTURE0);
+    m_shader.setInt("uTexture", 0);
+    for (const RenderItem &item : m_renderList.items())
+    {
+        if (!mainFrustum.intersects(item.worldBounds)) continue;
+        m_shader.setMat4("uModel", item.model);
+        m_shader.setMat3("uNormalMatrix", item.normal);
 
         const auto *mat = static_cast<const MaterialComponent *>(
-            ecs_get_id(m_world->c_ptr(), e.raw_id(), m_world->component<MaterialComponent>().raw_id()));
-        if (mat)
+            ecs_get_id(m_world->c_ptr(), item.entity,
+                       m_world->component<MaterialComponent>().raw_id()));
+        const glm::vec3 albedo = mat ? mat->albedo : glm::vec3(0.7f);
+        const float metallic = mat ? mat->metallic : 0.0f;
+        const float roughness = mat ? mat->roughness : 0.5f;
+        const float ao = mat ? mat->ao : 1.0f;
+        if (!hasBoundMaterial || glm::any(glm::notEqual(albedo, boundAlbedo)) ||
+            metallic != boundMetallic || roughness != boundRoughness || ao != boundAo)
         {
-            m_shader.setVec3("uMaterial.albedo", mat->albedo);
-            m_shader.setFloat("uMaterial.metallic", mat->metallic);
-            m_shader.setFloat("uMaterial.roughness", mat->roughness);
-            m_shader.setFloat("uMaterial.ao", mat->ao);
-        }
-        else
-        {
-            m_shader.setVec3("uMaterial.albedo", 0.7f, 0.7f, 0.7f);
-            m_shader.setFloat("uMaterial.metallic", 0.0f);
-            m_shader.setFloat("uMaterial.roughness", 0.5f);
-            m_shader.setFloat("uMaterial.ao", 1.0f);
+            m_shader.setVec3("uMaterial.albedo", albedo);
+            m_shader.setFloat("uMaterial.metallic", metallic);
+            m_shader.setFloat("uMaterial.roughness", roughness);
+            m_shader.setFloat("uMaterial.ao", ao);
+            boundAlbedo = albedo;
+            boundMetallic = metallic;
+            boundRoughness = roughness;
+            boundAo = ao;
+            hasBoundMaterial = true;
         }
 
         // 纹理：精灵帧动画优先，其次材质 albedo 贴图（共用 uTexture 单元 0）
         bool textured = false;
         auto *sp = static_cast<SpriteComponent *>(const_cast<void *>(
-            ecs_get_id(m_world->c_ptr(), e.raw_id(), m_world->component<SpriteComponent>().raw_id())));
+            ecs_get_id(m_world->c_ptr(), item.entity,
+                       m_world->component<SpriteComponent>().raw_id())));
         if (sp && sp->folder[0])
         {
             if (!sp->spriteHandle)
@@ -235,9 +270,12 @@ void RenderWidget::paintGL()
             const GpuTexture *tex = ResourceManager::instance().getSpriteFrame(sp->spriteHandle, sp->frame);
             if (tex)
             {
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, tex->id);
-                m_shader.setInt("uTexture", 0);
+                if (boundTexture != tex->id)
+                {
+                    glBindTexture(GL_TEXTURE_2D, tex->id);
+                    EngineTest::countTextureBind();
+                    boundTexture = tex->id;
+                }
                 textured = true;
             }
         }
@@ -246,27 +284,38 @@ void RenderWidget::paintGL()
             auto *mmat = const_cast<MaterialComponent *>(mat);
             if (!mmat->texHandle)
             {
-                std::string abs = (GamePaths::root() + QString::fromUtf8(mmat->albedoTex)).toStdString();
-                mmat->texHandle = ResourceManager::instance().acquireTexture(abs);
+                mmat->texHandle = ResourceManager::instance().acquireMaterialTexture(mmat->albedoTex);
             }
             const GpuTexture *tex = ResourceManager::instance().getTexture(mmat->texHandle);
             if (tex)
             {
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, tex->id);
-                m_shader.setInt("uTexture", 0);
+                if (boundTexture != tex->id)
+                {
+                    glBindTexture(GL_TEXTURE_2D, tex->id);
+                    EngineTest::countTextureBind();
+                    boundTexture = tex->id;
+                }
                 textured = true;
             }
         }
-        m_shader.setInt("uHasTexture", textured ? 1 : 0);
+        const int hasTexture = textured ? 1 : 0;
+        if (hasTexture != boundHasTexture)
+        {
+            m_shader.setInt("uHasTexture", hasTexture);
+            boundHasTexture = hasTexture;
+        }
 
-        const GpuMesh *gm = ResourceManager::instance().get(ms.meshHandle);
-        if (!gm) return;
-        glBindVertexArray(gm->vao);
-        if (gm->hasIndices) glDrawElements(gm->primitiveType, gm->indexCount, GL_UNSIGNED_INT, nullptr);
-        else glDrawArrays(gm->primitiveType, 0, gm->vertexCount);
+        const GpuMesh &gm = item.mesh;
+        if (boundVao != gm.vao)
+        {
+            glBindVertexArray(gm.vao);
+            boundVao = gm.vao;
+        }
+        if (gm.hasIndices) glDrawElements(gm.primitiveType, gm.indexCount, GL_UNSIGNED_INT, nullptr);
+        else glDrawArrays(gm.primitiveType, 0, gm.vertexCount);
         EngineTest::countDrawCall();
-        glBindVertexArray(0); });
+    }
+    glBindVertexArray(0);
 
     // ★ 粒子 Pass：不透明之后、后处理之前
     m_particles.draw(*m_world, view, proj);
@@ -275,12 +324,14 @@ void RenderWidget::paintGL()
     if (postOn)
         m_post.render(m_env, width(), height(), defaultFramebufferObject());
 
-    // ★ 帧计数：TestFramework 统计（宏关闭时零开销）
-    if (ENABLE_ENGINE_TESTING)
-        ++EngineTest::stats().frameCounter;
-
     // ★ 相机预览小窗
     drawCameraPreview();
+
+    // Include editor camera preview in the complete paintGL CPU sample.
+#if ENABLE_ENGINE_TESTING
+    ++EngineTest::stats().frameCounter;
+    recordPaintTime();
+#endif
 }
 
 // ============================================================
@@ -329,24 +380,25 @@ void RenderWidget::drawCameraPreview()
     m_shader.setInt("uShadowEnabled", 0);      // 预览不做阴影（省深度 pass）
     m_shader.setInt("uPointShadowEnabled", 0); // 关掉主 pass 残留的点光阴影开关（否则预览误采样 cubemap）
     m_shader.setInt("uHasTexture", 0);
-    m_world->each([this](flecs::entity ent, TransformComponent &tf, const MeshComponent &ms)
-                  {
-        if (!ms.isValid() || !tf.visibleInTree) return;
-        m_shader.setMat4("uModel", tf.worldMatrix);
-        m_shader.setMat3("uNormalMatrix", tf.worldNormalMatrix);
+    const RenderFrustum previewFrustum = RenderFrustum::fromViewProjection(pproj * pview);
+    for (const RenderItem &item : m_renderList.items())
+    {
+        if (!previewFrustum.intersects(item.worldBounds)) continue;
+        m_shader.setMat4("uModel", item.model);
+        m_shader.setMat3("uNormalMatrix", item.normal);
         const auto *mat = static_cast<const MaterialComponent *>(
-            ecs_get_id(m_world->c_ptr(), ent.raw_id(),
+            ecs_get_id(m_world->c_ptr(), item.entity,
                        m_world->component<MaterialComponent>().raw_id()));
         m_shader.setVec3("uMaterial.albedo", mat ? mat->albedo : glm::vec3(0.7f));
         m_shader.setFloat("uMaterial.metallic", mat ? mat->metallic : 0.0f);
         m_shader.setFloat("uMaterial.roughness", mat ? mat->roughness : 0.5f);
         m_shader.setFloat("uMaterial.ao", mat ? mat->ao : 1.0f);
-        const GpuMesh *gm = ResourceManager::instance().get(ms.meshHandle);
-        if (!gm) return;
-        glBindVertexArray(gm->vao);
-        if (gm->hasIndices) glDrawElements(gm->primitiveType, gm->indexCount, GL_UNSIGNED_INT, nullptr);
-        else glDrawArrays(gm->primitiveType, 0, gm->vertexCount);
-        glBindVertexArray(0); });
+        const GpuMesh &gm = item.mesh;
+        glBindVertexArray(gm.vao);
+        if (gm.hasIndices) glDrawElements(gm.primitiveType, gm.indexCount, GL_UNSIGNED_INT, nullptr);
+        else glDrawArrays(gm.primitiveType, 0, gm.vertexCount);
+    }
+    glBindVertexArray(0);
 
     glDisable(GL_SCISSOR_TEST);
     glViewport(0, 0, width(), height()); // 复原

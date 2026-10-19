@@ -92,6 +92,8 @@ end
 | `add_material(id, r,g,b [,metallic,roughness])` | PBR 材质：基础色 + 金属度(0=非金属 1=金属) + 粗糙度(0=镜面 1=粗糙) |
 | `add_rigidbody(id, motion)` | 刚体：0=静态 1=运动学 2=动态 |
 | `add_collider(id [,hx,hy,hz])` | 盒碰撞体半尺寸（默认 0.5） |
+| `add_sphere_collider(id [,radius])` | 球形碰撞体（半径默认 0.5） |
+| `add_capsule_collider(id [,radius,height])` | 胶囊碰撞体（总高默认 2.0，包含两端半球） |
 | `add_script(id, "scripts/x.lua")` | 挂行为脚本（相对路径，导出后有效） |
 | `add_camera(id, px,py,pz [,yaw,pitch])` | 游戏相机 |
 | `add_rotate(id, sx,sy,sz)` | 自转（度/秒，传送门那种） |
@@ -123,7 +125,7 @@ anim_fsm_param(id, "speed", 当前速度)
 
 ### 触发器（Area3D 同款）
 
-碰撞体勾选 `isTrigger`（或加组件后 Inspector 勾）→ 不阻挡只发信号：
+Box、Sphere、Capsule 碰撞体都可勾选 `isTrigger`（或加组件后在 Inspector 勾选）→ 不阻挡只发信号。同一实体只保留一种碰撞体；通过 Lua 添加新形状时会替换旧形状：
 
 ```lua
 connect("trigger_enter", function(other) end)  -- 物体进入区域

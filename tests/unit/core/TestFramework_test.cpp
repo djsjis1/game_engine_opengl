@@ -52,10 +52,14 @@ TEST(TestFrameworkTest, BeginFrame_KeepsCumulativeFrameCounter)
 
 TEST(TestFrameworkTest, StatsReport_ContainsExpectedKeys)
 {
+    EngineTest::recordPaintCpuTime(1200);
     std::string report = EngineTest::statsReport();
-    EXPECT_NE(report.find("draw calls/frame"), std::string::npos);
+    EXPECT_NE(report.find("main draws/frame"), std::string::npos);
     EXPECT_NE(report.find("entities"), std::string::npos);
     EXPECT_NE(report.find("checks pass/fail"), std::string::npos);
+    EXPECT_NE(report.find("paintGL CPU us"), std::string::npos);
+    EXPECT_NE(report.find("p95"), std::string::npos);
+    EXPECT_EQ(EngineTest::stats().paintLastUs.load(), 1200u);
 }
 
 TEST(TestFrameworkTest, RunSelfCheck_ReturnsPassSummary)

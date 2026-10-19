@@ -13,11 +13,15 @@
 #include "Components/TransformComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Components/BoxColliderComponent.h"
+#include "Components/SphereColliderComponent.h"
+#include "Components/CapsuleColliderComponent.h"
 #include "Core/GamePaths.h"
 #include "Core/SaveGame.h"
 #include "Core/SceneRouter.h"
 #include "Core/NavGrid.h"       // nav_* 寻路 API
 #include "Core/TestFramework.h" // 自检/统计（Agent 排障接口）
+#include <algorithm>
+#include <cmath>
 #include <cstring>
 #include <glm/gtc/matrix_transform.hpp> // set_camera 当帧重算 viewMatrix
 
@@ -402,17 +406,35 @@ int api_navBake(lua_State *L)
         return 0;
     NavGrid::instance().clear();
     int count = 0;
-    c->w->each([&](flecs::entity, const TransformComponent &tf,
-                   const RigidbodyComponent &rb, const BoxColliderComponent &box)
+    const auto boxId = c->w->component<BoxColliderComponent>().raw_id();
+    const auto sphereId = c->w->component<SphereColliderComponent>().raw_id();
+    const auto capsuleId = c->w->component<CapsuleColliderComponent>().raw_id();
+    c->w->each([&](flecs::entity e, const TransformComponent &tf,
+                   const RigidbodyComponent &rb)
                {
-        if (rb.motionType != 0 || box.isTrigger) return; // 只算静态实体碰撞体
+        if (rb.motionType != 0) return;
+        const auto *box = static_cast<const BoxColliderComponent *>(ecs_get_id(c->w->c_ptr(), e.raw_id(), boxId));
+        const auto *sphere = static_cast<const SphereColliderComponent *>(ecs_get_id(c->w->c_ptr(), e.raw_id(), sphereId));
+        const auto *capsule = static_cast<const CapsuleColliderComponent *>(ecs_get_id(c->w->c_ptr(), e.raw_id(), capsuleId));
+        if ((!box && !sphere && !capsule) || (box && box->isTrigger) ||
+            (sphere && sphere->isTrigger) || (capsule && capsule->isTrigger)) return;
         glm::vec3 pos(tf.worldMatrix[3]);
+        glm::vec3 halfExtents(0.0f);
+        if (box)
+            halfExtents = glm::abs(box->halfExtents * tf.scale);
+        else if (sphere)
+            halfExtents = glm::vec3(sphere->radius * std::max(std::abs(tf.scale.x), std::max(std::abs(tf.scale.y), std::abs(tf.scale.z))));
+        else
+        {
+            const float radius = capsule->radius * std::max(std::abs(tf.scale.x), std::abs(tf.scale.z));
+            const float halfCylinder = std::max(0.0f, capsule->height * std::abs(tf.scale.y) * 0.5f - radius);
+            halfExtents = glm::vec3(radius, halfCylinder + radius, radius);
+        }
         // 地面这类"又扁又大"的静态体不算障碍（顶面在脚下，不挡水平行走）
-        float topY = pos.y + box.halfExtents.y * tf.scale.y;
+        float topY = pos.y + halfExtents.y;
         if (topY < 0.3f) return;
-        float hx = box.halfExtents.x * tf.scale.x;
-        float hz = box.halfExtents.z * tf.scale.z;
-        NavGrid::instance().blockRect(pos.x - hx, pos.z - hz, pos.x + hx, pos.z + hz);
+        NavGrid::instance().blockRect(pos.x - halfExtents.x, pos.z - halfExtents.z,
+                                      pos.x + halfExtents.x, pos.z + halfExtents.z);
         ++count; });
     lua_pushinteger(L, count); // 返回烘焙的障碍数（调试用）
     return 1;

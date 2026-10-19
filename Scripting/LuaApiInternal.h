@@ -46,6 +46,8 @@ int api_addMaterial(lua_State *L);
 int api_addTexture(lua_State *L);
 int api_addRigidbody(lua_State *L);
 int api_addCollider(lua_State *L);
+int api_addSphereCollider(lua_State *L);
+int api_addCapsuleCollider(lua_State *L);
 int api_addScript(lua_State *L);
 int api_addCamera(lua_State *L);
 int api_addRotate(lua_State *L);

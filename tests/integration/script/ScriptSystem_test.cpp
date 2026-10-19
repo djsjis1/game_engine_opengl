@@ -16,6 +16,9 @@
 #include "Components/SignalComponent.h"
 #include "Components/TagComponent.h"
 #include <cstring>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
 
 namespace
 {
@@ -188,6 +191,55 @@ TEST_F(ScriptSystemTest, BrokenScript_DoesNotAffectOtherEntities)
                              "function update(dt) local x,y,z = get_position() set_position(x+1, y, z) end");
     stepFrames(3); // 坏脚本编译失败被跳过，好脚本照常跑
     EXPECT_FLOAT_EQ(getComp<TransformComponent>(m_engine->world(), good)->position.x, 3.0f);
+}
+
+TEST_F(ScriptSystemTest, HotReload_DisabledUntilExplicitReload_EditorPollsExternalChanges)
+{
+    const auto unique = std::chrono::steady_clock::now().time_since_epoch().count();
+    const auto file = std::filesystem::temp_directory_path() /
+                      ("mini_engine_reload_" + std::to_string(unique) + ".lua");
+    struct RemoveFile
+    {
+        std::filesystem::path path;
+        ~RemoveFile() { std::error_code error; std::filesystem::remove(path, error); }
+    } cleanup{file};
+    auto writeScript = [&](int value)
+    {
+        std::ofstream out(file, std::ios::trunc);
+        out << "function update(dt) set_position(" << value << ", 0, 0) end\n";
+        out.close();
+        ASSERT_TRUE(out.good());
+    };
+
+    writeScript(1);
+    auto entity = m_engine->world().entity();
+    entity.set<TransformComponent>({});
+    ScriptComponent script{};
+    const std::string path = file.string();
+    ASSERT_LT(path.size(), sizeof(script.filePath));
+    std::strncpy(script.filePath, path.c_str(), sizeof(script.filePath) - 1);
+    entity.set<ScriptComponent>(script);
+    stepFrames(1);
+    EXPECT_FLOAT_EQ(getComp<TransformComponent>(m_engine->world(), entity)->position.x, 1.0f);
+
+    auto previousWrite = std::filesystem::last_write_time(file);
+    writeScript(2);
+    std::filesystem::last_write_time(file, previousWrite + std::chrono::seconds(2));
+    stepFrames(3, 0.25f);
+    EXPECT_FLOAT_EQ(getComp<TransformComponent>(m_engine->world(), entity)->position.x, 1.0f);
+
+    m_script->reloadScript(path);
+    stepFrames(1);
+    EXPECT_FLOAT_EQ(getComp<TransformComponent>(m_engine->world(), entity)->position.x, 2.0f);
+
+    previousWrite = std::filesystem::last_write_time(file);
+    writeScript(3);
+    std::filesystem::last_write_time(file, previousWrite + std::chrono::seconds(2));
+    m_script->setHotReloadMode(ScriptSystem::HotReloadMode::EditorOnly);
+    stepFrames(1, 0.25f);
+    EXPECT_FLOAT_EQ(getComp<TransformComponent>(m_engine->world(), entity)->position.x, 2.0f);
+    stepFrames(1, 0.25f);
+    EXPECT_FLOAT_EQ(getComp<TransformComponent>(m_engine->world(), entity)->position.x, 3.0f);
 }
 
 // ---- 坑P1 回归：监听者死亡后，源实体的信号连接被清理（无孤儿回调）----

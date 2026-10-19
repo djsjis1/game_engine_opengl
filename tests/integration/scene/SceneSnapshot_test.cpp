@@ -230,6 +230,7 @@ TEST_F(SceneSnapshotTest, CaptureRestore_PreservesMaterial)
     MaterialComponent mat{};
     mat.albedo = {1.0f, 0.0f, 0.0f}; // 红色
     mat.metallic = 0.8f;
+    std::strncpy(mat.albedoTex, "textures/test.png", sizeof(mat.albedoTex) - 1);
     e.set<MaterialComponent>(mat);
 
     m_snapshot.capture(m_engine->world());
@@ -241,4 +242,6 @@ TEST_F(SceneSnapshotTest, CaptureRestore_PreservesMaterial)
     ASSERT_NE(m, nullptr);
     EXPECT_FLOAT_EQ(m->albedo.r, 1.0f);
     EXPECT_FLOAT_EQ(m->metallic, 0.8f);
+    EXPECT_STREQ(m->albedoTex, "textures/test.png");
+    EXPECT_EQ(m->texHandle, 0u);
 }

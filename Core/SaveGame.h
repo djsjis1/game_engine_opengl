@@ -3,7 +3,10 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QSaveFile>
+#include <QByteArray>
 #include <fstream>
+#include <limits>
 #include <string>
 #include <nlohmann/json.hpp>
 
@@ -46,12 +49,23 @@ public:
     bool write(int slot)
     {
         QDir().mkpath(dirPath()); // 首次保存自动建目录
-        std::ofstream f(filePath(slot).toStdString());
-        if (!f.is_open())
+        QByteArray bytes;
+        try
+        {
+            const std::string serialized = m_data.dump(2);
+            if (serialized.size() > static_cast<size_t>(std::numeric_limits<int>::max()))
+                return false;
+            bytes = QByteArray(serialized.data(), static_cast<int>(serialized.size()));
+        }
+        catch (...)
+        {
             return false;
-        f << m_data.dump(2); // nlohmann dump 输出天然 UTF-8（编码规范）
-        f.flush();
-        return f.good(); // 检查写入成功（磁盘满/IO 错时返回 false，别谎报成功）
+        }
+
+        QSaveFile f(filePath(slot));
+        if (!f.open(QIODevice::WriteOnly) || f.write(bytes) != bytes.size())
+            return false;
+        return f.commit(); // 临时文件完整落盘后原子替换旧存档
     }
 
     bool load(int slot)
@@ -60,7 +74,7 @@ public:
         if (!f.is_open())
             return false;
         nlohmann::json j = nlohmann::json::parse(f, nullptr, false);
-        if (j.is_discarded())
+        if (j.is_discarded() || !j.is_object())
             return false; // 存档损坏：不动内存数据（别用坏档覆盖进度）
         m_data = std::move(j);
         return true;

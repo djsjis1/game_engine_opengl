@@ -19,6 +19,7 @@
 #include "Components/EnvironmentComponent.h"
 #include "Render/Shader.h"
 #include "Render/ResourceManager.h"
+#include "Render/RenderList.h"
 #include "Render/ShadowRenderer.h"   // Pass0：方向光/聚光/点光阴影
 #include "Render/PostProcessor.h"    // Pass2/3：Bloom + 色调映射
 #include "Render/SkyRenderer.h"      // 天空盒
@@ -76,6 +77,7 @@ private:
 
     // ---- 主场景 shader（实体 PBR 渲染）----
     Shader m_shader;
+    RenderList m_renderList; // built once per frame, shared by all mesh passes
 
     // ---- 渲染子系统（各自持有 GL 资源）----
     ShadowRenderer m_shadow;      // Pass0：阴影深度

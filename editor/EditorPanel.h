@@ -111,6 +111,7 @@ private:
     void buildInspector();                        // 创建右侧 Inspector 面板（滚动区+底部添加组件行）
 
     void rebuildComponentList();
+    void applyEntityFilter();
     void addEntityToTree(flecs::entity e, class QTreeWidgetItem *parentItem); // 递归建树
     void runCommand(std::unique_ptr<class Command> cmd);
     void blockPropertySignals(bool block);
@@ -129,6 +130,7 @@ private:
 
     // ---- 左面板（场景树 + 资源面板）----
     QTreeWidget *m_entityTree = nullptr;   // 场景树（可折叠层级，对标 Godot）
+    QLineEdit *m_entitySearch = nullptr;   // 场景树名称过滤
     QTreeWidget *m_resourceTree = nullptr; // 资源浏览（prefab/scene/anim/sprite/script）
     QPushButton *m_newBtn = nullptr, *m_deleteBtn = nullptr;
 

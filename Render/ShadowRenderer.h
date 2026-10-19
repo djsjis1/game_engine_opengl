@@ -8,6 +8,7 @@
 #include <flecs.h>
 #pragma pop_macro("emit")
 #include "Render/Shader.h"
+#include "Render/RenderList.h"
 #include <string>
 
 // ============================================================
@@ -29,11 +30,13 @@ public:
 
     /// 方向光/聚光 → 2D 深度图。返回光空间矩阵（单位阵 = 无可投影光）
     /// outType：0=方向光 2=聚光（-1=无）；outPos：聚光位置
-    glm::mat4 renderDirSpot(flecs::world &world, int &outType, glm::vec3 &outPos);
+    glm::mat4 renderDirSpot(flecs::world &world, const RenderList &renderList,
+                            int &outType, glm::vec3 &outPos);
 
     /// 首个点光 → cubemap 6 面深度。返回 false = 场景无点光
     /// outPos/outFar：主 pass 采样用（光源位置 + 深度范围）
-    bool renderPoint(flecs::world &world, glm::vec3 &outPos, float &outFar);
+    bool renderPoint(flecs::world &world, const RenderList &renderList,
+                     glm::vec3 &outPos, float &outFar);
 
     // ---- 主 pass 绑定用（纹理单元由调用方管理）----
     GLuint dirSpotTexture() const { return m_shadowTex; }

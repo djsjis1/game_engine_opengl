@@ -13,6 +13,8 @@
 #include "Components/MaterialComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Components/BoxColliderComponent.h"
+#include "Components/SphereColliderComponent.h"
+#include "Components/CapsuleColliderComponent.h"
 #include "Components/CameraComponent.h"
 #include "Components/RotateBehavior.h"
 #include "Components/LightComponent.h"
@@ -201,6 +203,10 @@ int api_addMaterial(lua_State *L)
                   (float)luaL_checknumber(L, 4)};
     mat.metallic = (float)luaL_optnumber(L, 5, 0.0);
     mat.roughness = (float)luaL_optnumber(L, 6, 0.5);
+    const auto compId = e.world().component<MaterialComponent>().raw_id();
+    if (const auto *old = static_cast<const MaterialComponent *>(
+            ecs_get_id(e.world().c_ptr(), e.raw_id(), compId)))
+        ResourceManager::instance().releaseTexture(old->texHandle);
     e.set<MaterialComponent>(mat);
     return 0;
 }
@@ -226,6 +232,7 @@ int api_addTexture(lua_State *L)
     {
         strncpy(mat->albedoTex, rel, sizeof(mat->albedoTex) - 1);
         mat->albedoTex[sizeof(mat->albedoTex) - 1] = '\0';
+        ResourceManager::instance().releaseTexture(mat->texHandle);
         mat->texHandle = 0; // 归零 → RenderWidget 下帧惰性重新 acquire
     }
     return 0;
@@ -253,7 +260,38 @@ int api_addCollider(lua_State *L)
     box.halfExtents = {(float)luaL_optnumber(L, 2, 0.5),
                        (float)luaL_optnumber(L, 3, 0.5),
                        (float)luaL_optnumber(L, 4, 0.5)};
+    e.remove<SphereColliderComponent>();
+    e.remove<CapsuleColliderComponent>();
     e.set<BoxColliderComponent>(box);
+    return 0;
+}
+
+/// add_sphere_collider(id [, radius]) — 球形碰撞体
+int api_addSphereCollider(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    SphereColliderComponent sphere{};
+    sphere.radius = (float)luaL_optnumber(L, 2, 0.5);
+    e.remove<BoxColliderComponent>();
+    e.remove<CapsuleColliderComponent>();
+    e.set<SphereColliderComponent>(sphere);
+    return 0;
+}
+
+/// add_capsule_collider(id [, radius, height]) — 胶囊碰撞体，总高包含两端半球
+int api_addCapsuleCollider(lua_State *L)
+{
+    auto e = buildTarget(L, 1);
+    if (!e)
+        return 0;
+    CapsuleColliderComponent capsule{};
+    capsule.radius = (float)luaL_optnumber(L, 2, 0.5);
+    capsule.height = (float)luaL_optnumber(L, 3, 2.0);
+    e.remove<BoxColliderComponent>();
+    e.remove<SphereColliderComponent>();
+    e.set<CapsuleColliderComponent>(capsule);
     return 0;
 }
 

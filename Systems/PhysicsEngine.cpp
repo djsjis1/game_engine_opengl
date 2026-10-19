@@ -30,6 +30,8 @@
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h> // 盒形碰撞体
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyInterface.h>        // 创建/删除/查询刹体
 #include <Jolt/Physics/Collision/ContactListener.h> // 碰撞回调
@@ -37,15 +39,24 @@
 #include <Jolt/Physics/Body/BodyFilter.h>           // IgnoreSingleBodyFilter（射线忽略自己）
 #include <Jolt/Physics/Collision/CastResult.h>
 
+#ifndef GLM_ENABLE_EXPERIMENTAL
+#define GLM_ENABLE_EXPERIMENTAL
+#endif
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 #include "Systems/PhysicsSystem.h"
 #include "Components/TransformComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Components/BoxColliderComponent.h"
+#include "Components/SphereColliderComponent.h"
+#include "Components/CapsuleColliderComponent.h"
 #include "Core/SignalQueue.h" // 碰撞信号走 Core 层信号队列（不再依赖脚本层，ADR-002）
 
 #include <thread>
 #include <map>
 #include <algorithm> // std::max/std::min（线程数钳制、dt 死亡螺旋保护）
+#include <cmath>
 
 JPH_SUPPRESS_WARNINGS
 
@@ -62,6 +73,58 @@ namespace BroadPhaseLayers
     static constexpr JPH::BroadPhaseLayer NON_MOVING(0);
     static constexpr JPH::BroadPhaseLayer MOVING(1);
     static constexpr JPH::uint NUM_LAYERS(2);
+}
+
+namespace
+{
+    glm::mat4 localTransformMatrix(const TransformComponent &transform)
+    {
+        glm::mat4 matrix(1.0f);
+        matrix = glm::translate(matrix, transform.position);
+        matrix = glm::rotate(matrix, glm::radians(transform.rotation.x), glm::vec3(1, 0, 0));
+        matrix = glm::rotate(matrix, glm::radians(transform.rotation.y), glm::vec3(0, 1, 0));
+        matrix = glm::rotate(matrix, glm::radians(transform.rotation.z), glm::vec3(0, 0, 1));
+        return glm::scale(matrix, transform.scale);
+    }
+
+    glm::mat4 worldTransformMatrix(flecs::entity entity)
+    {
+        const auto *transform = static_cast<const TransformComponent *>(ecs_get_id(
+            entity.world().c_ptr(), entity.raw_id(),
+            entity.world().component<TransformComponent>().raw_id()));
+        if (!transform)
+            return glm::mat4(1.0f);
+
+        const glm::mat4 local = localTransformMatrix(*transform);
+        flecs::entity parent = entity.parent();
+        if (parent && parent.has<TransformComponent>())
+            return worldTransformMatrix(parent) * local;
+        return local;
+    }
+
+    bool decomposeWorldTransform(const glm::mat4 &matrix, glm::vec3 &position,
+                                 glm::quat &rotation, glm::vec3 &scale)
+    {
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        if (!glm::decompose(matrix, scale, rotation, position, skew, perspective))
+            return false;
+        const bool finite = std::isfinite(position.x) && std::isfinite(position.y) &&
+                            std::isfinite(position.z) && std::isfinite(scale.x) &&
+                            std::isfinite(scale.y) && std::isfinite(scale.z) &&
+                            std::isfinite(rotation.w) && std::isfinite(rotation.x) &&
+                            std::isfinite(rotation.y) && std::isfinite(rotation.z);
+        if (!finite || glm::length(rotation) < 1e-6f)
+            return false;
+        rotation = glm::normalize(rotation);
+        return true;
+    }
+
+    glm::quat toGlmQuaternion(const JPH::Quat &rotation)
+    {
+        return glm::normalize(glm::quat(rotation.GetW(), rotation.GetX(),
+                                        rotation.GetY(), rotation.GetZ()));
+    }
 }
 
 /// 对象层碰撞规则：静态只跟动态撞，动态跟所有撞
@@ -169,6 +232,14 @@ public:
 // ============================================================
 struct PhysicsSystem::Impl
 {
+    enum class ShapeKind : uint8_t { Box, Sphere, Capsule };
+    struct ShapeState
+    {
+        ShapeKind kind = ShapeKind::Box;
+        glm::vec3 dimensions{0.0f}; // box half extents, sphere radius, or capsule radius/half-cylinder
+        bool isTrigger = false;
+    };
+
     JPH::TempAllocatorImpl *tempAllocator = nullptr;
     JPH::JobSystemThreadPool *jobSystem = nullptr;
     JPH::PhysicsSystem physicsSystem;
@@ -180,6 +251,7 @@ struct PhysicsSystem::Impl
 
     std::map<flecs::entity_t, JPH::BodyID> bodies;    // 实体 → Jolt Body
     std::map<flecs::entity_t, glm::vec3> bodyExtents; // 创建时的尺寸（检测变化用）
+    std::map<flecs::entity_t, ShapeState> bodyShapes; // 形状、参数或 Trigger 改变时重建
     float accumulator = 0;                            // 固定步长累加器
 
     // ★ 物理插值（Godot 同款）：物理 60Hz、渲染帧率任意，两者节拍不合时
@@ -188,6 +260,8 @@ struct PhysicsSystem::Impl
     //   渲染回写时按 accumulator/kStep 在两者间 lerp → 任意帧率都平滑。
     std::map<flecs::entity_t, glm::vec3> prevPos; // 上一物理步位置
     std::map<flecs::entity_t, glm::vec3> currPos; // 当前物理步位置
+    std::map<flecs::entity_t, glm::quat> prevRot; // 上一物理步朝向
+    std::map<flecs::entity_t, glm::quat> currRot; // 当前物理步朝向
     bool snapshotValid = false;                   // 首帧/重置后无快照，直接用最新位置
 };
 
@@ -255,6 +329,7 @@ void PhysicsSystem::resetBodies()
     }
     m_impl->bodies.clear();
     m_impl->bodyExtents.clear();
+    m_impl->bodyShapes.clear();
     m_impl->accumulator = 0;
     // 插值快照一并清空（下次 Play 从新位置起步，不残留旧位置）
     m_impl->prevPos.clear();
@@ -272,15 +347,35 @@ void PhysicsSystem::update(flecs::world &world, float dt)
         return;
 
     auto &bodyIf = m_impl->physicsSystem.GetBodyInterface();
+    auto removeMappedBody = [&](flecs::entity_t entityId)
+    {
+        auto body = m_impl->bodies.find(entityId);
+        if (body == m_impl->bodies.end())
+            return;
+        const uint32_t bodyNum = body->second.GetIndexAndSequenceNumber();
+        bodyIf.RemoveBody(body->second);
+        bodyIf.DestroyBody(body->second);
+        m_impl->bodies.erase(body);
+        m_impl->bodyExtents.erase(entityId);
+        m_impl->bodyShapes.erase(entityId);
+        m_impl->prevPos.erase(entityId);
+        m_impl->currPos.erase(entityId);
+        m_impl->prevRot.erase(entityId);
+        m_impl->currRot.erase(entityId);
+        std::lock_guard<std::mutex> lk(m_impl->contactListener.mapMutex);
+        m_impl->contactListener.bodyToEntity.erase(bodyNum);
+    };
 
-    // ①a 清理"该销毁的刚体"：实体已死 / 或实体还活着但 Rigidbody/BoxCollider
+    // ①a 清理"该销毁的刚体"：实体已死 / 或刚体、所有碰撞形状组件均已移除
     //   组件被移除（编辑器删组件）——后者不清会留下看不见但撞得到的幽灵体（P6）。
     //   bodyExtents 和插值快照必须一起 erase，否则随实体销毁缓慢泄漏（P12）。
     for (auto it = m_impl->bodies.begin(); it != m_impl->bodies.end();)
     {
         flecs::entity e = world.entity(it->first);
-        bool gone = !e.is_alive() ||
-                    !e.has<RigidbodyComponent>() || !e.has<BoxColliderComponent>();
+        const bool hasCollider = e.is_alive() &&
+            (e.has<BoxColliderComponent>() || e.has<SphereColliderComponent>() ||
+             e.has<CapsuleColliderComponent>());
+        bool gone = !e.is_alive() || !e.has<RigidbodyComponent>() || !hasCollider;
         if (gone)
         {
             bodyIf.RemoveBody(it->second);
@@ -289,8 +384,11 @@ void PhysicsSystem::update(flecs::world &world, float dt)
             uint32_t bodyNum = it->second.GetIndexAndSequenceNumber();
             it = m_impl->bodies.erase(it);
             m_impl->bodyExtents.erase(id); // P12：随体销毁，不再只增不减
+            m_impl->bodyShapes.erase(id);
             m_impl->prevPos.erase(id);     // 插值快照一并清
             m_impl->currPos.erase(id);
+            m_impl->prevRot.erase(id);
+            m_impl->currRot.erase(id);
             {
                 std::lock_guard<std::mutex> lk(m_impl->contactListener.mapMutex);
                 m_impl->contactListener.bodyToEntity.erase(bodyNum);
@@ -301,22 +399,79 @@ void PhysicsSystem::update(flecs::world &world, float dt)
     }
 
     // ①b 发现新实体/尺寸变化 → 创建（或重建）Jolt Body
-    world.each([&](flecs::entity e, TransformComponent &tf,
-                   RigidbodyComponent &rb, BoxColliderComponent &box)
+    const auto boxId = world.component<BoxColliderComponent>().raw_id();
+    const auto sphereId = world.component<SphereColliderComponent>().raw_id();
+    const auto capsuleId = world.component<CapsuleColliderComponent>().raw_id();
+    world.each([&](flecs::entity e, TransformComponent &, RigidbodyComponent &rb)
                {
-        glm::vec3 extents(box.halfExtents.x * tf.scale.x,
-                          box.halfExtents.y * tf.scale.y,
-                          box.halfExtents.z * tf.scale.z);
+        const auto *box = static_cast<const BoxColliderComponent *>(ecs_get_id(world.c_ptr(), e.raw_id(), boxId));
+        const auto *sphere = static_cast<const SphereColliderComponent *>(ecs_get_id(world.c_ptr(), e.raw_id(), sphereId));
+        const auto *capsule = static_cast<const CapsuleColliderComponent *>(ecs_get_id(world.c_ptr(), e.raw_id(), capsuleId));
+        if (!box && !sphere && !capsule) return;
+
+        glm::vec3 worldPosition, worldScale;
+        glm::quat worldRotation;
+        if (!decomposeWorldTransform(worldTransformMatrix(e), worldPosition,
+                                     worldRotation, worldScale))
+        {
+            removeMappedBody(e.raw_id());
+            rb.bodyId = 0;
+            return;
+        }
+        const glm::vec3 scale = glm::abs(worldScale);
+        Impl::ShapeState shapeState;
+        glm::vec3 extents(0.0f);
+        if (box)
+        {
+            shapeState.kind = Impl::ShapeKind::Box;
+            shapeState.dimensions = glm::abs(box->halfExtents) * scale;
+            shapeState.isTrigger = box->isTrigger;
+            extents = shapeState.dimensions;
+        }
+        else if (sphere)
+        {
+            shapeState.kind = Impl::ShapeKind::Sphere;
+            const float radius = sphere->radius * std::max(scale.x, std::max(scale.y, scale.z));
+            shapeState.dimensions = glm::vec3(radius, 0.0f, 0.0f);
+            shapeState.isTrigger = sphere->isTrigger;
+            extents = glm::vec3(radius);
+        }
+        else
+        {
+            if (!std::isfinite(capsule->height) || capsule->height <= 0.0f)
+            {
+                removeMappedBody(e.raw_id());
+                rb.bodyId = 0;
+                return;
+            }
+            shapeState.kind = Impl::ShapeKind::Capsule;
+            const float radius = capsule->radius * std::max(scale.x, scale.z);
+            const float halfCylinder = std::max(0.0f, capsule->height * scale.y * 0.5f - radius);
+            shapeState.dimensions = glm::vec3(radius, halfCylinder, 0.0f);
+            shapeState.isTrigger = capsule->isTrigger;
+            extents = glm::vec3(radius, halfCylinder + radius, radius);
+        }
+        const glm::vec3 dims = shapeState.dimensions;
+        if (!std::isfinite(dims.x) || !std::isfinite(dims.y) || !std::isfinite(dims.z) ||
+            extents.x < 1e-4f || extents.y < 1e-4f || extents.z < 1e-4f)
+        {
+            removeMappedBody(e.raw_id());
+            rb.bodyId = 0;
+            return;
+        }
 
         auto found = m_impl->bodies.find(e.raw_id());
         if (found != m_impl->bodies.end())
         {
-            // 已存在：检查碰撞盒尺寸是否被编辑器改过 → 变了就重建
+            // 已存在：形状、尺寸或 Trigger 改变时重建
             auto &old = m_impl->bodyExtents[e.raw_id()];
-            if (glm::length(old - extents) < 0.0001f) return; // 没变，跳过
-            bodyIf.RemoveBody(found->second);
-            bodyIf.DestroyBody(found->second);
-            m_impl->bodies.erase(found);
+            const auto oldShape = m_impl->bodyShapes.find(e.raw_id());
+            const bool sameShape = oldShape != m_impl->bodyShapes.end() &&
+                oldShape->second.kind == shapeState.kind &&
+                oldShape->second.isTrigger == shapeState.isTrigger &&
+                glm::length(oldShape->second.dimensions - shapeState.dimensions) < 0.0001f;
+            if (sameShape && glm::length(old - extents) < 0.0001f) return;
+            removeMappedBody(e.raw_id());
         }
 
         JPH::EMotionType motion = JPH::EMotionType::Dynamic;
@@ -324,20 +479,39 @@ void PhysicsSystem::update(flecs::world &world, float dt)
         if (rb.motionType == 0) { motion = JPH::EMotionType::Static;    layer = Layers::NON_MOVING; }
         if (rb.motionType == 1) { motion = JPH::EMotionType::Kinematic; layer = Layers::MOVING; }
 
-        JPH::BoxShapeSettings shapeSettings(JPH::Vec3(extents.x, extents.y, extents.z));
-        auto shapeResult = shapeSettings.Create();
-        if (shapeResult.HasError()) return;
+        JPH::ShapeRefC shape;
+        if (shapeState.kind == Impl::ShapeKind::Box)
+        {
+            JPH::BoxShapeSettings shapeSettings(JPH::Vec3(dims.x, dims.y, dims.z));
+            auto result = shapeSettings.Create();
+            if (result.HasError()) { rb.bodyId = 0; return; }
+            shape = result.Get();
+        }
+        else if (shapeState.kind == Impl::ShapeKind::Sphere)
+        {
+            JPH::SphereShapeSettings shapeSettings(dims.x);
+            auto result = shapeSettings.Create();
+            if (result.HasError()) { rb.bodyId = 0; return; }
+            shape = result.Get();
+        }
+        else
+        {
+            JPH::CapsuleShapeSettings shapeSettings(dims.y, dims.x);
+            auto result = shapeSettings.Create();
+            if (result.HasError()) { rb.bodyId = 0; return; }
+            shape = result.Get();
+        }
 
         JPH::BodyCreationSettings settings(
-            shapeResult.Get(),
-            JPH::RVec3(tf.position.x, tf.position.y, tf.position.z),
-            JPH::Quat::sIdentity(),
+            shape,
+            JPH::RVec3(worldPosition.x, worldPosition.y, worldPosition.z),
+            JPH::Quat(worldRotation.x, worldRotation.y, worldRotation.z, worldRotation.w),
             motion, layer);
         settings.mFriction = rb.friction;
         settings.mRestitution = rb.restitution;
         settings.mUserData = e.raw_id(); // 碰撞监听器通过它找回实体
         // 触发器（Godot Area3D）：不阻挡只发信号（trigger_enter/collision_end）
-        settings.mIsSensor = box.isTrigger;
+        settings.mIsSensor = shapeState.isTrigger;
         // ★ 应用组件质量：不设的话 Jolt 按体积×密度(1000kg/m³)自动算——
         //   1x1x1 方块=1000kg！apply_impulse(6) 只推出 0.006m/s，
         //   跳跃看起来"完全失效"（实为被千倍质量吞掉，实猎的 bug）
@@ -351,6 +525,11 @@ void PhysicsSystem::update(flecs::world &world, float dt)
         JPH::BodyID id = bodyIf.CreateAndAddBody(settings, JPH::EActivation::Activate);
         m_impl->bodies[e.raw_id()] = id;
         m_impl->bodyExtents[e.raw_id()] = extents;
+        m_impl->bodyShapes[e.raw_id()] = shapeState;
+        m_impl->prevPos[e.raw_id()] = worldPosition;
+        m_impl->currPos[e.raw_id()] = worldPosition;
+        m_impl->prevRot[e.raw_id()] = worldRotation;
+        m_impl->currRot[e.raw_id()] = worldRotation;
         rb.bodyId = id.GetIndexAndSequenceNumber();
         {
             // 登记 BodyID→实体（OnContactRemoved 反查用，Jolt 工作线程会读）
@@ -371,6 +550,7 @@ void PhysicsSystem::update(flecs::world &world, float dt)
     {
         // 步进前：当前快照降级为"上一步"（只在真的要步进时才滚动）
         m_impl->prevPos = m_impl->currPos;
+        m_impl->prevRot = m_impl->currRot;
         m_impl->physicsSystem.Update(kStep, 1, m_impl->tempAllocator, m_impl->jobSystem);
         m_impl->accumulator -= kStep;
         stepped = true;
@@ -379,15 +559,18 @@ void PhysicsSystem::update(flecs::world &world, float dt)
     {
         // 步进后：采样所有 Dynamic 刚体的最新位置为"当前快照"
         m_impl->currPos.clear();
+        m_impl->currRot.clear();
         for (auto &[eid, bodyId] : m_impl->bodies)
         {
             JPH::RVec3 jp = bodyIf.GetCenterOfMassPosition(bodyId);
             m_impl->currPos[eid] = {(float)jp.GetX(), (float)jp.GetY(), (float)jp.GetZ()};
+            m_impl->currRot[eid] = toGlmQuaternion(bodyIf.GetRotation(bodyId));
         }
         // 首次步进 prev 为空 → 用 curr 补齐（避免从原点滑入）
         if (!m_impl->snapshotValid)
         {
             m_impl->prevPos = m_impl->currPos;
+            m_impl->prevRot = m_impl->currRot;
             m_impl->snapshotValid = true;
         }
     }
@@ -411,8 +594,11 @@ void PhysicsSystem::update(flecs::world &world, float dt)
 
         // 优先用插值快照；无快照（刚创建/刚重置）回退最新物理位置
         glm::vec3 worldPos;
+        glm::quat worldRot;
         auto itCurr = m_impl->currPos.find(e.raw_id());
         auto itPrev = m_impl->prevPos.find(e.raw_id());
+        auto rotCurr = m_impl->currRot.find(e.raw_id());
+        auto rotPrev = m_impl->prevRot.find(e.raw_id());
         if (itCurr != m_impl->currPos.end() && itPrev != m_impl->prevPos.end())
         {
             worldPos = glm::mix(itPrev->second, itCurr->second, alpha);
@@ -422,20 +608,28 @@ void PhysicsSystem::update(flecs::world &world, float dt)
             JPH::RVec3 jp = bodyIf.GetCenterOfMassPosition(it->second);
             worldPos = {(float)jp.GetX(), (float)jp.GetY(), (float)jp.GetZ()};
         }
+        if (rotCurr != m_impl->currRot.end() && rotPrev != m_impl->prevRot.end())
+            worldRot = glm::normalize(glm::slerp(rotPrev->second, rotCurr->second, alpha));
+        else
+            worldRot = toGlmQuaternion(bodyIf.GetRotation(it->second));
 
         flecs::entity parent = e.parent();
         if (parent && parent.has<TransformComponent>())
         {
-            // 世界坐标 → 父局部坐标（用父上一帧的 worldMatrix 逆矩阵）
-            const auto *pt = static_cast<const TransformComponent *>(ecs_get_id(
-                e.world().c_ptr(), parent.raw_id(),
-                e.world().component<TransformComponent>().raw_id()));
-            glm::vec4 local = glm::inverse(pt->worldMatrix) * glm::vec4(worldPos, 1.0f);
+            // 世界位姿 → 父局部位姿。使用当前组件层级重算，避免读取上一帧缓存。
+            const glm::mat4 parentWorld = worldTransformMatrix(parent);
+            glm::vec4 local = glm::inverse(parentWorld) * glm::vec4(worldPos, 1.0f);
             tf.position = glm::vec3(local);
+
+            glm::vec3 parentPosition, parentScale;
+            glm::quat parentRotation;
+            if (decomposeWorldTransform(parentWorld, parentPosition, parentRotation, parentScale))
+                tf.rotation = glm::degrees(glm::eulerAngles(glm::normalize(glm::inverse(parentRotation) * worldRot)));
         }
         else
         {
             tf.position = worldPos;
+            tf.rotation = glm::degrees(glm::eulerAngles(worldRot));
         } });
 }
 

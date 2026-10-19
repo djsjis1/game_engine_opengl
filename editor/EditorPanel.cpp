@@ -36,6 +36,9 @@
 #include "DragSpinBox.h"    // 拖拽调值数值框（Godot/Unity 手感）
 #include "Components/AnimationComponent.h"
 #include "Components/SpriteComponent.h"
+#include "Components/BoxColliderComponent.h"
+#include "Components/SphereColliderComponent.h"
+#include "Components/CapsuleColliderComponent.h"
 #include "Render/AnimationLibrary.h" // 动画编辑：打关键帧/新建clip/保存
 #include <cstring>
 #include <vector>
@@ -79,6 +82,10 @@ void EditorPanel::buildEntitySection(QVBoxLayout *layout)
     btnRow->addWidget(m_deleteBtn);
     vlay->addLayout(btnRow);
 
+    m_entitySearch = new QLineEdit;
+    m_entitySearch->setPlaceholderText("搜索实体名称");
+    vlay->addWidget(m_entitySearch);
+
     // 场景树：真正的可折叠树形（不再是手工缩进的列表）
     m_entityTree = new QTreeWidget;
     m_entityTree->setHeaderHidden(true);                       // 不显示列头
@@ -97,6 +104,8 @@ void EditorPanel::buildEntitySection(QVBoxLayout *layout)
     // 右键菜单（添加子节点/设父/解父/显隐/存预制体）
     connect(m_entityTree, &QTreeWidget::customContextMenuRequested,
             this, &EditorPanel::onTreeContextMenu);
+    connect(m_entitySearch, &QLineEdit::textChanged, this,
+            [this](const QString &) { applyEntityFilter(); });
 }
 
 // ============================================================
@@ -426,6 +435,17 @@ void EditorPanel::onAddComponent()
 
     flecs::entity_t compId = m_componentMap[name]; // 查找 Flecs 组件 ID
 
+    // Collider shapes are alternatives; keep exactly one active shape per entity.
+    const auto boxId = m_world->component<BoxColliderComponent>().raw_id();
+    const auto sphereId = m_world->component<SphereColliderComponent>().raw_id();
+    const auto capsuleId = m_world->component<CapsuleColliderComponent>().raw_id();
+    if (compId == boxId || compId == sphereId || compId == capsuleId)
+    {
+        if (compId != boxId) e.remove<BoxColliderComponent>();
+        if (compId != sphereId) e.remove<SphereColliderComponent>();
+        if (compId != capsuleId) e.remove<CapsuleColliderComponent>();
+    }
+
     // ---- 2. Mesh 特殊处理：需要登记资源句柄（纯记账，无 GL 依赖）----
     if (compId == m_world->component<MeshComponent>().raw_id())
     {
@@ -628,6 +648,31 @@ void EditorPanel::refreshEntityList()
 
     m_entityTree->expandAll();         // 默认展开全部层级
     m_entityTree->blockSignals(false); // 恢复信号
+    applyEntityFilter();               // 场景重建后保留当前过滤条件
+}
+
+/// 显示匹配项及其祖先，方便在层级场景中定位名称。
+void EditorPanel::applyEntityFilter()
+{
+    if (!m_entityTree)
+        return;
+    const QString query = m_entitySearch ? m_entitySearch->text().trimmed() : QString();
+    std::function<bool(QTreeWidgetItem *)> filterItem = [&](QTreeWidgetItem *item)
+    {
+        bool descendantMatches = false;
+        for (int i = 0; i < item->childCount(); ++i)
+            descendantMatches = filterItem(item->child(i)) || descendantMatches;
+
+        const bool matches = query.isEmpty() || item->text(0).contains(query, Qt::CaseInsensitive);
+        const bool visible = matches || descendantMatches;
+        item->setHidden(!visible);
+        if (!query.isEmpty() && descendantMatches)
+            item->setExpanded(true);
+        return visible;
+    };
+
+    for (int i = 0; i < m_entityTree->topLevelItemCount(); ++i)
+        filterItem(m_entityTree->topLevelItem(i));
 }
 
 /// 递归建树：parentItem=nullptr 时作为顶层节点，否则挂到父节点下

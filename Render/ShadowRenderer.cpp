@@ -1,5 +1,5 @@
 #include "Render/ShadowRenderer.h"
-#include "Render/ResourceManager.h"
+#include "Core/TestFramework.h"
 #include "Components/LightComponent.h"
 #include "Components/TransformComponent.h"
 #include "Components/MeshComponent.h"
@@ -83,7 +83,8 @@ void ShadowRenderer::cleanup()
 // 方向光优先（正交投影）；没有方向光时用第一盏聚光灯（透视投影，
 // 手电筒/舞台光效果）——同一张深度图和同一个 calcShadow 两者通用，
 // 差别只在投影矩阵。outType/outPos 告诉主 pass "谁在投影"。
-glm::mat4 ShadowRenderer::renderDirSpot(flecs::world &world, int &outType, glm::vec3 &outPos)
+glm::mat4 ShadowRenderer::renderDirSpot(flecs::world &world, const RenderList &renderList,
+                                        int &outType, glm::vec3 &outPos)
 {
     outType = -1;
     if (!m_shadowReady || !m_depthShader.isValid())
@@ -140,27 +141,30 @@ glm::mat4 ShadowRenderer::renderDirSpot(flecs::world &world, int &outType, glm::
     }
 
     // 渲染深度：切到 shadow FBO，只画各实体网格（无材质/光照）
+    EngineTest::countShadowPass();
     glViewport(0, 0, kDirSpotSize, kDirSpotSize);
     glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFbo);
     glClear(GL_DEPTH_BUFFER_BIT);
     m_depthShader.use();
     m_depthShader.setMat4("uLightSpaceMatrix", lightSpace);
-    world.each([this](flecs::entity, TransformComponent &tf, const MeshComponent &ms)
-               {
-        if (!ms.isValid() || !tf.visibleInTree) return;
-        m_depthShader.setMat4("uModel", tf.worldMatrix);
-        const GpuMesh *gm = ResourceManager::instance().get(ms.meshHandle);
-        if (!gm) return;
-        glBindVertexArray(gm->vao);
-        if (gm->hasIndices) glDrawElements(gm->primitiveType, gm->indexCount, GL_UNSIGNED_INT, nullptr);
-        else glDrawArrays(gm->primitiveType, 0, gm->vertexCount);
-        glBindVertexArray(0); });
+    const RenderFrustum frustum = RenderFrustum::fromViewProjection(lightSpace);
+    for (const RenderItem &item : renderList.items())
+    {
+        if (!frustum.intersects(item.worldBounds)) continue;
+        m_depthShader.setMat4("uModel", item.model);
+        const GpuMesh &gm = item.mesh;
+        glBindVertexArray(gm.vao);
+        if (gm.hasIndices) glDrawElements(gm.primitiveType, gm.indexCount, GL_UNSIGNED_INT, nullptr);
+        else glDrawArrays(gm.primitiveType, 0, gm.vertexCount);
+    }
+    glBindVertexArray(0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     return lightSpace;
 }
 
 // 首个点光的 6 面深度渲染。返回 false = 场景无点光（主 pass 关点光阴影）
-bool ShadowRenderer::renderPoint(flecs::world &world, glm::vec3 &outPos, float &outFar)
+bool ShadowRenderer::renderPoint(flecs::world &world, const RenderList &renderList,
+                                 glm::vec3 &outPos, float &outFar)
 {
     if (!m_pointShadowReady || !m_pointDepthShader.isValid())
         return false;
@@ -193,22 +197,25 @@ bool ShadowRenderer::renderPoint(flecs::world &world, glm::vec3 &outPos, float &
 
     for (int face = 0; face < 6; ++face)
     {
+        EngineTest::countShadowPass();
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
                                m_pointShadowCube, 0);
         glClear(GL_DEPTH_BUFFER_BIT);
         glm::mat4 view = glm::lookAt(lightPos, lightPos + dirs[face], ups[face]);
-        m_pointDepthShader.setMat4("uLightSpaceMatrix", proj * view);
-        world.each([this](flecs::entity, TransformComponent &tf, const MeshComponent &ms)
-                   {
-            if (!ms.isValid() || !tf.visibleInTree) return;
-            m_pointDepthShader.setMat4("uModel", tf.worldMatrix);
-            const GpuMesh *gm = ResourceManager::instance().get(ms.meshHandle);
-            if (!gm) return;
-            glBindVertexArray(gm->vao);
-            if (gm->hasIndices) glDrawElements(gm->primitiveType, gm->indexCount, GL_UNSIGNED_INT, nullptr);
-            else glDrawArrays(gm->primitiveType, 0, gm->vertexCount);
-            glBindVertexArray(0); });
+        const glm::mat4 faceSpace = proj * view;
+        m_pointDepthShader.setMat4("uLightSpaceMatrix", faceSpace);
+        const RenderFrustum frustum = RenderFrustum::fromViewProjection(faceSpace);
+        for (const RenderItem &item : renderList.items())
+        {
+            if (!frustum.intersects(item.worldBounds)) continue;
+            m_pointDepthShader.setMat4("uModel", item.model);
+            const GpuMesh &gm = item.mesh;
+            glBindVertexArray(gm.vao);
+            if (gm.hasIndices) glDrawElements(gm.primitiveType, gm.indexCount, GL_UNSIGNED_INT, nullptr);
+            else glDrawArrays(gm.primitiveType, 0, gm.vertexCount);
+        }
+        glBindVertexArray(0);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     outPos = lightPos;

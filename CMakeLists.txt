@@ -99,6 +99,11 @@ endif()
 # ============================================================
 set(ENGINE_SOURCES
     Core/Engine.h
+    Core/EngineObservers.cpp
+    Core/EngineHost.h
+    Core/EngineHost.cpp
+    Core/EngineSystems.h
+    Core/EngineSystems.cpp
     Core/EngineState.h
     Core/EngineFSM.h
     Core/EngineLog.h
@@ -130,6 +135,8 @@ set(ENGINE_SOURCES
     Components/SignalComponent.h
     Components/RigidbodyComponent.h
     Components/BoxColliderComponent.h
+    Components/SphereColliderComponent.h
+    Components/CapsuleColliderComponent.h
     Components/AnimationComponent.h
     Components/HealthComponent.h
     Components/SpriteComponent.h
@@ -173,7 +180,13 @@ set(ENGINE_SOURCES
     Render/ObjLoader.h
     Render/Shader.h
     Render/MeshFactory.h
+    Render/Visibility.h
+    Render/RenderList.h
+    Render/RenderList.cpp
     Render/ResourceManager.h
+    Render/AsyncAssetLoader.h
+    Render/AsyncAssetLoader.cpp
+    Render/SceneResourcePreloader.h
     Render/AnimationLibrary.h
     Render/SceneSerializer.h
 )
@@ -329,11 +342,13 @@ if(EXISTS "${GTEST_DIR}/CMakeLists.txt")
         tests/unit/core/NavGrid_test.cpp
         tests/unit/core/CommandStack_test.cpp
         tests/unit/core/TestFramework_test.cpp
+        tests/unit/render/Visibility_test.cpp
         Core/EngineLog.cpp # test_main 的 shutdownEngineLog（spdlog 显式收尾）
         Core/TestFramework.cpp # 被测对象：自检/统计框架
     )
     target_include_directories(unit_tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
+        "${GLM_DIR}"
         "${NLOHMANN_DIR}"
     )
     target_compile_definitions(unit_tests PRIVATE ENABLE_ENGINE_TESTING=1) # 测试构建验证完整自检逻辑
@@ -351,13 +366,16 @@ if(EXISTS "${GTEST_DIR}/CMakeLists.txt")
     # 规范：tests/integration/<模块>/，每用例 <5s
     add_executable(integration_tests
         tests/test_main.cpp
+        tests/integration/core/EngineHost_test.cpp
         tests/integration/physics/PhysicsSystem_test.cpp
         tests/integration/script/ScriptSystem_test.cpp
         tests/integration/particles/ParticleSystem_test.cpp
         tests/integration/animation/AnimationTrack_test.cpp
         tests/integration/tween/TweenSystem_test.cpp
         tests/integration/scene/SceneSnapshot_test.cpp
+        tests/integration/scene/SceneSerializer_test.cpp
         tests/integration/resource/ResourceManager_test.cpp
+        tests/integration/resource/AsyncAssetLoader_test.cpp
         tests/unit/render/ObjLoader_test.cpp
         ${ENGINE_SOURCES}
     )

@@ -20,6 +20,7 @@
 #include <map>
 #include <vector>
 #include <thread>
+#include <optional>
 
 // ============================================================
 // 脚本加载与编译
@@ -78,8 +79,7 @@ static bool compileAndLoad(lua_State *L, const ScriptComponent &sc, int *outRef)
             lua_dump(L, [](lua_State *, const void *p, size_t sz, void *ud) -> int
                      { ((CachedChunk*)ud)->data.append((const char*)p,sz); return 0; }, &cc, 0);
             struct stat st;
-            stat(sc.filePath, &st);
-            cc.mtime = st.st_mtime;
+            cc.mtime = stat(sc.filePath, &st) == 0 ? st.st_mtime : 0;
             g_compiledChunks[key] = std::move(cc);
             // 栈顶仍是 loadstring 编译好的 chunk → 下方直接 luaL_ref 复用
         }
@@ -170,6 +170,7 @@ struct ScriptSystem::Impl
     std::map<flecs::entity_t, time_t> scriptMtimes;
     flecs::observer observer;
     flecs::world *world = nullptr; // 保存 world（reloadScript 遍历实体用）
+    float hotReloadSeconds = 0.0f;
 };
 
 ScriptSystem::~ScriptSystem() = default;
@@ -207,6 +208,11 @@ void ScriptSystem::shutdown()
 {
     if (m_impl)
     {
+        // Engine destroys systems before its world. Remove the observer while
+        // this object is still alive; otherwise world teardown calls a lambda
+        // that captured a deleted ScriptSystem.
+        if (m_impl->observer.is_alive())
+            m_impl->observer.destruct();
         if (m_impl->L)
         {
             invalidateApiLuaState(); // C1：先置空 LuaApi 的全局 VM 指针，
@@ -228,6 +234,20 @@ void ScriptSystem::update(flecs::world &world, float dt)
     processDeferredSignals(L, world);
     processAsyncResults(L);
     processTimers(L, dt); // delay() 定时器推进（到点调回调）
+
+    // External edits need only a short polling cadence. The built-in editor
+    // calls reloadScript immediately, and exported games disable this path.
+    bool pollExternalEdits = false;
+    if (m_hotReloadMode != HotReloadMode::Disabled)
+    {
+        m_impl->hotReloadSeconds += dt;
+        if (m_impl->hotReloadSeconds >= 0.5f)
+        {
+            m_impl->hotReloadSeconds = 0.0f;
+            pollExternalEdits = true;
+        }
+    }
+    std::map<std::string, std::optional<time_t>> checkedMtimes;
 
     // ★ 两阶段执行（Godot 同款）：先收集实体，遍历结束后再跑脚本。
     //   直接在 world.each 里调 Lua 的话，脚本一旦做结构变更（connect_to
@@ -270,18 +290,20 @@ void ScriptSystem::update(flecs::world &world, float dt)
         }
         int envRef = it->second;
 
-        if (sc->filePath[0])
+        if (sc->filePath[0] && pollExternalEdits)
         {
-            // 【待优化】热重载 mtime 轮询：每帧对每个脚本实体一次 stat()
-            //   syscall（200 实体×60fps=12000 次/秒）。此轮询是编辑器功能——
-            //   内置脚本编辑器 Ctrl+S 已主动调 reloadScript()（精确即时），
-            //   轮询仅为"外部编辑器改文件"兜底；导出的 my_game 里纯属浪费。
-            //   计划：ScriptSystem 加 setHotReload(bool)，编辑器开、GameWindow 关。
-            struct stat st;
-            if (stat(sc->filePath, &st) == 0)
+            // 外部编辑器修改文件时兜底；内置编辑器保存直接调用 reloadScript。
+            auto [checked, inserted] = checkedMtimes.try_emplace(sc->filePath);
+            if (inserted)
+            {
+                struct stat st;
+                if (stat(sc->filePath, &st) == 0)
+                    checked->second = st.st_mtime;
+            }
+            if (checked->second)
             {
                 auto mtimeIt = m_impl->scriptMtimes.find(id);
-                if (mtimeIt != m_impl->scriptMtimes.end() && mtimeIt->second != st.st_mtime)
+                if (mtimeIt != m_impl->scriptMtimes.end() && mtimeIt->second != *checked->second)
                 {
                     int oldEnvRef = envRef;
                     int newEnvRef;
@@ -290,12 +312,12 @@ void ScriptSystem::update(flecs::world &world, float dt)
                         luaL_unref(L, LUA_REGISTRYINDEX, oldEnvRef);
                         m_impl->envRefs[id] = newEnvRef;
                         m_impl->wasReady[id] = false;
-                        m_impl->scriptMtimes[id] = st.st_mtime;
+                        m_impl->scriptMtimes[id] = *checked->second;
                         envRef = newEnvRef;
                     }
                     else
                     {
-                        m_impl->scriptMtimes[id] = st.st_mtime;
+                        m_impl->scriptMtimes[id] = *checked->second;
                         continue;
                     }
                 }

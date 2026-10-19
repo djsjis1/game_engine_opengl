@@ -2,14 +2,13 @@
 #define GAMEWINDOW_H
 
 #include <QMainWindow>
-#include <QTimer>
-#include <QElapsedTimer>
 #include <QKeyEvent>
 #include <QMouseEvent>
-#include <QPoint>
+#include <memory>
 
 class RenderWidget;
 class Engine;
+class EngineHost;
 
 // ============================================================
 // GameWindow — 游戏运行时窗口（my_game.exe 的主窗口）
@@ -38,12 +37,8 @@ private:
     void processMouse(QMouseEvent *event);  // 鼠标事件 → Input
 
     RenderWidget *m_renderWidget = nullptr;
+    std::unique_ptr<EngineHost> m_host;
     Engine *m_engine = nullptr;
-    QTimer *m_timer = nullptr;
-    QElapsedTimer m_elapsed;
-
-    bool m_cursorCaptured = false;
-    QPoint m_lastMousePos;
 };
 
 #endif

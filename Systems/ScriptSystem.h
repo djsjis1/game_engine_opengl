@@ -18,6 +18,8 @@
 class ScriptSystem : public System
 {
 public:
+    enum class HotReloadMode { EditorOnly, Always, Disabled };
+
     ~ScriptSystem();
     void init(flecs::world &world);
     void shutdown() override;
@@ -34,12 +36,18 @@ public:
     /// yaw 初始化全在 ready 里）→ "第二次运行视角不正常"（实bug）
     void resetAllScripts();
 
+    // EditorOnly is selected by the editor host; Always lets another host opt
+    // in explicitly. Disabled keeps exported games free of mtime polling.
+    void setHotReloadMode(HotReloadMode mode) { m_hotReloadMode = mode; }
+    HotReloadMode hotReloadMode() const { return m_hotReloadMode; }
+
     int phase() const override { return 100; }
     int activeIn() const override { return (int)EngineState::Play; }
 
 private:
     struct Impl;
     Impl *m_impl = nullptr;
+    HotReloadMode m_hotReloadMode = HotReloadMode::Disabled;
 };
 
 #endif

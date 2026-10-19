@@ -1,29 +1,24 @@
 #include "MainWindow.h"
 #include "Render/RenderWidget.h"
 #include "Core/Engine.h"
+#include "Core/EngineHost.h"
 #include "editor/EditorPanel.h"
 #include "editor/ScriptEditor.h"     // 内置脚本编辑器（主屏 Script 页）
 #include "editor/GameExporter.h"     // 导出游戏（纯逻辑类，UI 只管对话框）
 #include "Core/EngineLog.h"          // 输出面板：注册脚本错误 sink
 #include "Scripting/ScriptApiStub.h" // 生成 VSCode API 存根
-#include "Systems/RotationSystem.h"
-#include "Systems/CameraSystem.h"
-#include "Systems/TransformSystem.h"
-#include "Systems/AnimationSystem.h"
-#include "Systems/ParticleSystem.h" // 粒子模拟（编辑/运行都预览）
 #include "Systems/TweenSystem.h"    // 补间动画（退 Play 清残留）
 #include "Systems/AnimFsmSystem.h"  // 动画状态机（退 Play 清残留）
-#include "Core/SignalQueue.h"       // clearDeferredSignals（进/出 Play 清陈旧信号，Core 层）
 #include "Systems/ScriptSystem.h"
 #include "Systems/PhysicsSystem.h"
 #include "Systems/AudioSystem.h" // 音频系统（miniaudio）
 #include "Render/ResourceManager.h"
 #include "Core/Input.h"
-#include "Core/Time.h"
 #include "Core/SceneRouter.h" // 运行时切场景（Play 模式帧末执行）
 #include "Core/CommandStack.h"
 #include "editor/EditorCommands.h" // MoveEntityCommand（Gizmo 拖动撤销）
 #include "Render/SceneSerializer.h"
+#include "Render/SceneResourcePreloader.h"
 
 #include <QHBoxLayout>
 #include <QSplitter>
@@ -51,29 +46,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     resize(1440, 860);
 
     // ====== 引擎 + 系统 ======
-    m_engine = new Engine;
-    m_engine->addSystem(std::make_unique<RotationSystem>());
-    m_engine->addSystem(std::make_unique<CameraSystem>());
-    m_engine->addSystem(std::make_unique<TransformSystem>()); // 父子层级变换传播
-    m_engine->addSystem(std::make_unique<AnimationSystem>()); // 属性动画采样（脚本后、Transform前）
-    m_engine->addSystem(std::make_unique<ParticleSystem>());  // 粒子模拟（编辑/运行都预览）
-    m_engine->addSystem(std::make_unique<TweenSystem>());     // 补间动画（脚本 tween API）
-    m_engine->addSystem(std::make_unique<AnimFsmSystem>());   // 动画状态机（anim_fsm_*）
-    auto *physicsSysPtr = new PhysicsSystem;
-    physicsSysPtr->init();
-    m_engine->addSystem(std::unique_ptr<PhysicsSystem>(physicsSysPtr));
-    auto *scriptSysPtr = new ScriptSystem;
-    scriptSysPtr->init(m_engine->world());
-    m_engine->addSystem(std::unique_ptr<ScriptSystem>(scriptSysPtr));
-    auto *audioSysPtr = new AudioSystem;
-    audioSysPtr->init();
-    m_engine->addSystem(std::unique_ptr<AudioSystem>(audioSysPtr));
+    m_host = std::make_unique<EngineHost>(this, ScriptSystem::HotReloadMode::EditorOnly);
+    m_engine = &m_host->engine();
+    auto *physicsSysPtr = m_host->systems().physics;
+    auto *scriptSysPtr = m_host->systems().script;
+    auto *audioSysPtr = m_host->systems().audio;
 
     // ====== 状态机回调（引擎 Context 注册 HFSM2 enter/exit） ======
-    m_engine->context().onEnterPlay = [this]()
+    m_host->setEnterPlayCallback([this]()
     {
-        m_engine->onEnterPlay(); // ★ applyStateFilter：按 Play 状态启停 System（Physics 开、等）
-        clearDeferredSignals();  // ★ 丢弃编辑模式堆积的陈旧信号（预览动画事件无消费者）
         m_editor->setVisible(false);
         m_editor->inspectorWidget()->setVisible(false); // Inspector 也隐藏（独立 widget）
         m_renderWidget->setShowGizmo(false);
@@ -95,30 +76,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         m_sceneBeforePlay = SceneRouter::instance().current();
         // ★ autoplay：进入运行模式，勾了"自动播放"的动画从头开播
         //   （对标 Godot AnimationPlayer.autoplay —— 点运行即见动画，无需配置）
-        int autoplayCount = 0;
-        int badClip = 0; // 文件里找不到指定动画的实体数（路径错/名字错）
-        m_engine->world().each([&](flecs::entity, AnimationComponent &ac)
-                               {
-            if (ac.autoplay && ac.animFile[0] && ac.current[0])
-            {
-                AnimLib *lb = AnimationLibraryManager::instance().getOrCreate(ac.animFile);
-                if (!lb || !lb->clips.count(ac.current)) { badClip++; return; }
-                ac.playing = true;
-                ac.time = 0.0f;
-                autoplayCount++;
-            } });
+        const auto autoplay = m_host->restartAutoplay();
         // 诊断可见化：WIN32 GUI 无控制台，状态栏是用户能看见的通道
-        QString msg = QString("▶ 运行中 | 自动播放 %1 个动画").arg(autoplayCount);
-        if (badClip > 0)
-            msg += QString(" | ⚠ %1 个实体的动画文件/动画名无效（路径或拼写错）").arg(badClip);
-        else if (autoplayCount == 0)
+        QString msg = QString("▶ 运行中 | 自动播放 %1 个动画").arg(autoplay.started);
+        if (autoplay.invalid > 0)
+            msg += QString(" | ⚠ %1 个实体的动画文件/动画名无效（路径或拼写错）").arg(autoplay.invalid);
+        else if (autoplay.started == 0)
             msg += " | ⚠ 没有可播动画（检查：自动播放勾选/动画名非空）";
         statusBar()->showMessage(msg, 0);
-    };
-    m_engine->context().onExitPlay = [this, physicsSysPtr, audioSysPtr, scriptSysPtr]()
+    });
+    m_host->setExitPlayCallback([this, physicsSysPtr, audioSysPtr, scriptSysPtr]()
     {
-        m_engine->onExitPlay(); // ★ applyStateFilter：回 Edit 状态（Physics 停）
-        clearDeferredSignals(); // 未消费的运行时信号不带回编辑模式
         m_editor->setVisible(true);
         m_editor->inspectorWidget()->setVisible(true);
         m_renderWidget->setShowGizmo(true);
@@ -129,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         // 销毁物理刚体 + 完整还原场景（对标 Godot：运行不污染编辑场景）
         physicsSysPtr->resetBodies();
         m_engine->restoreScene(); // 全组件还原 + 运行时新建实体清除
+        preloadSceneResources(m_engine->world());
         SceneRouter::instance().resetChanged();
         SceneRouter::instance().setCurrent(m_sceneBeforePlay);
         m_editor->refreshEntityList();
@@ -150,7 +119,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         TweenSystem::clearAll();                    // 未完成的补间清掉（不然下次 Play 物体乱跳）
         AnimFsmSystem::clearAll();                  // 状态机规则清掉（下次 Play ready() 重新声明）
         statusBar()->showMessage("编辑模式", 3000); // 清掉"运行中"残留提示
-    };
+    });
     // System 启用/禁用由 Engine::onEnterPlay/onExitEdit 自动处理
 
     // ====== UI ======
@@ -313,6 +282,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         if (path.isEmpty()) return;
         // 无需 GL 上下文：acquire/release 都是纯记账，GPU 操作延迟到渲染帧
         bool ok = SceneSerializer::load(m_engine->world(), path.toStdString());
+        if (ok) preloadSceneResources(m_engine->world());
         if (ok) {
             statusBar()->showMessage("已加载: " + path, 3000);
             // ★ 记录当前场景（相对资源根）：脚本 get_scene() 靠它判断在哪关。
@@ -365,126 +335,53 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         if (m_engine->state() == EngineState::Play) return;
         m_editor->redoLast(); });
 
-    // ====== 游戏循环（QTimer 驱动，约 60 FPS）======
-    //
-    // 每帧执行顺序：
-    //   1. 算 dt（距上帧的真实秒数）
-    //   2. Time::step → 更新全局时钟（脚本 delta() 读它）
-    //   3. Engine::runFrame → 按 phase 顺序跑所有 System：
-    //        Camera(50) → Physics(90) → Script/Rotation(100) → Transform(150)
-    //   4. Input::endFrame → 清除本帧的“刚按下/刚松开”事件
-    //   5. RenderWidget::update → 触发重绘（paintGL）
-    m_timer = new QTimer(this);
-    connect(m_timer, &QTimer::timeout, this, [this]()
-            {
-        float rawDt = m_elapsed.restart() / 1000.f; // 毫秒 → 秒
-
-        auto &time = Time::instance();
-        time.step(rawDt);
-
-        // 【TEMP 帧率显示】测试用，后期删除：每 0.5s 刷新一次状态栏
-        // static 局部变量偷懒不进头文件（临时代码不解耦）
-        static int fpsFrames = 0;
-        static float fpsTimer = 0;
-        if (m_engine->state() == EngineState::Play)
-        {
-            fpsFrames++;
-            fpsTimer += rawDt;
-            if (fpsTimer >= 0.5f)
-            {
-                float fps = fpsFrames / fpsTimer;
-                statusBar()->showMessage(
-                    QString("FPS: %1  |  帧时间: %2 ms")
-                        .arg(fps, 0, 'f', 1)
-                        .arg(1000.f / fps, 0, 'f', 2),
-                    0);
-                fpsFrames = 0;
-                fpsTimer = 0;
-            }
-        }
-
-        auto &in = Input::instance();
-
-        m_engine->runFrame(time.delta); // 驱动全部 System
-
-        // ★ 编辑模式：Gizmo 模式切换（W/E/R）在 Input 轮询里做——
-        //   按键先到 Input（相机飞行），同时切换 Gizmo（Godot 同行为）。
-        //   QShortcut 方案会吞键（见构造函数的实踩坑注释），故弃用。
+    m_host->setFpsCallback([this](float fps)
+    {
+        if (m_engine->state() != EngineState::Play) return;
+        statusBar()->showMessage(
+            QString("FPS: %1  |  帧时间: %2 ms")
+                .arg(fps, 0, 'f', 1)
+                .arg(1000.f / fps, 0, 'f', 2), 0);
+    });
+    m_host->setFrameCallback([this]()
+    {
+        auto &input = Input::instance();
         if (m_engine->state() == EngineState::Edit)
         {
-            if (in.isJustPressed('W'))
+            if (input.isJustPressed('W'))
             {
                 m_renderWidget->setGizmoMode(0);
                 statusBar()->showMessage("Gizmo：移动模式", 2000);
             }
-            else if (in.isJustPressed('E'))
+            else if (input.isJustPressed('E'))
             {
                 m_renderWidget->setGizmoMode(1);
                 statusBar()->showMessage("Gizmo：旋转模式", 2000);
             }
-            else if (in.isJustPressed('R'))
+            else if (input.isJustPressed('R'))
             {
                 m_renderWidget->setGizmoMode(2);
                 statusBar()->showMessage("Gizmo：缩放模式", 2000);
             }
         }
-
-        // 应用光标模式（脚本 set_mouse_mode 写 Input，UI 层这里读取执行）
-        // 只在 Play 模式生效：编辑模式强制正常光标（不然没法操作编辑器）
-        bool capture = (m_engine->state() == EngineState::Play &&
-                        in.mouseMode() == Input::kMouseCaptured);
-        if (capture != m_cursorCaptured)
+        m_host->applyMouseCapture(m_renderWidget, m_engine->state() == EngineState::Play);
+        m_renderWidget->update();
+    });
+    m_host->setSceneChangeCallback([this](const std::string &path)
+    {
+        const QString rel = QString::fromStdString(path);
+        const QString fullPath = (rel.size() >= 2 && rel[1] == ':') || rel.startsWith('/')
+                                     ? rel : QString(ASSET_DIR) + rel;
+        if (SceneSerializer::load(m_engine->world(), fullPath.toStdString()))
         {
-            m_cursorCaptured = capture;
-            m_renderWidget->setCursor(capture ? Qt::BlankCursor : Qt::ArrowCursor);
+            preloadSceneResources(m_engine->world());
+            SceneRouter::instance().setCurrent(path);
+            SceneRouter::instance().markChanged();
+            m_engine->world().each([](flecs::entity, CameraComponent &camera)
+                                   { if (camera.isEditor) camera.active = false; });
+            m_host->restartAutoplay();
         }
-        if (capture)
-        {
-            // 光标锁视口中心（FPS 视角）。只在实际偏离时回中：
-            // QCursor::setPos 是系统调用且会触发合成 MouseMove，
-            // 每帧无条件调用会加剧输入抖动（丝滑度修复的一部分）
-            QPoint center = m_renderWidget->mapToGlobal(
-                QPoint(m_renderWidget->width() / 2, m_renderWidget->height() / 2));
-            if (QCursor::pos() != center)
-            {
-                // ★ 必须在 setPos 之前重置参考点！
-                // Windows 上 QCursor::setPos 会同步触发 MouseMove 事件，
-                // 如果先 setPos 再设 m_lastMousePos，合成事件的 delta =
-                // center - 用户位置 = 反向抵消真实鼠标移动（摄像机不转的根因）
-                m_lastMousePos = center;
-                QCursor::setPos(center);
-            }
-            // ★ 确保键盘焦点在视口（否则键盘事件不生成，WASD 无效）
-            if (!m_renderWidget->hasFocus())
-                m_renderWidget->setFocus();
-        }
-
-        in.endFrame();                  // 清理一次性输入事件
-
-        // ★ 帧末执行切场景（仅 Play 模式；脚本 change_scene 的请求）
-        if (m_engine->state() == EngineState::Play &&
-            SceneRouter::instance().hasPending())
-        {
-            QString rel = QString::fromStdString(SceneRouter::instance().takePending());
-            // 绝对路径直接用，相对路径拼 ASSET_DIR（兼容两种写法）
-            QString fullPath = (rel.size() >= 2 && rel[1] == ':') || rel.startsWith('/')
-                                   ? rel
-                                   : QString(ASSET_DIR) + rel;
-            if (SceneSerializer::load(m_engine->world(), fullPath.toStdString()))
-            {
-                SceneRouter::instance().setCurrent(rel.toStdString());
-                SceneRouter::instance().markChanged(); // 退出 Play 时要恢复备份
-                // 新场景有游戏相机则编辑器相机继续让位
-                m_engine->world().each([&](flecs::entity, CameraComponent &cam)
-                                       { if (cam.isEditor) cam.active = false; });
-            }
-        }
-        else if (m_engine->state() != EngineState::Play)
-        {
-            SceneRouter::instance().takePending(); // 编辑模式丢弃残留请求
-        }
-
-        m_renderWidget->update(); }); // 请求重绘
+    });
 
     // ====== 编辑器摄像机实体 ======
     auto &w = m_engine->world();
@@ -498,12 +395,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::startGameLoop()
 {
-    m_elapsed.start();
-    // ★ PreciseTimer：Windows 默认 CoarseTimer 有 5% 容差 + 15.6ms 节拍对齐，
-    //   16ms 的间隔实际在 15.6~31ms 抖动 → 帧节奏不稳（操作不丝滑的主因）。
-    //   Precise 用高精度定时，帧间隔稳定在 ±1ms。
-    m_timer->setTimerType(Qt::PreciseTimer);
-    m_timer->start(16);
+    m_host->start();
 
     // 创建动画测试实体（acquireMesh 是纯登记，GPU 创建延迟到首帧渲染）
     // 预挂 AnimationComponent 指向示例动画文件（含 spin/bounce 两个动画），
@@ -535,14 +427,11 @@ void MainWindow::startGameLoop()
 MainWindow::~MainWindow()
 {
     qApp->removeEventFilter(this);
-    m_timer->stop();
-    // ★ 先解绑状态机回调再销毁 Engine！（MODULES.md 坑7 的孪生陷阱）
-    // Play 状态直接关窗口时：delete m_engine → FSM 析构 → 当前状态 exit
-    // → onExitPlay 回调里的 physicsSysPtr/m_editor 可能已处于销毁流程
-    // → use-after-free。清空回调后 FSM 析构静默退出，安全。
-    m_engine->context() = EngineContext{};
-    m_renderWidget->cleanupGL();
-    delete m_engine;
+    m_host->stop();
+    if (m_renderWidget->context())
+        m_renderWidget->cleanupGL();
+    m_renderWidget->setWorld(nullptr);
+    m_host.reset();
 }
 
 void MainWindow::togglePlayMode()
@@ -558,7 +447,6 @@ void MainWindow::togglePlayMode()
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    auto &in = Input::instance();
     switch (event->type())
     {
     case QEvent::KeyPress:
@@ -594,55 +482,17 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::processKey(QKeyEvent *event, bool pressed)
 {
-    Input::instance().onKey(event->key(), pressed);
+    m_host->routeKey(event, pressed);
 }
 
 void MainWindow::processMouse(QMouseEvent *event)
 {
-    auto &in = Input::instance();
-    // Qt 鼠标键 → 引擎下标（0=左 1=中 2=右）
-    auto btnIndex = [](Qt::MouseButton b) -> int
-    {
-        if (b == Qt::LeftButton)
-            return 0;
-        if (b == Qt::MiddleButton)
-            return 1;
-        if (b == Qt::RightButton)
-            return 2;
-        return -1;
-    };
-
-    if (event->type() == QEvent::MouseButtonPress)
-    {
-        int idx = btnIndex(event->button());
-        if (idx >= 0)
-            in.onMouseButton(idx, true);
-    }
-    else if (event->type() == QEvent::MouseButtonRelease)
-    {
-        int idx = btnIndex(event->button());
-        if (idx >= 0)
-            in.onMouseButton(idx, false);
-    }
-    else if (event->type() == QEvent::MouseMove)
-    {
-        // 绝对坐标（供脚本 get_mouse_position）
-        in.onMousePosition((float)event->x(), (float)event->y());
-        // 相对位移（供相机转视角）；成员变量而非 static，
-        // 光标回中后可重置，避免"跳回中心"被当成真位移
-        if (!m_lastMousePos.isNull())
-        {
-            QPoint d = event->globalPos() - m_lastMousePos;
-            in.onMouseMove((float)d.x(), (float)d.y());
-        }
-        m_lastMousePos = event->globalPos();
-    }
+    m_host->routeMouse(event);
 }
 
 void MainWindow::processWheel(QWheelEvent *event)
 {
-    // angleDelta().y() 单位 1/8 度，常见一格 120 → 归一化为 ±1
-    Input::instance().onWheel((float)event->angleDelta().y() / 120.0f);
+    m_host->routeWheel(event);
 }
 
 // ============================================================

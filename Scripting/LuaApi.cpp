@@ -354,6 +354,8 @@ const std::vector<ScriptApiEntry> &scriptApiList()
         {api_addTexture, "add_texture", "id, path", "", "设 albedo 贴图（相对路径如 \"textures/wood.png\"）"},
         {api_addRigidbody, "add_rigidbody", "id, motion", "", "加刚体（0=静态 1=运动学 2=动态）"},
         {api_addCollider, "add_collider", "id, hx, hy, hz", "", "加盒碰撞体（半尺寸，默认0.5）"},
+        {api_addSphereCollider, "add_sphere_collider", "id, radius", "", "加球形碰撞体（半径默认0.5）"},
+        {api_addCapsuleCollider, "add_capsule_collider", "id, radius, height", "", "加胶囊碰撞体（总高默认2.0）"},
         {api_addScript, "add_script", "id, path", "", "挂行为脚本（相对路径如 \"scripts/x.lua\"）"},
         {api_addCamera, "add_camera", "id, px, py, pz, yaw, pitch", "", "加游戏相机（active）"},
         {api_setCamera, "set_camera", "px, py, pz, yaw, pitch", "", "每帧驱动游戏相机（第一人称/跟随视角）"},

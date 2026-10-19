@@ -9,11 +9,14 @@
 // 详见 docs/troubleshooting.md
 // ============================================================
 #include <gtest/gtest.h>
+#include <cmath>
 #include "Core/Engine.h"
 #include "Systems/PhysicsSystem.h"
 #include "Components/TransformComponent.h"
 #include "Components/RigidbodyComponent.h"
 #include "Components/BoxColliderComponent.h"
+#include "Components/SphereColliderComponent.h"
+#include "Components/CapsuleColliderComponent.h"
 #include "Components/TagComponent.h"
 
 namespace
@@ -195,6 +198,38 @@ TEST_F(PhysicsSystemTest, Raycast_NothingBelow_ReturnsFalse)
     float hx = 0, hy = 0, hz = 0, hd = 0;
     EXPECT_FALSE(physicsRaycast(0, 100, 0, 0, -1, 0, 2.0f,
                                 hitE, hx, hy, hz, hd, lone.raw_id()));
+}
+
+TEST_F(PhysicsSystemTest, SphereCollider_RaycastUsesCurvedSurface)
+{
+    auto e = makeCube({0, 0, 0}, 0);
+    e.remove<BoxColliderComponent>();
+    e.set<SphereColliderComponent>({0.5f, false});
+    stepFrames(1);
+
+    flecs::entity_t hitE = 0;
+    float hx = 0, hy = 0, hz = 0, hitDist = 0;
+    ASSERT_TRUE(physicsRaycast(-2.0f, 0.49f, 0.0f, 1, 0, 0, 4.0f,
+                               hitE, hx, hy, hz, hitDist));
+    EXPECT_EQ(hitE, e.raw_id());
+    // A unit box would hit at 1.5; the sphere's narrow chord is near 1.9.
+    EXPECT_NEAR(hitDist, 2.0f - std::sqrt(0.25f - 0.49f * 0.49f), 0.02f);
+}
+
+TEST_F(PhysicsSystemTest, CapsuleCollider_RaycastUsesRoundedCap)
+{
+    auto e = makeCube({0, 0, 0}, 0);
+    e.remove<BoxColliderComponent>();
+    e.set<CapsuleColliderComponent>({0.5f, 2.0f, false});
+    stepFrames(1);
+
+    flecs::entity_t hitE = 0;
+    float hx = 0, hy = 0, hz = 0, hitDist = 0;
+    ASSERT_TRUE(physicsRaycast(-2.0f, 0.9f, 0.0f, 1, 0, 0, 4.0f,
+                               hitE, hx, hy, hz, hitDist));
+    EXPECT_EQ(hitE, e.raw_id());
+    // At y=.9, the top hemisphere is centered at y=.5 and has x radius .3.
+    EXPECT_NEAR(hitDist, 1.7f, 0.03f);
 }
 
 // ---- 坑21 回归：传送必须写物理体（且插值快照同步，不产生拖影滑移）----
