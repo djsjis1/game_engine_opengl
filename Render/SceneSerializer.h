@@ -15,6 +15,14 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <cctype>
+#include <cstdint>
+#include <limits>
+#include <stdexcept>
+#include <QByteArray>
+#include <QDir>
+#include <QFileInfo>
+#include <QSaveFile>
 #include <nlohmann/json.hpp>
 #include <glm/glm.hpp>
 
@@ -98,6 +106,10 @@ public:
 
         if (const MeshComponent *m = getComponent<MeshComponent>(w, id))
             ent["MeshComponent"]["meshType"] = m->meshType; // 句柄不存盘，存资源名
+
+        if (const MaterialComponent *m = getComponent<MaterialComponent>(w, id))
+            if (m->albedoTex[0])
+                ent["MaterialComponent"]["albedoTex"] = m->albedoTex;
 
         if (const ScriptComponent *s = getComponent<ScriptComponent>(w, id))
         {
@@ -228,9 +240,29 @@ public:
             void *ptr = ecs_get_mut_id(w, e.raw_id(), cid);
             if (!ptr)
                 continue;
-            std::string s = it.value().dump();
+            json reflected = it.value();
+            std::string albedoTex;
+            if (key == "MaterialComponent")
+            {
+                albedoTex = reflected.value("albedoTex", "");
+                reflected.erase("albedoTex"); // char[] 不是 Flecs 反射字段
+            }
+            std::string s = reflected.dump();
             // flecs JSON addon：按反射元数据自动反序列化
-            ecs_ptr_from_json(w, cid, ptr, s.c_str(), nullptr);
+            const char *end = ecs_ptr_from_json(w, cid, ptr, s.c_str(), nullptr);
+            if (!end)
+                throw std::runtime_error("invalid reflected component JSON: " + key);
+            while (*end && std::isspace(static_cast<unsigned char>(*end)))
+                ++end;
+            if (*end)
+                throw std::runtime_error("trailing data in reflected component JSON: " + key);
+            if (key == "MaterialComponent")
+            {
+                auto *material = static_cast<MaterialComponent *>(ptr);
+                strncpy(material->albedoTex, albedoTex.c_str(), sizeof(material->albedoTex) - 1);
+                material->albedoTex[sizeof(material->albedoTex) - 1] = '\0';
+                material->texHandle = 0;
+            }
             ecs_modified_id(w, e.raw_id(), cid);
         }
     }
@@ -284,15 +316,13 @@ public:
     /// 把实体（含整棵子树）保存为预制体文件
     static bool savePrefab(flecs::world &world, flecs::entity root, const std::string &path)
     {
+        if (!root || !root.is_alive())
+            return false;
         json arr = json::array();
         snapshotSubtree(world, root, arr, -1);
-        std::ofstream out(path);
-        if (!out)
-            return false;
         json doc;
         doc["prefab"] = arr; // 包一层，未来可加版本号/元信息
-        out << doc.dump(2);
-        return true;
+        return writeJsonAtomically(path, doc);
     }
 
     /// 从预制体文件实例化实体子树（需 GL 上下文：Mesh acquire）。返回根实体
@@ -336,11 +366,7 @@ public:
 
             root["entities"].push_back(ent); });
 
-        std::ofstream out(path);
-        if (!out)
-            return false;
-        out << root.dump(2);
-        return true;
+        return writeJsonAtomically(path, root);
     }
 
     static bool load(flecs::world &world, const std::string &path)
@@ -351,50 +377,118 @@ public:
         // 非抛异常版 parse（项目错误码风格）：坏文件/截断 → 返回 false，
         // 不闪退。与 instantiatePrefab 一致（此处曾漏改，审查 P3）
         json root = json::parse(in, nullptr, false);
-        if (root.is_discarded())
+        if (root.is_discarded() || !root.is_object() ||
+            !root.contains("entities") || !root["entities"].is_array())
             return false;
 
-        // 清空所有非编辑器实体（Mesh 资源由 OnRemove Observer 自动释放，
-        // 含级联删除的子实体 —— 不再需要手动两遍处理）
+        const json &entities = root["entities"];
+        if (entities.size() > static_cast<size_t>(std::numeric_limits<int>::max()))
+            return false;
+        std::vector<int> parents(entities.size(), -1);
+        for (size_t i = 0; i < entities.size(); ++i)
+        {
+            const json &ent = entities[i];
+            if (!ent.is_object())
+                return false;
+            if (!ent.contains("parent"))
+                continue;
+            if (!ent["parent"].is_number_integer())
+                return false;
+            int64_t parent = -1;
+            try
+            {
+                parent = ent["parent"].get<int64_t>();
+            }
+            catch (...)
+            {
+                return false;
+            }
+            if (parent < 0 || parent >= static_cast<int64_t>(entities.size()) ||
+                parent == static_cast<int64_t>(i))
+                return false;
+            parents[i] = static_cast<int>(parent);
+        }
+
+        // Reject cycles before creating entities or changing the live scene.
+        std::vector<uint8_t> visit(entities.size(), 0);
+        for (size_t i = 0; i < entities.size(); ++i)
+        {
+            std::vector<size_t> path;
+            int current = static_cast<int>(i);
+            while (current >= 0 && visit[static_cast<size_t>(current)] == 0)
+            {
+                visit[static_cast<size_t>(current)] = 1;
+                path.push_back(static_cast<size_t>(current));
+                current = parents[static_cast<size_t>(current)];
+            }
+            if (current >= 0 && visit[static_cast<size_t>(current)] == 1)
+                return false;
+            for (size_t idx : path)
+                visit[idx] = 2;
+        }
+
+        // Collect the old scene first. New entities are staged alongside it so
+        // a component parse failure cannot erase the currently loaded scene.
         std::vector<flecs::entity_t> toRemove;
         world.each([&](flecs::entity e, const TagComponent &)
                    {
             const CameraComponent *cam = getComponent<CameraComponent>(&world, e.raw_id());
             if (cam && cam->isEditor) return;
             toRemove.push_back(e.raw_id()); });
-        for (auto id : toRemove)
+
+        std::vector<flecs::entity> created;
+        created.reserve(entities.size());
+        try
         {
-            if (world.is_alive(id)) // 父先删时子已级联死亡 → 跳过
-                world.entity(id).destruct();
-        }
-
-        if (!root.contains("entities"))
-            return false;
-
-        std::vector<flecs::entity> created; // 下标对应 JSON 数组顺序
-
-        for (auto &ent : root["entities"])
-        {
-            auto e = world.entity();
-            created.push_back(e);
-            // 全部组件 JSON → 实体（公共函数，与 Undo 快照共用）
-            componentsFromJson(e, ent);
-        }
-
-        // 第二遍：设置父子关系（全部实体创建完后才能引用）
-        int i = 0;
-        for (auto &ent : root["entities"])
-        {
-            if (ent.contains("parent"))
+            for (const auto &ent : entities)
             {
-                int pIdx = ent["parent"].get<int>();
-                if (pIdx >= 0 && pIdx < (int)created.size())
-                    created[i].child_of(created[pIdx]);
+                auto e = world.entity();
+                created.push_back(e);
+                componentsFromJson(e, ent);
             }
-            ++i;
+
+            for (size_t i = 0; i < created.size(); ++i)
+                if (parents[i] >= 0)
+                    created[i].child_of(created[static_cast<size_t>(parents[i])]);
         }
+        catch (...)
+        {
+            for (auto &e : created)
+                if (e.is_alive())
+                    e.destruct();
+            return false;
+        }
+
+        // The staged scene is valid. Remove the previous non-editor scene now.
+        for (auto id : toRemove)
+            if (world.is_alive(id))
+                world.entity(id).destruct();
 
         return true;
+    }
+
+private:
+    static bool writeJsonAtomically(const std::string &path, const json &document)
+    {
+        try
+        {
+            const QFileInfo info(QString::fromStdString(path));
+            if (!QDir().mkpath(info.absolutePath()))
+                return false;
+
+            const std::string serialized = document.dump(2);
+            if (serialized.size() > static_cast<size_t>(std::numeric_limits<int>::max()))
+                return false;
+            const QByteArray bytes(serialized.data(), static_cast<int>(serialized.size()));
+            QSaveFile out(info.absoluteFilePath());
+            if (!out.open(QIODevice::WriteOnly) || out.write(bytes) != bytes.size())
+                return false;
+            return out.commit();
+        }
+        catch (...)
+        {
+            return false;
+        }
     }
 };
 

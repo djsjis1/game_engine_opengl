@@ -4,12 +4,16 @@
 #include "Render/MeshFactory.h"
 #include "Render/ObjLoader.h" // .obj 模型加载（名字分发在 get()）
 #include "Core/GamePaths.h"   // 模型相对路径 → 运行时绝对路径
+#include "Render/AsyncAssetLoader.h"
+#include "Core/EngineLog.h"
 #include <QImage>
 #include <QDir>
 #include <vector>
 #include <map>
 #include <string>
 #include <cstdint>
+#include <memory>
+#include <chrono>
 
 // ============================================================
 // ResourceManager — 资源管理器（句柄 + 缓存 + 引用计数 + 延迟 GPU 操作）
@@ -34,6 +38,8 @@
 // ============================================================
 class ResourceManager
 {
+    enum class LoadState : uint8_t { Unloaded, Queued, Ready, Failed };
+
 public:
     static ResourceManager &instance()
     {
@@ -57,13 +63,14 @@ public:
         MeshEntry entry;
         entry.name = name;
         entry.refCount = 1;
-        entry.loaded = false;
+        entry.state = LoadState::Unloaded;
+        entry.generation = m_nextGeneration++;
 
         // 优先复用空槽（防句柄数组无限增长）
         uint32_t handle = 0;
         for (size_t i = 0; i < m_entries.size(); ++i)
         {
-            if (m_entries[i].refCount == 0 && !m_entries[i].loaded)
+            if (m_entries[i].refCount == 0 && m_entries[i].state == LoadState::Unloaded)
             {
                 m_entries[i] = entry;
                 handle = static_cast<uint32_t>(i + 1);
@@ -97,44 +104,47 @@ public:
         if (--e.refCount > 0)
             return; // 还有人在用
         // 归零：GPU 数据移入待删列表（延迟到有 GL 上下文时真正删除）
-        if (e.loaded)
+        if (e.state == LoadState::Ready)
         {
             m_pendingDelete.push_back(e.gpu);
             e.gpu = GpuMesh{};
-            e.loaded = false;
         }
+        e.state = LoadState::Unloaded;
         m_byName.erase(e.name);
     }
 
-    /// 句柄 → GPU 数据。首次访问时现场创建（须在 GL 上下文内，渲染循环天然满足）
+    /// Preload OBJ parsing on a worker. Built-in cube creation remains cheap
+    /// and is deferred to get(), where a GL context is available.
+    void preloadMesh(uint32_t handle)
+    {
+        if (!isValidHandle(handle)) return;
+        auto &entry = m_entries[handle - 1];
+        if (entry.refCount <= 0 || entry.state != LoadState::Unloaded) return;
+        if (entry.name.size() <= 4 ||
+            entry.name.compare(entry.name.size() - 4, 4, ".obj") != 0) return;
+        entry.state = LoadState::Queued;
+        const std::string path =
+            (GamePaths::root() + QString::fromUtf8(entry.name.c_str())).toStdString();
+        loader().enqueueMesh(handle, entry.generation, path);
+    }
+
+    /// Return a ready mesh. The first OBJ request queues CPU parsing and
+    /// returns null until pumpUploads() uploads it on the render thread.
     const GpuMesh *get(uint32_t handle)
     {
-        if (!isValidHandle(handle))
-            return nullptr;
-        auto &e = m_entries[handle - 1];
-        if (e.refCount <= 0)
-            return nullptr; // 已释放的句柄 → 安全返回空
-        if (!e.loaded)
+        if (!isValidHandle(handle)) return nullptr;
+        auto &entry = m_entries[handle - 1];
+        if (entry.refCount <= 0) return nullptr;
+        if (entry.state == LoadState::Unloaded)
         {
-            // 延迟创建：第一次被渲染时才真正上传 GPU。
-            // 名字分发：".obj" 结尾 = 模型文件（相对资源根，如 "models/tree.obj"）；
-            // 其余 = 程序化几何（"cube"）。加载失败回退 cube（错路径可见方块提示）
-            if (e.name.size() > 4 &&
-                e.name.compare(e.name.size() - 4, 4, ".obj") == 0)
+            preloadMesh(handle);
+            if (entry.state == LoadState::Unloaded)
             {
-                std::vector<Vertex> verts;
-                std::string abs =
-                    (GamePaths::root() + QString::fromUtf8(e.name.c_str())).toStdString();
-                if (ObjLoader::loadFile(abs, verts))
-                    factory().createFromVertices(e.gpu, verts);
-                else
-                    factory().createCube(e.gpu); // 回退：至少看得见
+                factory().createCube(entry.gpu);
+                entry.state = LoadState::Ready;
             }
-            else
-                factory().createCube(e.gpu);
-            e.loaded = true;
         }
-        return &e.gpu;
+        return entry.state == LoadState::Ready ? &entry.gpu : nullptr;
     }
 
     /// 执行延迟删除（每帧渲染前调用，须在 GL 上下文内）
@@ -151,7 +161,7 @@ public:
     // ============================================================
     // 精灵帧集（SpriteFrames，对标 Godot）—— 与 Mesh 完全同模式：
     //   acquire = 纯登记（扫目录收集图片路径，不碰 GL）
-    //   getFrame = 首次访问时 QImage 解码 + 上传 GPU（渲染循环内）
+    //   getFrame = 首次访问时排队解码；上传在渲染循环内限额执行
     //   release = 纯记账，归零挂待删
     //   配合 SpriteComponent OnRemove Observer 自动释放
     // ============================================================
@@ -180,7 +190,9 @@ public:
         entry.refCount = 1;
         for (auto &f : files)
             entry.framePaths.push_back(dir.absoluteFilePath(f).toStdString());
-        entry.textures.resize(entry.framePaths.size()); // 全部未加载
+        entry.textures.resize(entry.framePaths.size());
+        entry.states.resize(entry.framePaths.size(), LoadState::Unloaded);
+        entry.generation = m_nextGeneration++;
 
         uint32_t handle = 0;
         for (size_t i = 0; i < m_sprites.size(); ++i)
@@ -207,33 +219,34 @@ public:
         return (int)m_sprites[handle - 1].framePaths.size();
     }
 
-    /// 取指定帧的纹理（首次访问时解码+上传，须在 GL 上下文内）
-    /// frame 越界自动钳制到有效范围（动画插值精度不影响安全）
+    /// Queue CPU decode without touching GL; safe immediately after scene load.
+    void preloadSpriteFrame(uint32_t handle, int frame)
+    {
+        if (handle < 1 || handle > m_sprites.size()) return;
+        auto &entry = m_sprites[handle - 1];
+        if (entry.refCount <= 0 || entry.framePaths.empty()) return;
+        if (frame < 0) frame = 0;
+        if (frame >= static_cast<int>(entry.framePaths.size()))
+            frame = static_cast<int>(entry.framePaths.size()) - 1;
+        const size_t index = static_cast<size_t>(frame);
+        if (entry.states[index] != LoadState::Unloaded) return;
+        entry.states[index] = LoadState::Queued;
+        loader().enqueueImage(handle, entry.generation, index, entry.framePaths[index]);
+    }
+
+    /// Return only uploaded textures. A first request queues background decode.
     const GpuTexture *getSpriteFrame(uint32_t handle, int frame)
     {
-        if (handle < 1 || handle > m_sprites.size())
-            return nullptr;
-        auto &e = m_sprites[handle - 1];
-        if (e.refCount <= 0 || e.framePaths.empty())
-            return nullptr;
-        if (frame < 0)
-            frame = 0;
-        if (frame >= (int)e.framePaths.size())
-            frame = (int)e.framePaths.size() - 1;
-
-        GpuTexture &tex = e.textures[frame];
-        if (tex.id == 0)
-        {
-            // 延迟加载：QImage 解码 → RGBA → 上传 GPU
-            QImage img(QString::fromUtf8(e.framePaths[frame].c_str()));
-            if (img.isNull())
-                return nullptr;
-            QImage rgba = img.convertToFormat(QImage::Format_RGBA8888)
-                              .mirrored(); // GL 纹理原点在左下，图片在左上 → 翻转
-            factory().createTexture(tex, rgba.constBits(),
-                                    rgba.width(), rgba.height());
-        }
-        return &tex;
+        if (handle < 1 || handle > m_sprites.size()) return nullptr;
+        auto &entry = m_sprites[handle - 1];
+        if (entry.refCount <= 0 || entry.framePaths.empty()) return nullptr;
+        if (frame < 0) frame = 0;
+        if (frame >= static_cast<int>(entry.framePaths.size()))
+            frame = static_cast<int>(entry.framePaths.size()) - 1;
+        const size_t index = static_cast<size_t>(frame);
+        if (entry.states[index] == LoadState::Unloaded)
+            preloadSpriteFrame(handle, frame);
+        return entry.states[index] == LoadState::Ready ? &entry.textures[index] : nullptr;
     }
 
     /// 释放精灵帧集引用（纯记账，归零挂待删）
@@ -250,6 +263,7 @@ public:
             if (tex.id)
                 m_pendingDeleteTex.push_back(tex);
         e.textures.clear();
+        e.states.clear();
         e.framePaths.clear();
         m_spriteByName.erase(e.folder);
     }
@@ -260,7 +274,7 @@ public:
     //   材质贴图和精灵帧共享同一份缓存/延迟加载/引用计数逻辑。
     // ============================================================
 
-    /// 登记单张纹理（绝对路径）。返回句柄；文件无效返回 0
+    /// 登记单张纹理（绝对路径）。空路径返回 0；文件有效性由后台解码确认。
     uint32_t acquireTexture(const std::string &absPath)
     {
         auto it = m_spriteByName.find(absPath);
@@ -269,14 +283,15 @@ public:
             m_sprites[it->second - 1].refCount++;
             return it->second;
         }
-        QImage probe(QString::fromUtf8(absPath.c_str()));
-        if (probe.isNull())
-            return 0; // 文件不存在/非图片
+        if (absPath.empty())
+            return 0;
         SpriteEntry entry;
         entry.folder = absPath; // 复用 folder 字段当缓存 key
         entry.refCount = 1;
         entry.framePaths.push_back(absPath); // 单帧
         entry.textures.resize(1);
+        entry.states.resize(1, LoadState::Unloaded);
+        entry.generation = m_nextGeneration++;
         uint32_t handle = 0;
         for (size_t i = 0; i < m_sprites.size(); ++i)
             if (m_sprites[i].refCount == 0)
@@ -294,18 +309,95 @@ public:
         return handle;
     }
 
-    /// 取纹理（材质贴图用；就是取该句柄的第 0 帧）
+    /// Material texture paths are relative to the runtime assets directory.
+    uint32_t acquireMaterialTexture(const char *relativePath)
+    {
+        if (!relativePath || !relativePath[0]) return 0;
+        return acquireTexture(
+            (GamePaths::root() + QString::fromUtf8(relativePath)).toStdString());
+    }
+
+    void preloadTexture(uint32_t handle) { preloadSpriteFrame(handle, 0); }
+    void releaseTexture(uint32_t handle) { releaseSprite(handle); }
+
+    /// Scene changes drop completed results and invalidate queued jobs.
+    /// Referenced resources can be queued again by the new scene or next draw.
+    void cancelPendingLoads()
+    {
+        if (m_loader) m_loader->invalidate();
+        for (auto &entry : m_entries)
+            if (entry.state == LoadState::Queued)
+                entry.state = LoadState::Unloaded;
+        for (auto &entry : m_sprites)
+            for (auto &state : entry.states)
+                if (state == LoadState::Queued)
+                    state = LoadState::Unloaded;
+    }
+
     const GpuTexture *getTexture(uint32_t handle)
     {
         return getSpriteFrame(handle, 0);
     }
 
+    /// Apply a small number of completed uploads while the GL context is
+    /// current. Handles and generations reject results from unloaded scenes.
+    void pumpUploads(size_t maxResults = 2)
+    {
+        if (!m_loader) return;
+        const auto started = std::chrono::steady_clock::now();
+        AsyncAssetLoader::Result result;
+        size_t processed = 0;
+        while (processed < maxResults && m_loader->tryTake(result))
+        {
+            ++processed;
+            if (result.kind == AsyncAssetLoader::Kind::Mesh)
+            {
+                if (!isValidHandle(result.handle)) continue;
+                auto &entry = m_entries[result.handle - 1];
+                if (entry.refCount <= 0 || entry.generation != result.generation ||
+                    entry.state != LoadState::Queued) continue;
+                if (result.success && !result.vertices.empty())
+                    factory().createFromVertices(entry.gpu, result.vertices,
+                                                 result.boundsMin, result.boundsMax);
+                else
+                {
+                    engineLogError("[Resource] OBJ load failed: " + result.path);
+                    factory().createCube(entry.gpu);
+                }
+                entry.state = LoadState::Ready;
+            }
+            else
+            {
+                if (result.handle < 1 || result.handle > m_sprites.size()) continue;
+                auto &entry = m_sprites[result.handle - 1];
+                if (entry.refCount <= 0 || entry.generation != result.generation ||
+                    result.frame >= entry.states.size() ||
+                    entry.states[result.frame] != LoadState::Queued) continue;
+                if (result.success)
+                {
+                    const QImage &image = result.image;
+                    factory().createTexture(entry.textures[result.frame],
+                                            image.constBits(), image.width(), image.height());
+                    entry.states[result.frame] = LoadState::Ready;
+                }
+                else
+                {
+                    entry.states[result.frame] = LoadState::Failed;
+                    engineLogError("[Resource] image load failed: " + result.path);
+                }
+            }
+            if (std::chrono::steady_clock::now() - started >= std::chrono::milliseconds(3))
+                break;
+        }
+    }
+
     /// 程序退出时清理全部资源（须在 GL 上下文销毁前调用，如 cleanupGL）
     void releaseAll()
     {
+        if (m_loader) m_loader->invalidate();
         flushPendingDeletes();
         for (auto &e : m_entries)
-            if (e.loaded)
+            if (e.state == LoadState::Ready)
                 factory().destroyMesh(e.gpu);
         m_entries.clear();
         m_byName.clear();
@@ -325,6 +417,12 @@ public:
 private:
     ResourceManager() = default;
 
+    AsyncAssetLoader &loader()
+    {
+        if (!m_loader) m_loader = std::make_unique<AsyncAssetLoader>();
+        return *m_loader;
+    }
+
     /// MeshFactory 惰性创建（堆分配，生命周期手控，避开静态析构陷阱）
     MeshFactory &factory()
     {
@@ -338,7 +436,8 @@ private:
     {
         GpuMesh gpu;
         int refCount = 0;
-        bool loaded = false; // GPU 数据是否已创建（延迟加载标志）
+        LoadState state = LoadState::Unloaded;
+        uint64_t generation = 0;
         std::string name;
     };
 
@@ -351,13 +450,17 @@ private:
     std::map<std::string, uint32_t> m_byName; // 名字 → 句柄（缓存查找）
     std::vector<GpuMesh> m_pendingDelete;     // 待删列表（延迟 glDelete）
     MeshFactory *m_factory = nullptr;         // 堆分配！releaseAll 时销毁（见上）
+    std::unique_ptr<AsyncAssetLoader> m_loader;
+    uint64_t m_nextGeneration = 1;
 
     /// 精灵帧集记录：帧路径列表 + 逐帧延迟加载的纹理
     struct SpriteEntry
     {
         std::string folder;
         std::vector<std::string> framePaths; // 按文件名排序 = 帧序
-        std::vector<GpuTexture> textures;    // 与 framePaths 对齐，id==0 未加载
+        std::vector<GpuTexture> textures;
+        std::vector<LoadState> states;
+        uint64_t generation = 0;
         int refCount = 0;
     };
     std::vector<SpriteEntry> m_sprites;

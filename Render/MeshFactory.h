@@ -2,6 +2,7 @@
 #define MESHFACTORY_H
 
 #include <QOpenGLFunctions_3_3_Core>
+#include <glm/glm.hpp>
 #include <vector>
 
 // ============================================================
@@ -19,6 +20,8 @@ struct GpuMesh
     GLsizei indexCount = 0;
     GLenum primitiveType = GL_TRIANGLES;
     bool hasIndices = false;
+    glm::vec3 boundsMin{-0.5f}; // mesh-local AABB for conservative view culling
+    glm::vec3 boundsMax{0.5f};
 };
 
 // ============================================================
@@ -152,6 +155,8 @@ public:
         outMesh.indexCount = static_cast<GLsizei>(indices.size());
         outMesh.hasIndices = true;
         outMesh.primitiveType = GL_TRIANGLES;
+        outMesh.boundsMin = glm::vec3(-h);
+        outMesh.boundsMax = glm::vec3(h);
     }
 
     // ---- 销毁网格 GPU 资源 ----
@@ -170,7 +175,8 @@ public:
 
     // ---- 从顶点数组创建（OBJ 模型等非索引三角形数据，布局同 cube）----
     // 必须在 GL 上下文内调用
-    void createFromVertices(GpuMesh &outMesh, const std::vector<Vertex> &vertices)
+    void createFromVertices(GpuMesh &outMesh, const std::vector<Vertex> &vertices,
+                            const glm::vec3 &boundsMin, const glm::vec3 &boundsMax)
     {
         if (!m_glInit)
         {
@@ -198,6 +204,8 @@ public:
         outMesh.indexCount = 0;
         outMesh.hasIndices = false; // 非索引：glDrawArrays
         outMesh.primitiveType = GL_TRIANGLES;
+        outMesh.boundsMin = boundsMin;
+        outMesh.boundsMax = boundsMax;
     }
 
     // ---- 创建纹理（从 RGBA 像素数据，QImage 解码在 ResourceManager 层）----

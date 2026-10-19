@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "Core/TestFramework.h"
 #include <QOpenGLFunctions_3_3_Core>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -79,31 +80,37 @@ public:
     // ---- Uniform 设置 ----
     void setMat4(const std::string &name, const glm::mat4 &m)
     {
+        EngineTest::countUniform();
         glUniformMatrix4fv(loc(name), 1, GL_FALSE, glm::value_ptr(m));
     }
 
     void setMat3(const std::string &name, const glm::mat3 &m)
     {
+        EngineTest::countUniform();
         glUniformMatrix3fv(loc(name), 1, GL_FALSE, glm::value_ptr(m));
     }
 
     void setVec3(const std::string &name, const glm::vec3 &v)
     {
+        EngineTest::countUniform();
         glUniform3fv(loc(name), 1, glm::value_ptr(v));
     }
 
     void setVec3(const std::string &name, float x, float y, float z)
     {
+        EngineTest::countUniform();
         glUniform3f(loc(name), x, y, z);
     }
 
     void setFloat(const std::string &name, float v)
     {
+        EngineTest::countUniform();
         glUniform1f(loc(name), v);
     }
 
     void setInt(const std::string &name, int v)
     {
+        EngineTest::countUniform();
         glUniform1i(loc(name), v);
     }
 
