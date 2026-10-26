@@ -217,7 +217,7 @@ struct AnimClip
 
     // ---- 事件轨道（Method Track，对标 Godot）----
     // "播到 0.5 秒时触发 attack_hit" —— 播放头跨越事件时刻 → 发射信号
-    // （走 g_signalQueue 信号总线，Lua connect("attack_hit",cb) 接收）
+    // （走 Core 层信号总线，Lua connect("attack_hit",cb) 接收）
     // ★动画不直接调函数 —— 解耦：动画只负责"什么时候"，"干什么"在脚本
     struct AnimEvent
     {

@@ -23,7 +23,7 @@ extern "C"
 #include <ctime>
 #include <thread>
 
-#include "Core/SignalQueue.h" // DeferredSignal/g_signalQueue（已抽到 Core 层，ADR-002）
+#include "Core/SignalQueue.h" // DeferredSignal/信号总线 API（已抽到 Core 层，ADR-002）
 
 // ============================================================
 // LuaApi.h — Lua C API 的公共声明（供 ScriptEngine 引用）

@@ -9,14 +9,14 @@
 //   duration 边界（极短/零）
 //
 // 注意：physicsSetPosition 在无物理世界时安全返回 false，不影响测试。
-//   完成信号走 g_signalQueue，测试中直接检查队列。
+//   完成信号走 Core 层信号总线，测试经 takeDeferredSignals() 检视。
 // ============================================================
 #include <gtest/gtest.h>
 #include "Core/Engine.h"
 #include "Systems/TweenSystem.h"
 #include "Components/TransformComponent.h"
 #include "Components/TagComponent.h"
-#include "Core/SignalQueue.h" // g_signalQueue（Core 层，不拉 Lua 依赖）
+#include "Core/SignalQueue.h" // takeDeferredSignals（Core 层，不拉 Lua 依赖）
 #include <cstring>
 
 namespace
@@ -38,8 +38,7 @@ protected:
         m_tween = new TweenSystem();
         TweenSystem::clearAll();
         // 清空信号队列（其他测试可能残留）
-        while (!g_signalQueue.empty())
-            g_signalQueue.pop();
+        clearDeferredSignals();
     }
     void TearDown() override
     {
@@ -177,10 +176,10 @@ TEST_F(TweenSystemTest, DoneSignal_PushedToQueue)
 
     stepFrames(10); // 超过 0.1s
     // 信号应该被推入队列
-    ASSERT_FALSE(g_signalQueue.empty());
-    auto sig = g_signalQueue.front();
-    EXPECT_EQ(sig.emitterId, id);
-    EXPECT_EQ(sig.signalName, "move_done");
+    auto signals = takeDeferredSignals();
+    ASSERT_GE(signals.size(), 1u);
+    EXPECT_EQ(signals[0].emitterId, id);
+    EXPECT_EQ(signals[0].signalName, "move_done");
 }
 
 TEST_F(TweenSystemTest, NoDoneSignal_QueueStaysEmpty)
@@ -189,7 +188,7 @@ TEST_F(TweenSystemTest, NoDoneSignal_QueueStaysEmpty)
     tweenStart(id, "position", 5, 0, 0, 0.1f, 0, ""); // 空信号名
 
     stepFrames(10);
-    EXPECT_TRUE(g_signalQueue.empty());
+    EXPECT_TRUE(takeDeferredSignals().empty());
 }
 
 // ---- clearAll ----

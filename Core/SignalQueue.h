@@ -24,14 +24,13 @@
 //   Scripting 层每帧来消费 —— 依赖方向统一指向 Core（ADR-002）。
 //
 // 【线程模型】
-//   生产者：物理接触监听跑在 Jolt 工作线程、其余在主线程 —— 都要加锁
-//   消费者：ScriptSystem 主线程每帧 processDeferredSignals()（Scripting 层）
+//   生产者：物理接触监听跑在 Jolt 工作线程、其余在主线程 —— 内部加锁
+//   消费者：ScriptSystem 主线程每帧 takeDeferredSignals()（Scripting 层）
 //   lua_State 非线程安全，工作线程绝不直接调 Lua，一律先入队。
 //
-// 【用法】
-//   生产者一行投递（内部加锁）：
-//     pushDeferredSignal({entityId, "collision_start", {(double)otherId}});
-//   需要批量/特殊场景才直接用 g_signalQueue + g_signalMutex。
+// 【封装】
+//   队列与锁是文件私有状态（匿名命名空间），头文件只暴露三个接口：
+//   push / take / clear。外部拿不到裸队列，不存在绕过锁的路径。
 // ============================================================
 
 /// 延迟信号条目（C++ 系统推送，主线程消费后调 Lua 回调）
@@ -43,12 +42,11 @@ struct DeferredSignal
     std::vector<double> args;
 };
 
-/// 信号队列 & 锁（extern：测试需直接检视队列内容）
-extern std::queue<DeferredSignal> g_signalQueue;
-extern std::mutex g_signalMutex;
-
-/// 线程安全的信号投递入口（内部加锁，生产者首选）
+/// 线程安全的信号投递入口（生产者唯一写入口）
 void pushDeferredSignal(DeferredSignal sig);
+
+/// 原子取出全部未消费信号（加锁 swap，消费方唯一读入口）
+std::vector<DeferredSignal> takeDeferredSignals();
 
 /// 清空信号队列（丢弃未消费信号）
 /// 用途：进/出 Play 时调用 —— 编辑模式预览动画产生的事件信号

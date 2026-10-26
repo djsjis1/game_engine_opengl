@@ -77,6 +77,26 @@ my_demo / my_game / unit_tests / integration_tests / engine_tests 全部
 编译通过无警告；unit_tests 69 用例、integration_tests 98 用例全绿
 （含 TweenSystem 信号队列断言——行为零回归）。
 
+## 修订（2026-10-26）：收编 extern 全局变量
+
+原决策保留 `g_signalQueue`/`g_signalMutex` extern（方案 A），理由是
+"测试需直接检视队列"。后续项目自查发现这与模块解耦铁律（头文件只暴露
+接口、状态收进匿名命名空间）冲突：任何 include 者都能绕过锁直接操作
+裸队列，锁纪律只靠自觉维持。
+
+实际修订：
+
+- 队列与锁移入 `SignalQueue.cpp` 匿名命名空间（文件私有）
+- 新增 `takeDeferredSignals()`：加锁 swap + 转移到 vector 返回，一个接口
+  覆盖两个需求——Scripting 每帧消费、测试断言（取出后检视）
+- 消费方 `LuaApi.cpp` 与 `TweenSystem_test.cpp` 均已迁移，行为零变化
+- 头文件接口收敛为 push / take / clear 三个函数，无任何数据暴露
+
+当时"为测试开洞更丑"的顾虑不成立：take 语义（原子取走全部）正是消费方
+本来要做的事，测试复用它不需要额外的 peek 接口——当初方案 B 的缺点评估
+有误，修正之。
+
 ## 状态
 
-已采纳（2026-08-13）
+已采纳（2026-08-13）；2026-10-26 修订：extern 收编为文件私有（接口
+push/take/clear，全封装）

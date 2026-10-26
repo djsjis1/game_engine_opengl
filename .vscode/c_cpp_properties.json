@@ -3,19 +3,18 @@
         {
             "name": "Win64",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/game_engine/build/editor",
-                "${workspaceFolder}/glm-1.0.3",
                 "${workspaceFolder}",
-                "D:/QT/5.14.2/msvc2017_64/include",
-                "D:/QT/5.14.2/msvc2017_64/include/QtWidgets",
-                "D:/QT/5.14.2/msvc2017_64/include/QtOpenGL",
-                "D:/QT/5.14.2/msvc2017_64/include/QtGui",
-                "D:/QT/5.14.2/msvc2017_64/include/QtCore"
+                "${workspaceFolder}/thirdparty/glm-1.0.3",
+                "${workspaceFolder}/thirdparty",
+                "${workspaceFolder}/thirdparty/HFSM2-2.12.1/include",
+                "${workspaceFolder}/thirdparty/JoltPhysics-master",
+                "${workspaceFolder}/thirdparty/miniaudio-master",
+                "${workspaceFolder}/thirdparty/flecs-4.1.6/distr",
+                "${workspaceFolder}/thirdparty/lua-5.4.7/src"
             ],
             "defines": [
-                "SHADER_DIR=\"engine/render/shaders/\"",
-                "ASSETS_DIR=\"assets/\""
+                "SHADER_DIR=\"${workspaceFolder}/assets/Shaders/\"",
+                "ASSET_DIR=\"${workspaceFolder}/assets/\""
             ],
             "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe",
             "cStandard": "c17",

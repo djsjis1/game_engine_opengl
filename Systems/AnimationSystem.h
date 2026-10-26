@@ -121,7 +121,7 @@ public:
             // 为什么发信号而不是直接调函数？——解耦：
             //   本系统不认识 Lua，只报告"什么时候到了"；
             //   "到了该干什么"由脚本 connect("信号名", 回调) 决定。
-            //   信号走 g_signalQueue 总线（和物理碰撞信号同一条队列），
+            //   信号走 Core 层信号总线（和物理碰撞信号同一条队列），
             //   下一帧被 ScriptSystem 消费 → 调 Lua 回调（有一帧延迟，无感知）
             if (!clip.events.empty() && ac.time != prevTime)
             {

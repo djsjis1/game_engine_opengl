@@ -136,35 +136,20 @@ void cleanupEntitySignals(flecs::world world, flecs::entity_t deadId)
 /// 必须在持有 lua_State 的线程上调用
 void processDeferredSignals(lua_State *L, flecs::world &world)
 {
-    std::queue<DeferredSignal> local;
+    for (auto &ds : takeDeferredSignals())
     {
-        std::lock_guard<std::mutex> lock(g_signalMutex);
-        std::swap(local, g_signalQueue);
-    }
-    while (!local.empty())
-    {
-        auto &ds = local.front();
         flecs::entity e = world.entity(ds.emitterId);
         if (!e)
-        {
-            local.pop();
-            continue;
-        } // 实体已删除，跳过
+            continue; // 实体已删除，跳过
 
         auto compId = world.component<SignalComponent>().raw_id();
         auto *sig = (SignalComponent *)ecs_get_id(world.c_ptr(), ds.emitterId, compId);
         if (!sig)
-        {
-            local.pop();
             continue;
-        }
 
         auto it = sig->signalMap.find(ds.signalName);
         if (it == sig->signalMap.end())
-        {
-            local.pop();
             continue;
-        }
 
         // 为发信号的实体建立上下文，让回调里的 get_position() 等 API 正确作用
         // （不建会导致 __active_ctx 指向上帧已销毁的栈变量 → 悬空指针）
@@ -189,7 +174,6 @@ void processDeferredSignals(lua_State *L, flecs::world &world)
             if (lua_pcall(L, (int)ds.args.size(), 0, 0) != LUA_OK)
                 lua_pop(L, 1);
         }
-        local.pop();
     }
 
     // 清空上下文：本函数用的 ctx 是栈变量，返回后就销毁了，

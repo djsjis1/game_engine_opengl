@@ -27,7 +27,8 @@ set(HFSM2_DIR     "${ROOT_DIR}/thirdparty/HFSM2-2.12.1/include")
 set(JOLT_DIR      "${THIRDPARTY_DIR}/JoltPhysics-master")
 set(MINIAUDIO_DIR "${THIRDPARTY_DIR}/miniaudio-master")
 set(SHADER_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/assets/Shaders/")
-set(QT_PATH        "D:/QT/5.14.2/msvc2017_64")
+# Qt 安装目录做成 CACHE 变量：换机器/换路径用 -DQT_PATH=... 覆盖，不用改文件
+set(QT_PATH        "D:/QT/5.14.2/msvc2017_64" CACHE PATH "Qt 安装目录（msvc 版）")
 
 # ---- 独立构建时设置全局选项，子目录时跳过 ----
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -192,6 +193,45 @@ set(ENGINE_SOURCES
 )
 
 # ============================================================
+# engine_common — 引擎目标公共配置（INTERFACE 库）
+#
+# my_demo / my_game / integration_tests / engine_tests 四个目标的
+# include 目录 / 链接库 / 编译宏完全一致，收敛到这一处：
+# 新增第三方依赖只改这里，不再四处同步（历史上的 Jolt CRT 链接问题
+# 就是漏改一处的产物）。unit_tests 刻意不依赖它——轻量单测只链
+# Qt5::Core + gtest，秒级编译的约束不能被引擎全量依赖破坏。
+# ============================================================
+add_library(engine_common INTERFACE)
+target_include_directories(engine_common INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    "${GLM_DIR}"
+    "${NLOHMANN_DIR}"
+    "${HFSM2_DIR}"
+    "${JOLT_DIR}"
+    "${MINIAUDIO_DIR}"
+)
+target_link_libraries(engine_common INTERFACE
+    flecs
+    Jolt
+    Qt5::OpenGL
+    OpenGL::GL
+    sqlite3
+    mylog
+    lua
+    Qt5::Widgets
+)
+target_compile_definitions(engine_common INTERFACE
+    # 资源根目录绝对路径注入（开发/导出共用，GamePaths 负责 rebase）
+    SHADER_DIR="${SHADER_DIR}"
+    ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
+)
+if(MSVC)
+    target_compile_options(engine_common INTERFACE /utf-8 /FS)
+    # strncpy 等 C 函数的 C4996 安全警告（项目已用 sizeof-1 限长，安全）
+    target_compile_definitions(engine_common INTERFACE _CRT_SECURE_NO_WARNINGS)
+endif()
+
+# ============================================================
 # my_demo 可执行文件（编辑器：引擎核心 + 编辑器 UI）
 # ============================================================
 add_executable(my_demo WIN32
@@ -206,32 +246,13 @@ add_executable(my_demo WIN32
     ${ENGINE_SOURCES}
 )
 
-target_include_directories(my_demo PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    "${GLM_DIR}"
-    "${NLOHMANN_DIR}"
-    "${HFSM2_DIR}"
-    "${JOLT_DIR}"
-    "${MINIAUDIO_DIR}"
-)
+target_link_libraries(my_demo PRIVATE engine_common Qt5::WinMain)
 
-target_link_libraries(my_demo PRIVATE
-    flecs
-    Jolt
-    Qt5::OpenGL
-    OpenGL::GL
-    sqlite3
-    mylog
-    lua
-    Qt5::Widgets
-    Qt5::WinMain
+# Visual Studio 调试器：启动时自动找到 Qt DLL
+set_target_properties(my_demo PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    VS_DEBUGGER_ENVIRONMENT "PATH=${QT_PATH}/bin;%PATH%\nQT_QPA_PLATFORM_PLUGIN_PATH=${QT_PATH}/plugins"
 )
-
-if(MSVC)
-    target_compile_options(my_demo PRIVATE /utf-8 /FS)
-    # strncpy 等 C 函数的 C4996 安全警告（项目已用 sizeof-1 限长，安全）
-    target_compile_definitions(my_demo PRIVATE _CRT_SECURE_NO_WARNINGS)
-endif()
 
 # ---- mini-UHT：反射代码生成器 ----
 # 扫描 Components/*.h 的 REFLECT 宏标记 → 生成 Generated/ComponentReflection.inl
@@ -251,19 +272,6 @@ add_custom_target(run_reflect_gen
 add_dependencies(run_reflect_gen reflect_gen) # 先编生成器再跑
 add_dependencies(my_demo run_reflect_gen)
 
-# Shader 路径注入（指向 assets/Shaders/ 目录，开发/导出共用）
-# ASSET_DIR：资源根目录绝对路径（anims/scripts 等资源一律绝对路径，不依赖工作目录）
-target_compile_definitions(my_demo PRIVATE
-    SHADER_DIR="${SHADER_DIR}"
-    ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
-)
-
-# Visual Studio 调试器：启动时自动找到 Qt DLL
-set_target_properties(my_demo PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    VS_DEBUGGER_ENVIRONMENT "PATH=${QT_PATH}/bin;%PATH%\nQT_QPA_PLATFORM_PLUGIN_PATH=${QT_PATH}/plugins"
-)
-
 # ============================================================
 # my_game 可执行文件（游戏运行时：引擎核心 + 游戏窗口，无编辑器）
 # 导出游戏 = 拷贝 my_game.exe + assets/ + game.json 到目标目录
@@ -274,37 +282,7 @@ add_executable(my_game WIN32
     ${ENGINE_SOURCES}
 )
 
-target_include_directories(my_game PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    "${GLM_DIR}"
-    "${NLOHMANN_DIR}"
-    "${HFSM2_DIR}"
-    "${JOLT_DIR}"
-    "${MINIAUDIO_DIR}"
-)
-
-target_link_libraries(my_game PRIVATE
-    flecs
-    Jolt
-    Qt5::OpenGL
-    OpenGL::GL
-    sqlite3
-    mylog
-    lua
-    Qt5::Widgets
-    Qt5::WinMain
-)
-
-if(MSVC)
-    target_compile_options(my_game PRIVATE /utf-8 /FS)
-    target_compile_definitions(my_game PRIVATE _CRT_SECURE_NO_WARNINGS)
-endif()
-
-# 开发模式回退路径（exe 旁无 assets/ 时用，方便 F5 直接调试运行时）
-target_compile_definitions(my_game PRIVATE
-    SHADER_DIR="${SHADER_DIR}"
-    ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
-)
+target_link_libraries(my_game PRIVATE engine_common Qt5::WinMain)
 add_dependencies(my_game run_reflect_gen)
 
 set_target_properties(my_game PROPERTIES
@@ -376,25 +354,11 @@ if(EXISTS "${GTEST_DIR}/CMakeLists.txt")
         tests/integration/scene/SceneSerializer_test.cpp
         tests/integration/resource/ResourceManager_test.cpp
         tests/integration/resource/AsyncAssetLoader_test.cpp
-        tests/unit/render/ObjLoader_test.cpp
+        tests/integration/resource/ObjLoader_test.cpp
         ${ENGINE_SOURCES}
     )
-    target_include_directories(integration_tests PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        "${GLM_DIR}" "${NLOHMANN_DIR}" "${HFSM2_DIR}" "${JOLT_DIR}" "${MINIAUDIO_DIR}"
-    )
     target_compile_definitions(integration_tests PRIVATE ENABLE_ENGINE_TESTING=1)
-    target_link_libraries(integration_tests PRIVATE
-        gtest flecs Jolt Qt5::OpenGL OpenGL::GL sqlite3 mylog lua Qt5::Widgets
-    )
-    if(MSVC)
-        target_compile_options(integration_tests PRIVATE /utf-8 /FS)
-        target_compile_definitions(integration_tests PRIVATE _CRT_SECURE_NO_WARNINGS)
-    endif()
-    target_compile_definitions(integration_tests PRIVATE
-        SHADER_DIR="${SHADER_DIR}"
-        ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
-    )
+    target_link_libraries(integration_tests PRIVATE engine_common gtest)
     add_dependencies(integration_tests run_reflect_gen)
     add_test(NAME integration_tests COMMAND integration_tests)
     set_target_properties(integration_tests PROPERTIES
@@ -411,23 +375,10 @@ if(EXISTS "${GTEST_DIR}/CMakeLists.txt")
         tests/engine/LuaTestApi.cpp
         ${ENGINE_SOURCES}
     )
-    target_include_directories(engine_tests PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        "${GLM_DIR}" "${NLOHMANN_DIR}" "${HFSM2_DIR}" "${JOLT_DIR}" "${MINIAUDIO_DIR}"
-    )
     target_compile_definitions(engine_tests PRIVATE ENABLE_ENGINE_TESTING=1)
-    target_link_libraries(engine_tests PRIVATE
-        flecs Jolt Qt5::OpenGL OpenGL::GL sqlite3 mylog lua Qt5::Widgets
-    )
-    if(MSVC)
-        target_compile_options(engine_tests PRIVATE /utf-8 /FS)
-        target_compile_definitions(engine_tests PRIVATE _CRT_SECURE_NO_WARNINGS)
-    endif()
-    target_compile_definitions(engine_tests PRIVATE
-        SHADER_DIR="${SHADER_DIR}"
-        ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
-    )
+    target_link_libraries(engine_tests PRIVATE engine_common)
     add_dependencies(engine_tests run_reflect_gen)
+    add_test(NAME engine_tests COMMAND engine_tests)
     set_target_properties(engine_tests PROPERTIES
         VS_DEBUGGER_ENVIRONMENT "PATH=${QT_PATH}/bin;%PATH%"
     )
