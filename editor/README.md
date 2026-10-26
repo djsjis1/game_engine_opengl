@@ -56,13 +56,14 @@ if (comp == "Material") {
 
 ### 2.2 反射方式（当前实现）
 
-**Engine.h 注册一次**：
+**member 注册由 reflect_gen 自动生成**（`tools/reflect_gen.cpp` 扫描 `Components/*.h` 里带 `REFLECT` 标记的字段，生成 `Generated/ComponentReflection.inl`，Engine.h 直接 include，⚠勿手改）：
 
 ```cpp
+// Generated/ComponentReflection.inl（自动生成的样子）
 m_world.component<TransformComponent>()
-    .member<glm::vec3>("position", offsetof(TransformComponent, position))
-    .member<glm::vec3>("rotation", offsetof(TransformComponent, rotation))
-    .member<glm::vec3>("scale",    offsetof(TransformComponent, scale));
+    .member<glm::vec3>("position", 1, offsetof(TransformComponent, position))
+    .member<glm::vec3>("rotation", 1, offsetof(TransformComponent, rotation))
+    .member<glm::vec3>("scale",    1, offsetof(TransformComponent, scale));
 ```
 
 **EditorPanel 自动生成 UI**（不需要改代码）：
@@ -81,8 +82,8 @@ for (int mi = 0; mi < memberCount; ++mi) {
 
 **新增组件只需两处**：
 
-1. `Engine.h` 构造函数：`m_world.component<NewComponent>()`
-2. `Engine.h` 的 `registerReflection()` 函数：`.member<float>("x", offsetof(...))`
+1. `Components/NewComponent.h`：字段行尾加 `REFLECT` 标记 → reflect_gen 构建时自动生成 member 注册
+2. `Core/Engine.h` 构造函数：`m_world.component<NewComponent>().add<EditorVisible>()`
 
 **EditorPanel 一行不改**。运行时自动发现。
 
@@ -135,7 +136,7 @@ struct ecs_member_t {
 };
 ```
 
-来源：`registerReflection()` 注册时 Flecs 自动填充。
+来源：reflect_gen 生成的注册执行时 Flecs 自动填充（member 注册见 `Generated/ComponentReflection.inl`）。
 
 用法：`((float*)((char*)data + m.offset))[vi]` — 通过偏移量直接读写内存。
 
@@ -288,16 +289,14 @@ Qt 的 `emit` 宏和 Flecs 源码里的 `emit` 变量名冲突。`Q_MOC_RUN` 只
 
 ## 八、如何扩展
 
-### 添加新组件支持（只需要改 Engine.h）
+### 添加新组件支持（改组件头文件 + Engine.h 各一处）
 
-1. 创建 `Components/MyComponent.h`
-2. 在 `Engine.h` 构造函数加 `m_world.component<MyComponent>()`
-3. 在 `registerReflection()` 加成员信息：
+1. 创建 `Components/MyComponent.h`，需要进编辑器的字段行尾加 `REFLECT` 标记
+2. 重新构建：reflect_gen 扫描后把 member 注册自动写进 `Generated/ComponentReflection.inl`（含 count=1 三参数形式，坑 8 不会再犯）
+3. 在 `Core/Engine.h` 构造函数注册组件类型：
 
    ```cpp
-   m_world.component<MyComponent>()
-       .member<float>("health", offsetof(MyComponent, health))
-       .member<bool>("alive",   offsetof(MyComponent, alive));
+   m_world.component<MyComponent>().add<EditorVisible>();
    ```
 
 4. **EditorPanel 自动识别**，下拉列表会出现 "MyComponent"

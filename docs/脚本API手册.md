@@ -90,6 +90,7 @@ end
 | `create_entity(name)` → id | 创建光杆实体（Tag+Transform），下面这组装配它 |
 | `add_mesh(id, "cube")` | 加可见网格（不加=不可见逻辑实体） |
 | `add_material(id, r,g,b [,metallic,roughness])` | PBR 材质：基础色 + 金属度(0=非金属 1=金属) + 粗糙度(0=镜面 1=粗糙) |
+| `add_texture(id, "textures/wood.png")` | 给材质设 albedo 贴图（相对资源根路径；有贴图时贴图 × 基础色当染色） |
 | `add_rigidbody(id, motion)` | 刚体：0=静态 1=运动学 2=动态 |
 | `add_collider(id [,hx,hy,hz])` | 盒碰撞体半尺寸（默认 0.5） |
 | `add_sphere_collider(id [,radius])` | 球形碰撞体（半径默认 0.5） |
@@ -192,6 +193,7 @@ connect("collision_end", function(other) end)  -- 分离/离开区域
 |-----|------|
 | `connect(signal, cb)` / `emit(signal, ...)` | 监听/发射本实体信号 |
 | `connect_to(id, signal, cb)` / `disconnect(signal, ref)` | 跨实体监听 / 断开 |
+| `delay(seconds, cb)` | 定时器：秒数后在主线程调回调（一次性，Godot create_timer 同款；退 Play 自动清空） |
 | `async(fn, cb)` | 异步执行计算（WorkerThreadPool） |
 | `export(name, default)` / `get_prop` / `set_prop` | 可导出变量（编辑器可调，@export 风格） |
 | `delta()` → number | 帧间隔秒数（等价 update 的 dt 参数） |
@@ -258,5 +260,5 @@ end
 ## 关联文档
 
 - 引擎架构与模块：`../模块文档.md`
-- 排障手册（22 个实战坑 + 方法论）：`排障手册.md`
+- 排障手册（坑 15~29 + 方法论；坑 1~14 见 `../模块文档.md` 第八节）：`排障手册.md`
 - API 实现（单一事实来源）：`../Scripting/LuaApi.cpp` 的 `kApiTable`

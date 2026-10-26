@@ -42,6 +42,7 @@ opengl/
 ├── docs/                       # 引擎文档
 │   ├── 脚本API手册.md          #   全部 Lua API 手册
 │   ├── 排障手册.md             #   实战坑 + 排障方法论
+│   ├── 优化方案-2026-09-25.md  #   性能优化路线（现状核验 + 分阶段实施）
 │   └── adr/                    #   架构决策记录
 │
 ├── thirdparty/                 # 第三方库（源码内嵌，锁定版本）
@@ -126,7 +127,7 @@ cmake --build build --config Release --target lesson05_texture
 ## 五、OpenGL 学习课程
 
 21 节渐进式课程，从窗口创建到延迟渲染，每节独立可运行。
-详见 [lessons/ 目录](lessons/) 和 [课程 README](lessons/README.md)。
+详见 [lessons/ 目录](lessons/)，课程配套文档见 [lessons/docs/](lessons/docs/)（opengl 原理 / flecs / hfsm2 / lua / 引擎渲染实战）。
 
 | # | 课程 | 核心知识点 |
 | --- | ------ | ----------- |
@@ -158,10 +159,13 @@ cmake --build build --config Release --target lesson05_texture
 
 | 文档 | 给谁看 | 内容 |
 | ------ | -------- | ------ |
-| [模块文档.md](模块文档.md) | 想理解/扩展引擎的人 | 架构、模块职责、数据流、设计模式 |
+| [模块文档.md](模块文档.md) | 想理解/扩展引擎的人 | 架构、模块职责、数据流、设计模式、坑 1~14 |
 | [脚本API手册.md](docs/脚本API手册.md) | 用引擎做游戏的人 | 全部 Lua API + 三种开发方式 + 最小示例 |
-| [排障手册.md](docs/排障手册.md) | 遇到 bug 的人 | 实战坑 + 排障方法论 |
-| [功能更新计划.md](功能更新计划.md) | 规划功能的人 | 待实现功能路线图 |
+| [排障手册.md](docs/排障手册.md) | 遇到 bug 的人 | 实战坑 15~29 + 排障方法论 |
+| [功能更新计划.md](功能更新计划.md) | 规划功能的人 | 对标 Godot 的功能缺口 + 实施路线 |
+| [优化方案-2026-09-25.md](docs/优化方案-2026-09-25.md) | 做性能优化的人 | 现状核验 + 分阶段优化路线与验收标准 |
+| [通用开发记忆.md](通用开发记忆.md) | 跨项目复用规范的人 | 路径/编码/文档/测试等通用约定 |
+| [ADR 索引](docs/adr/README.md) | 做架构决策的人 | 已采纳的架构决策记录 |
 
 ---
 
@@ -188,4 +192,4 @@ cmake --build build --config Release --target lesson05_texture
 - 类名 PascalCase，函数 camelCase，成员 `m_` 前缀
 - RAII + 智能指针，禁止裸 new
 - 函数 ≤ 50 行，单一职责
-- 详细规范见 [AGENTS.md](AGENTS.md) 和 [.qoder/rules/](.qoder/rules/)
+- 详细规范见 [.qoder/rules/AGENTS.md](.qoder/rules/AGENTS.md) 和 [.qoder/rules/](.qoder/rules/)
